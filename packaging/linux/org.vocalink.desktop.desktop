@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Name=Vocal Ink
+GenericName=Speech assistant
+Comment=Type or speak and be heard in a voice you choose
+Exec=VocalInk %U
+Icon=org.vocalink.desktop
+Terminal=false
+Categories=Utility;Accessibility;AudioVideo;Audio;
+Keywords=tts;text to speech;speech;voice;mute;aac;accessibility;obs;captions;stream;
+StartupWMClass=VocalInk

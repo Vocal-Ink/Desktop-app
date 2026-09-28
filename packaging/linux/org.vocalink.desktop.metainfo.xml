@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>org.vocalink.desktop</id>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>Apache-2.0</project_license>
+  <name>Vocal Ink</name>
+  <summary>Type or speak and be heard in a voice you choose</summary>
+  <description>
+    <p>
+      Vocal Ink speaks for people who can't, or don't want to, use their own voice.
+      Type a message or speak (even quietly) and it is said aloud in the voice you pick,
+      routed to a virtual microphone for calls, games and streams.
+    </p>
+    <ul>
+      <li>Free local voices (Piper, system voices, eSpeak NG) and cloud voices from Microsoft Azure, ElevenLabs, Fish Audio and OpenAI</li>
+      <li>On-device speech recognition with whisper.cpp</li>
+      <li>Quick phrases, history, global shortcuts and a quick-type box for games</li>
+      <li>OBS integration: live caption overlay, text-source subtitles, closed captions and a talking indicator</li>
+    </ul>
+  </description>
+  <launchable type="desktop-id">org.vocalink.desktop.desktop</launchable>
+  <url type="homepage">https://github.com/Vocal-Ink/Desktop-app</url>
+  <url type="bugtracker">https://github.com/Vocal-Ink/Desktop-app/issues</url>
+  <categories>
+    <category>Utility</category>
+    <category>Accessibility</category>
+  </categories>
+  <content_rating type="oars-1.1"/>
+  <releases>
+    <release version="0.1.0" date="2026-09-28"/>
+  </releases>
+</component>

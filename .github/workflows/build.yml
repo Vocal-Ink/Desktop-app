@@ -1,0 +1,218 @@
+name: Build
+
+on:
+  push:
+    branches: [main, "claude/**"]
+    tags: ["v*"]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  QT_VERSION: "6.8.3"
+  QT_MODULES: "qtmultimedia qtspeech qtwebsockets"
+  BUILD_TYPE: Release
+
+jobs:
+  linux:
+    name: Linux (x86_64)
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ninja-build libsecret-1-dev libx11-dev libxkbcommon-x11-0 libxcb-cursor0 \
+            libspeechd2 libpulse0 libgstreamer1.0-0 libgstreamer-plugins-base1.0-0 gstreamer1.0-plugins-base \
+            espeak-ng xvfb fuse libfuse2
+
+      - uses: jurplel/install-qt-action@v4
+        with:
+          version: ${{ env.QT_VERSION }}
+          modules: ${{ env.QT_MODULES }}
+          cache: true
+
+      - name: Configure
+        run: cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }}
+
+      - name: Build
+        run: cmake --build build --parallel
+
+      - name: Cache speech model for the round-trip test
+        uses: actions/cache@v4
+        with:
+          path: ci-models
+          key: whisper-ggml-tiny.en-v1
+
+      - name: Download speech model
+        run: |
+          mkdir -p ci-models
+          [ -f ci-models/ggml-tiny.en.bin ] || curl -fsSL -o ci-models/ggml-tiny.en.bin \
+            https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-tiny.en.bin
+
+      - name: Test
+        env:
+          VOCALINK_WHISPER_MODEL: ${{ github.workspace }}/ci-models/ggml-tiny.en.bin
+        run: ctest --test-dir build --output-on-failure --timeout 300
+
+      - name: Smoke test (launch and screenshot)
+        run: |
+          mkdir -p screenshots
+          xvfb-run -a -s "-screen 0 1400x900x24" build/src/VocalInk --screenshot screenshots/linux-main.png
+          xvfb-run -a -s "-screen 0 1400x900x24" build/src/VocalInk --show settings:voices --screenshot screenshots/linux-settings.png
+
+      - name: Package AppImage
+        run: |
+          VERSION=$(sed -n 's/^ *VERSION \([0-9.]*\)$/\1/p' CMakeLists.txt | head -n1)
+          packaging/linux/build-appimage.sh build "$VERSION"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: VocalInk-linux
+          path: dist/*.AppImage
+          if-no-files-found: error
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: screenshots-linux
+          path: screenshots/
+          if-no-files-found: ignore
+
+  windows:
+    name: Windows (x64)
+    runs-on: windows-2022
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: x64
+
+      - uses: jurplel/install-qt-action@v4
+        with:
+          version: ${{ env.QT_VERSION }}
+          modules: ${{ env.QT_MODULES }}
+          arch: win64_msvc2022_64
+          cache: true
+
+      - name: Configure
+        run: cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }}
+
+      - name: Build
+        run: cmake --build build --parallel
+
+      - name: Test
+        run: ctest --test-dir build --output-on-failure --timeout 300
+
+      - name: Smoke test (launch and screenshot)
+        shell: pwsh
+        env:
+          QT_QPA_PLATFORM: offscreen
+        run: |
+          New-Item -ItemType Directory -Force screenshots | Out-Null
+          $p = Start-Process -FilePath build\src\VocalInk.exe -ArgumentList "--screenshot","screenshots\windows-main.png" -PassThru -Wait
+          if ($p.ExitCode -ne 0) { throw "VocalInk exited with $($p.ExitCode)" }
+
+      - name: Package (installer + portable zip)
+        shell: pwsh
+        run: |
+          $version = (Select-String -Path CMakeLists.txt -Pattern '^\s*VERSION\s+([0-9.]+)').Matches[0].Groups[1].Value
+          ./packaging/windows/deploy.ps1 -BuildDir build -Version $version
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: VocalInk-windows
+          path: |
+            dist/*.exe
+            dist/*.zip
+          if-no-files-found: error
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: screenshots-windows
+          path: screenshots/
+          if-no-files-found: ignore
+
+  macos:
+    name: macOS (${{ matrix.arch }})
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner: macos-15
+            arch: arm64
+          - runner: macos-15-intel
+            arch: x86_64
+    runs-on: ${{ matrix.runner }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install build tools
+        run: brew install ninja
+
+      - uses: jurplel/install-qt-action@v4
+        with:
+          version: ${{ env.QT_VERSION }}
+          modules: ${{ env.QT_MODULES }}
+          cache: true
+
+      - name: Configure
+        run: >
+          cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }}
+          -DCMAKE_OSX_DEPLOYMENT_TARGET=12.0 -DCMAKE_OSX_ARCHITECTURES=${{ matrix.arch }}
+
+      - name: Build
+        run: cmake --build build --parallel
+
+      - name: Test
+        run: ctest --test-dir build --output-on-failure --timeout 300
+
+      - name: Smoke test (launch and screenshot)
+        env:
+          QT_QPA_PLATFORM: offscreen
+        run: |
+          mkdir -p screenshots
+          build/src/VocalInk.app/Contents/MacOS/VocalInk --screenshot screenshots/macos-${{ matrix.arch }}-main.png
+
+      - name: Package dmg
+        run: |
+          VERSION=$(sed -n 's/^ *VERSION \([0-9.]*\)$/\1/p' CMakeLists.txt | head -n1)
+          packaging/macos/build-dmg.sh build "$VERSION"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: VocalInk-macos-${{ matrix.arch }}
+          path: dist/*.dmg
+          if-no-files-found: error
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: screenshots-macos-${{ matrix.arch }}
+          path: screenshots/
+          if-no-files-found: ignore
+
+  release:
+    name: Publish release
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: [linux, windows, macos]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: VocalInk-*
+          path: artifacts
+          merge-multiple: true
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: artifacts/*
+          generate_release_notes: true
+          draft: true
