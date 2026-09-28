@@ -1,0 +1,8 @@
+<!DOCTYPE RCC>
+<RCC version="1.0">
+    <qresource prefix="/overlay">
+        <file alias="index.html">overlay/index.html</file>
+        <file alias="overlay.css">overlay/overlay.css</file>
+        <file alias="overlay.js">overlay/overlay.js</file>
+    </qresource>
+</RCC>
