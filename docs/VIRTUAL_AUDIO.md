@@ -202,9 +202,10 @@ through Microsoft's Partner Center. What it takes:
       takes minutes to a few hours.
    4. Download the signed package. Put its `VocalInkAudio.inf`,
       `VocalInkAudio.sys` and `VocalInkAudio.cat` in `packaging/windows/driver/`
-      and commit them, or host the zip and set the CI variables
-      `VOCALINK_DRIVER_PACKAGE_URL` and `VOCALINK_DRIVER_PACKAGE_SHA256` for the
-      Windows packaging step.
+      and commit them, or host the zip somewhere stable and set the GitHub
+      repository variables `VOCALINK_DRIVER_PACKAGE_URL` and
+      `VOCALINK_DRIVER_PACKAGE_SHA256`, which `build.yml` passes to the Windows
+      packaging step.
 5. **Never modify the signed files** (not even the INF's text): the catalog
    covers them and any change breaks the signature. For a change, rebuild,
    bump the driver version and sign again.
