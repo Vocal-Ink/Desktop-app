@@ -79,10 +79,13 @@ QString areaOf(const QString &key)
     return {};
 }
 
+// Lists typed by the user: commas (also the full-width ，、 used in Chinese and
+// Japanese), semicolons or new lines.
 QStringList splitList(const QString &text)
 {
     QStringList out;
-    const QStringList parts = text.split(QRegularExpression(QStringLiteral("[,\\n]")), Qt::SkipEmptyParts);
+    static const QRegularExpression separators(QStringLiteral("[,;\\n\\x{FF0C}\\x{3001}\\x{FF1B}]"));
+    const QStringList parts = text.split(separators, Qt::SkipEmptyParts);
     for (const QString &p : parts) {
         const QString t = p.trimmed();
         if (!t.isEmpty())
