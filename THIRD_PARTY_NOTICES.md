@@ -7,11 +7,17 @@ with, or downloads at the user's request, the following third-party software.
 
 | Component | License | Notes |
 |---|---|---|
-| [Qt 6](https://www.qt.io/) (Core, Gui, Widgets, Network, Multimedia, TextToSpeech, WebSockets, Concurrent) | LGPL-3.0 | Dynamically linked. You may replace the Qt libraries shipped with Vocal Ink with your own build. Source: https://download.qt.io/official_releases/qt/ |
+| [Qt 6](https://www.qt.io/) (Core, Gui, Widgets, Qml, Quick, Quick Controls, Quick Shapes, Network, Multimedia, TextToSpeech, WebSockets, Concurrent) | LGPL-3.0 | Dynamically linked. You may replace the Qt libraries shipped with Vocal Ink with your own build. Source: https://download.qt.io/official_releases/qt/ |
 | [FFmpeg](https://ffmpeg.org/) (shipped by Qt Multimedia) | LGPL-2.1+ | Dynamically linked, as distributed by the Qt project. |
 | [whisper.cpp / ggml](https://github.com/ggml-org/whisper.cpp) v1.9.4 | MIT | Statically linked on-device speech recognition. Copyright (c) 2023-2026 The ggml authors. |
 | [QHotkey](https://github.com/Skycoder42/QHotkey) 1.5.0 | BSD-3-Clause | System-wide shortcuts. Copyright (c) 2016 Felix Barz. |
 | [QtKeychain](https://github.com/frankosterfeld/qtkeychain) 0.17.0 | BSD-3-Clause | Secure storage of API keys. Copyright (c) 2011-2026 Frank Osterfeld and contributors. |
+| [Bricolage Grotesque](https://github.com/ateliertriay/bricolage) | OFL-1.1 | Display and stage type. Static instances in `resources/fonts` (see `LICENSES.md` there). |
+| [Atkinson Hyperlegible Next & Mono](https://github.com/googlefonts/atkinson-hyperlegible-next) | OFL-1.1 | Interface text and keycaps. © Braille Institute of America. |
+| [Lexend](https://github.com/googlefonts/lexend) | OFL-1.1 | Optional reading font. |
+| [OpenDyslexic](https://github.com/antijingoist/opendyslexic) | OFL-1.1 | Optional reading font, unmodified. |
+| [Lucide icons](https://lucide.dev) | ISC | Interface icons, converted to path data in `src/qml/Icons.js`. |
+| [wordfreq](https://github.com/rspeer/wordfreq) word list | CC BY-SA 4.0 | Base vocabulary for word prediction in `resources/predict/`. By Robyn Speer; filtered and reformatted. |
 
 ## Downloaded on request (not bundled)
 
