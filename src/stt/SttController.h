@@ -4,6 +4,7 @@
 
 #include <QObject>
 #include <QPointer>
+#include <QSet>
 
 class MicCapture;
 class Vad;
@@ -38,10 +39,20 @@ public:
     void cancel();           // stop without transcribing
 
     bool isListening() const { return m_listening; }
-    bool isBusy() const { return m_pendingRequests > 0; }
+    bool isBusy() const { return !m_pending.isEmpty(); }
 
     static Mode modeFromString(const QString &s);
     static QString modeToString(Mode m);
+
+    // Recordings shorter than this are ignored (accidental taps); longer ones are
+    // sent in pieces of at most MaxRecordingSeconds.
+    static constexpr int SampleRate = 16000;
+    static constexpr int MinRecordingMs = 300;
+    static constexpr int MaxRecordingSeconds = 60;
+
+    // Test hooks: run without a real microphone and feed 16 kHz mono audio directly.
+    void setSimulatedInputForTesting(bool simulated) { m_simulatedInput = simulated; }
+    void feedForTesting(const QVector<float> &mono16k) { onSamples(mono16k); }
 
 signals:
     void listeningChanged(bool listening);
@@ -55,13 +66,18 @@ private:
     void onSamples(const QVector<float> &mono16k);
     void submit(const QVector<float> &audio);
     void setListening(bool listening);
+    void stop(bool transcribe);
+    void finishRequest(quint64 requestId);
+    void clearPending();
+    QString unavailableReason() const; // empty when the engine can take requests
 
     QPointer<SttEngine> m_engine;
     MicCapture *m_mic = nullptr;
     Vad *m_vad = nullptr;
     Mode m_mode = Mode::PushToTalk;
     bool m_listening = false;
+    bool m_simulatedInput = false;
     QVector<float> m_recording;
     quint64 m_nextRequest = 1;
-    int m_pendingRequests = 0;
+    QSet<quint64> m_pending;
 };
