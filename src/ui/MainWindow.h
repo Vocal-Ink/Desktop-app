@@ -50,6 +50,7 @@ private:
     void historyMenu(const QPoint &pos);
     void showAndRaise();
     void fitPhrases();
+    void refreshIcons();
 
     AppContext *m_ctx;
     bool m_firstRunWizard = true;
@@ -70,6 +71,7 @@ private:
     QLabel *m_micStatus = nullptr;
     QPushButton *m_speakButton = nullptr;
     QPushButton *m_stopButton = nullptr;
+    QToolButton *m_settingsButton = nullptr;
     QLabel *m_queueLabel = nullptr;
     QListView *m_history = nullptr;
     QLabel *m_banner = nullptr;

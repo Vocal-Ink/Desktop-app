@@ -41,7 +41,8 @@ private:
     };
 
     void rebuild();
-    void addRow(const QString &taskId, const QString &title, const QString &details, bool recommended);
+    void addRow(const QString &taskId, const QString &title, const QString &size, const QString &details,
+                bool recommended);
     void refreshRow(const QString &taskId);
     void refreshRuntime();
     void onAction(const QString &taskId);

@@ -107,6 +107,8 @@ QListView, QTreeView, QTableView, QTreeWidget {
     background: %BASE%; alternate-background-color: %ALT%; border: 1px solid %BORDER%; border-radius: 8px;
     selection-background-color: %ACCENT%; selection-color: %ACCENTTEXT%;
 }
+QListView::item { padding: 7px 8px; border-bottom: 1px solid %BORDER%; }
+QListView::item:selected { background: %ACCENT%; color: %ACCENTTEXT%; }
 QHeaderView::section { background: %ALT%; color: %MUTED%; border: none; padding: 6px; }
 QTabWidget::pane { border: 1px solid %BORDER%; border-radius: 8px; top: -1px; }
 QTabBar::tab { background: transparent; padding: 8px 14px; color: %MUTED%; border-bottom: 2px solid transparent; }

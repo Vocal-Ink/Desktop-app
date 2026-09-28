@@ -1,6 +1,7 @@
 #include "platform/VirtualAudio.h"
 
 #include <QAudioDevice>
+#include <algorithm>
 #include <QCoreApplication>
 #include <QMediaDevices>
 #include <QProcess>
@@ -93,15 +94,17 @@ bool createVirtualMic(QString *error)
     if (virtualMicExists())
         return true;
     const QString sink = QString::fromLatin1(LinuxSinkName);
+    // Module arguments only honour quotes around a whole value, so the property
+    // list is quoted as a unit: sink_properties="device.description='A B'".
     if (!runPactl({QStringLiteral("load-module"), QStringLiteral("module-null-sink"),
                    QStringLiteral("sink_name=") + sink,
-                   QStringLiteral("sink_properties=device.description=\"Vocal Ink Voice\"")},
+                   QStringLiteral("sink_properties=\"device.description='Vocal Ink Voice'\"")},
                   nullptr, error))
         return false;
     if (!runPactl({QStringLiteral("load-module"), QStringLiteral("module-remap-source"),
                    QStringLiteral("master=") + sink + QStringLiteral(".monitor"),
                    QStringLiteral("source_name=") + QString::fromLatin1(LinuxSourceName),
-                   QStringLiteral("source_properties=device.description=\"Vocal Ink Microphone\"")},
+                   QStringLiteral("source_properties=\"device.description='Vocal Ink Microphone'\"")},
                   nullptr, error))
         return false;
     return true;
@@ -112,16 +115,25 @@ bool removeVirtualMic(QString *error)
     QString out;
     if (!runPactl({QStringLiteral("list"), QStringLiteral("short"), QStringLiteral("modules")}, &out, error))
         return false;
-    bool ok = true;
+    QStringList ids;
     const QStringList lines = out.split(QLatin1Char('\n'), Qt::SkipEmptyParts);
     for (const QString &line : lines) {
-        if (!line.contains(QLatin1String(LinuxSinkName)))
-            continue;
-        const QString moduleId = line.section(QLatin1Char('\t'), 0, 0).trimmed();
-        if (!moduleId.isEmpty())
-            ok = runPactl({QStringLiteral("unload-module"), moduleId}, nullptr, error) && ok;
+        if (line.contains(QLatin1String(LinuxSinkName)))
+            ids << line.section(QLatin1Char('\t'), 0, 0).trimmed();
     }
-    return ok;
+    // Unload the microphone (loaded last) before the sink it listens to; PulseAudio
+    // may also drop it by itself when the sink goes, which is fine.
+    std::reverse(ids.begin(), ids.end());
+    for (const QString &id : std::as_const(ids)) {
+        if (!id.isEmpty())
+            runPactl({QStringLiteral("unload-module"), id}, nullptr, nullptr);
+    }
+    if (virtualMicExists()) {
+        if (error)
+            *error = tr("Could not remove the virtual microphone.");
+        return false;
+    }
+    return true;
 }
 
 bool looksLikeVirtualCable(const QString &description)

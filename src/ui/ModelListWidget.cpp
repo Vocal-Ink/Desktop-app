@@ -31,14 +31,15 @@ ModelListWidget::ModelListWidget(Kind kind, AppContext *context, QWidget *parent
     , m_tree(new QTreeWidget(this))
     , m_status(new QLabel(this))
 {
-    m_tree->setColumnCount(3);
-    m_tree->setHeaderLabels({tr("Name"), tr("Details"), QString()});
+    m_tree->setColumnCount(4);
+    m_tree->setHeaderLabels({tr("Name"), tr("Size"), tr("Details"), QString()});
     m_tree->setRootIsDecorated(false);
     m_tree->setAlternatingRowColors(true);
     m_tree->setSelectionMode(QAbstractItemView::NoSelection);
     m_tree->header()->setSectionResizeMode(0, QHeaderView::ResizeToContents);
-    m_tree->header()->setSectionResizeMode(1, QHeaderView::Stretch);
-    m_tree->header()->setSectionResizeMode(2, QHeaderView::ResizeToContents);
+    m_tree->header()->setSectionResizeMode(1, QHeaderView::ResizeToContents);
+    m_tree->header()->setSectionResizeMode(2, QHeaderView::Stretch);
+    m_tree->header()->setSectionResizeMode(3, QHeaderView::ResizeToContents);
     m_tree->setAccessibleName(kind == Kind::Whisper ? tr("Speech recognition models") : tr("Piper voices"));
     m_status->setProperty("hint", true);
     m_status->setWordWrap(true);
@@ -75,7 +76,10 @@ ModelListWidget::ModelListWidget(Kind kind, AppContext *context, QWidget *parent
 
         connect(m_ctx->models(), &ModelManager::piperCatalogChanged, this, &ModelListWidget::rebuild);
         connect(m_ctx->models(), &ModelManager::piperCatalogError, this, [this](const QString &msg) {
-            m_status->setText(tr("Could not load the voice list: %1").arg(msg));
+            // With a saved catalogue the message already says so; otherwise explain.
+            m_status->setText(m_ctx->models()->piperCatalog().isEmpty()
+                                  ? tr("Could not load the voice list: %1").arg(msg)
+                                  : msg);
         });
         m_ctx->models()->refreshPiperCatalog();
     }
@@ -146,15 +150,14 @@ void ModelListWidget::rebuild()
         for (const WhisperModelInfo &m : catalog) {
             if (m_recommendedOnly && !m.recommended)
                 continue;
-            const QString details = QStringLiteral("%1 • %2%3")
-                                        .arg(m.description, sizeText(m.approxBytes),
-                                             m.multilingual ? tr(" • many languages") : tr(" • English"));
-            addRow(QStringLiteral("whisper:") + m.file, m.title, details, m.recommended);
+            addRow(QStringLiteral("whisper:") + m.file, m.title, sizeText(m.approxBytes), m.description, m.recommended);
         }
     } else {
         refreshRuntime();
         QList<PiperVoiceInfo> voices = m_ctx->models()->piperCatalog();
-        const QString myLang = QLocale().name();         // e.g. en_US
+        QString myLang = QLocale().name();               // e.g. en_US
+        if (myLang == QLatin1String("C"))
+            myLang = QStringLiteral("en_US");
         const QString myLangShort = myLang.section(QLatin1Char('_'), 0, 0);
         std::stable_sort(voices.begin(), voices.end(), [&](const PiperVoiceInfo &a, const PiperVoiceInfo &b) {
             auto rank = [&](const PiperVoiceInfo &v) {
@@ -172,10 +175,10 @@ void ModelListWidget::rebuild()
             const bool rec = v.key == recommended;
             if (m_recommendedOnly && !rec)
                 continue;
-            QString details = QStringLiteral("%1 • %2 • %3").arg(v.languageName, v.quality, sizeText(v.totalBytes()));
+            QString details = QStringLiteral("%1 • %2").arg(v.languageName, v.quality);
             if (v.numSpeakers > 1)
                 details += tr(" • %n speakers", nullptr, v.numSpeakers);
-            addRow(QStringLiteral("piper-voice:") + v.key, v.key, details, rec);
+            addRow(QStringLiteral("piper-voice:") + v.key, v.key, sizeText(v.totalBytes()), details, rec);
         }
         if (voices.isEmpty())
             m_status->setText(tr("Loading the Piper voice list…"));
@@ -183,13 +186,16 @@ void ModelListWidget::rebuild()
     applyFilter();
 }
 
-void ModelListWidget::addRow(const QString &taskId, const QString &title, const QString &details, bool recommended)
+void ModelListWidget::addRow(const QString &taskId, const QString &title, const QString &size, const QString &details,
+                             bool recommended)
 {
     Row row;
     row.item = new QTreeWidgetItem(m_tree);
     row.item->setText(0, recommended ? title + tr("  ★ recommended") : title);
-    row.item->setText(1, details);
-    row.item->setToolTip(1, details);
+    row.item->setText(1, size);
+    row.item->setTextAlignment(1, Qt::AlignRight | Qt::AlignVCenter);
+    row.item->setText(2, details);
+    row.item->setToolTip(2, details);
 
     auto *cell = new QWidget(m_tree);
     auto *h = new QHBoxLayout(cell);
@@ -210,7 +216,7 @@ void ModelListWidget::addRow(const QString &taskId, const QString &title, const 
         });
     }
     h->addWidget(row.action);
-    m_tree->setItemWidget(row.item, 2, cell);
+    m_tree->setItemWidget(row.item, 3, cell);
     connect(row.action, &QPushButton::clicked, this, [this, taskId] { onAction(taskId); });
     m_rows.insert(taskId, row);
     refreshRow(taskId);
@@ -333,7 +339,7 @@ void ModelListWidget::applyFilter()
     const QString f = m_filter ? m_filter->text().trimmed() : QString();
     for (auto it = m_rows.cbegin(); it != m_rows.cend(); ++it) {
         const bool match = f.isEmpty() || it->item->text(0).contains(f, Qt::CaseInsensitive)
-            || it->item->text(1).contains(f, Qt::CaseInsensitive);
+            || it->item->text(2).contains(f, Qt::CaseInsensitive);
         it->item->setHidden(!match);
     }
 }

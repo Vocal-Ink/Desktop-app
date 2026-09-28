@@ -84,7 +84,7 @@ MainWindow::MainWindow(AppContext *context, QWidget *parent)
         restoreGeometry(geometry);
 
     refreshVoiceCombo();
-    updateMicButton();
+    refreshIcons();
     updateStatus();
     m_edit->setFocus();
 }
@@ -99,6 +99,19 @@ void MainWindow::applyTheme()
         if (visible)
             show();
     }
+    refreshIcons();
+}
+
+void MainWindow::refreshIcons()
+{
+    // Colours come from the application palette, which the theme sets immediately.
+    if (!m_speakButton)
+        return;
+    const QPalette pal = QApplication::palette();
+    m_settingsButton->setIcon(Icons::gear(pal.color(QPalette::ButtonText)));
+    m_stopButton->setIcon(Icons::stop(pal.color(QPalette::ButtonText)));
+    m_speakButton->setIcon(Icons::speak(pal.color(QPalette::HighlightedText)));
+    updateMicButton();
 }
 
 void MainWindow::buildUi()
@@ -108,6 +121,7 @@ void MainWindow::buildUi()
     bar->setObjectName(QStringLiteral("voiceToolbar"));
     bar->setMovable(false);
     bar->setFloatable(false);
+    bar->setIconSize(QSize(16, 16));
 
     bar->addWidget(new QLabel(tr("Voice:"), bar));
     m_voiceCombo = new QComboBox(bar);
@@ -147,7 +161,9 @@ void MainWindow::buildUi()
     m_overlayChip = chip(tr("Stream caption overlay — click to configure"));
     m_obsChip = chip(tr("OBS connection — click to configure"));
     auto *settings = new QToolButton(bar);
-    settings->setText(tr("⚙ Settings"));
+    settings->setText(tr("Settings"));
+    settings->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+    m_settingsButton = settings;
     settings->setAccessibleName(tr("Settings"));
     connect(settings, &QToolButton::clicked, this, [this] { showSettings(); });
     bar->addWidget(settings);
@@ -209,10 +225,10 @@ void MainWindow::buildUi()
     micColumn->addWidget(m_micStatus);
     m_queueLabel = new QLabel(left);
     m_queueLabel->setProperty("hint", true);
-    m_stopButton = new QPushButton(tr("■ Stop"), left);
+    m_stopButton = new QPushButton(tr("Stop"), left);
     m_stopButton->setToolTip(tr("Stop speaking and clear the queue (Esc)"));
     m_stopButton->setEnabled(false);
-    m_speakButton = new QPushButton(tr("Speak  ⏎"), left);
+    m_speakButton = new QPushButton(tr("Speak"), left);
     m_speakButton->setProperty("primary", true);
     m_speakButton->setToolTip(tr("Say the message (Enter)"));
     controls->addWidget(m_micButton);
@@ -258,7 +274,11 @@ void MainWindow::buildMenus()
     QMenu *file = menuBar()->addMenu(tr("&File"));
     file->addAction(tr("Setup &assistant…"), this, &MainWindow::runSetupWizard);
     QAction *prefs = file->addAction(tr("&Settings…"), this, [this] { showSettings(); });
-    prefs->setShortcut(QKeySequence::Preferences);
+    // The platform "Preferences" key is empty on Windows and most Linux desktops.
+    QList<QKeySequence> prefKeys = QKeySequence::keyBindings(QKeySequence::Preferences);
+    if (prefKeys.isEmpty())
+        prefKeys << QKeySequence(Qt::CTRL | Qt::Key_Comma);
+    prefs->setShortcuts(prefKeys);
     prefs->setMenuRole(QAction::PreferencesRole);
     file->addSeparator();
     QAction *quit = file->addAction(tr("&Quit"), this, [this] {
@@ -579,7 +599,7 @@ void MainWindow::updateMicButton()
         break;
     }
     m_micButton->setText(text);
-    m_micButton->setIcon(Icons::mic(listening ? QColor(Qt::white) : palette().color(QPalette::ButtonText)));
+    m_micButton->setIcon(Icons::mic(listening ? QColor(Qt::white) : QApplication::palette().color(QPalette::ButtonText)));
     m_micButton->setToolTip(hotkey.isEmpty() ? QString() : tr("Shortcut: %1 (works in any app)").arg(hotkey));
     m_micButton->setProperty("listening", listening);
     m_micButton->style()->unpolish(m_micButton);
