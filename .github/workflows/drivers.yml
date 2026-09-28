@@ -30,7 +30,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # 64-bit MSBuild: the WDK's post-build checks (ApiValidator, InfVerif) pick
+      # tools matching MSBuild's own architecture, and the NuGet WDK has no x86 ones.
       - uses: microsoft/setup-msbuild@v2
+        with:
+          msbuild-architecture: x64
 
       # The supported way to get the WDK without its installer. Versions are pinned in
       # driver/windows/packages.config; Directory.Build.props imports them. Without the

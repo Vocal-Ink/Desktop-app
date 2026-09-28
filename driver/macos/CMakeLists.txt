@@ -37,6 +37,9 @@ ExternalProject_Add(libaspl_project
     UPDATE_COMMAND ""
     PREFIX         ${CMAKE_CURRENT_BINARY_DIR}/libaspl-work
     INSTALL_DIR    ${_vi_aspl_prefix}
+    # libASPL's build declares a custom command whose output ninja rejects
+    # (". is defined as an output multiple times"); Makefiles accept it.
+    CMAKE_GENERATOR "Unix Makefiles"
     CMAKE_ARGS
         -DCMAKE_INSTALL_PREFIX=<INSTALL_DIR>
         -DCMAKE_INSTALL_LIBDIR=lib
