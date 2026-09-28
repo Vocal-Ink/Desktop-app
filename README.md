@@ -19,9 +19,14 @@ local voices and on-device speech recognition; cloud voices are optional and use
 ## Features
 
 <p align="center">
-  <img src="docs/screenshots/onboarding.png" width="270" alt="Setup: the welcome screen writes its greeting in ink.">
+  <img src="docs/screenshots/onboarding.png" width="270" alt="Setup, first stop: the greeting written in ink, the language picker and comfort settings (text size, reading font, high contrast, less motion, bigger buttons).">
+  <img src="docs/screenshots/onboarding-journey.png" width="270" alt="Setup travels node by node along an ink stroke across the top of the window.">
   <img src="docs/screenshots/board.png" width="270" alt="Board: phrase tiles in categories.">
-  <img src="docs/screenshots/realmic.png" width="270" alt="Real microphone settings with the live warning.">
+</p>
+<p align="center">
+  <img src="docs/screenshots/stream.png" width="270" alt="Stream page: overlays with a live preview, looks and every style detail.">
+  <img src="docs/screenshots/avatar.png" width="270" alt="Avatar page: an ink-drop mouth preview and connections to VTube Studio, VMC apps and veadotube.">
+  <img src="docs/screenshots/talk-custom.jpg" width="270" alt="A customised look: pink ink, tinted paper background, serif centred lines, sidebar on the right, message box on top.">
 </p>
 
 **Talking**
