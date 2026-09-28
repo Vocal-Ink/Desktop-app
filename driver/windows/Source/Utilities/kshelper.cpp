@@ -8,7 +8,7 @@ Module Name:
 
 Abstract:
 
-    Helper functions for simple audio sample
+    Helper functions for Vocal Ink audio
 --*/
 
 #include "definitions.h"
@@ -156,20 +156,20 @@ Return Value:
 //-----------------------------------------------------------------------------
 #pragma code_seg("PAGE")
 NTSTATUS
-SimpleAudioSamplePropertyDispatch
+VocalInkAudioPropertyDispatch
 (
     _In_ PPCPROPERTY_REQUEST PropertyRequest
 )
 /*++
-    Handles and dispatches a SIMPLEAUDIOSAMPLE_PROPERTY_ITEM.
+    Handles and dispatches a VOCALINKAUDIO_PROPERTY_ITEM.
 
     Use this as the property handler only if the property item is a
-    SIMPLEAUDIOSAMPLE_PROPERTY_ITEM.
+    VOCALINKAUDIO_PROPERTY_ITEM.
 --*/
 {
     PAGED_CODE();
 
-    SIMPLEAUDIOSAMPLE_PROPERTY_ITEM* item = (SIMPLEAUDIOSAMPLE_PROPERTY_ITEM*)PropertyRequest->PropertyItem;
+    VOCALINKAUDIO_PROPERTY_ITEM* item = (VOCALINKAUDIO_PROPERTY_ITEM*)PropertyRequest->PropertyItem;
 
     if (PropertyRequest->Verb & KSPROPERTY_TYPE_BASICSUPPORT)
     {

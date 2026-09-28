@@ -44,7 +44,7 @@ class CAdapterCommon :
         WDFDEVICE               m_WdfDevice;            // Wdf device. 
         DEVICE_POWER_STATE      m_PowerState;  
 
-        PCSimpleAudioSampleHW   m_pHW;                  // Virtual Simple Audio Sample HW object
+        PCVocalInkAudioHW   m_pHW;                  // Virtual Vocal Ink Audio HW object
         PPORTCLSETWHELPER       m_pPortClsEtwHelper;
 
         static LONG             m_AdapterInstances;     // # of adapter objects.
@@ -164,7 +164,7 @@ class CAdapterCommon :
             _In_            REFGUID                                     MiniportClassId,
             _In_opt_        PFNCREATEMINIPORT                           MiniportCreate,
             _In_            ULONG                                       cPropertyCount,
-            _In_reads_opt_(cPropertyCount) const SIMPLEAUDIOSAMPLE_DEVPROPERTY   * pProperties,
+            _In_reads_opt_(cPropertyCount) const VOCALINKAUDIO_DEVPROPERTY   * pProperties,
             _In_opt_        PVOID                                       DeviceContext,
             _In_            PENDPOINT_MINIPAIR                          MiniportPair,
             _In_opt_        PRESOURCELIST                               ResourceList,
@@ -270,7 +270,7 @@ class CAdapterCommon :
         _In_ PCWSTR                                                 ReferenceString,
         _In_opt_ PCWSTR                                             TemplateReferenceString,
         _In_ ULONG                                                  cPropertyCount,
-        _In_reads_opt_(cPropertyCount) const SIMPLEAUDIOSAMPLE_DEVPROPERTY        *pProperties,
+        _In_reads_opt_(cPropertyCount) const VOCALINKAUDIO_DEVPROPERTY        *pProperties,
         _Out_ _At_(AudioSymbolicLinkName->Buffer, __drv_allocatesMem(Mem)) PUNICODE_STRING AudioSymbolicLinkName
     );
 
@@ -305,11 +305,11 @@ LONG  CAdapterCommon::m_AdapterInstances = 0;
 
 //=============================================================================
 #pragma code_seg("PAGE")
-NTSTATUS SimpleAudioSampleIoSetDeviceInterfacePropertyDataMultiple
+NTSTATUS VocalInkAudioIoSetDeviceInterfacePropertyDataMultiple
 (
     _In_ PUNICODE_STRING                                        SymbolicLinkName,
     _In_ ULONG                                                  cPropertyCount,
-    _In_reads_opt_(cPropertyCount) const SIMPLEAUDIOSAMPLE_DEVPROPERTY        *pProperties
+    _In_reads_opt_(cPropertyCount) const VOCALINKAUDIO_DEVPROPERTY        *pProperties
 )
 {
     NTSTATUS ntStatus;
@@ -599,10 +599,10 @@ Return Value:
 
     // Initialize HW.
     // 
-    m_pHW = new (POOL_FLAG_NON_PAGED, SIMPLEAUDIOSAMPLE_POOLTAG)  CSimpleAudioSampleHW;
+    m_pHW = new (POOL_FLAG_NON_PAGED, VOCALINKAUDIO_POOLTAG)  CVocalInkAudioHW;
     if (!m_pHW)
     {
-        DPF(D_TERSE, ("Insufficient memory for Simple Audio Sample HW"));
+        DPF(D_TERSE, ("Insufficient memory for Vocal Ink Audio HW"));
         ntStatus = STATUS_INSUFFICIENT_RESOURCES;
     }
     IF_FAILED_JUMP(ntStatus, Done);
@@ -1416,7 +1416,7 @@ CAdapterCommon::CreateAudioInterfaceWithProperties
     _In_ PCWSTR ReferenceString,
     _In_opt_ PCWSTR TemplateReferenceString,
     _In_ ULONG cPropertyCount,
-    _In_reads_opt_(cPropertyCount) const SIMPLEAUDIOSAMPLE_DEVPROPERTY *pProperties,
+    _In_reads_opt_(cPropertyCount) const VOCALINKAUDIO_DEVPROPERTY *pProperties,
     _Out_ _At_(AudioSymbolicLinkName->Buffer, __drv_allocatesMem(Mem)) PUNICODE_STRING AudioSymbolicLinkName
 )
 /*++
@@ -1471,11 +1471,11 @@ Create the audio interface (in disabled mode).
     //
     // Set properties on the interface
     //
-    ntStatus = SimpleAudioSampleIoSetDeviceInterfacePropertyDataMultiple(AudioSymbolicLinkName, cPropertyCount, pProperties);
+    ntStatus = VocalInkAudioIoSetDeviceInterfacePropertyDataMultiple(AudioSymbolicLinkName, cPropertyCount, pProperties);
 
     IF_FAILED_ACTION_JUMP(
         ntStatus,
-        DPF(D_ERROR, ("CreateAudioInterfaceWithProperties: SimpleAudioSampleIoSetDeviceInterfacePropertyDataMultiple(...): failed, 0x%x", ntStatus)),
+        DPF(D_ERROR, ("CreateAudioInterfaceWithProperties: VocalInkAudioIoSetDeviceInterfacePropertyDataMultiple(...): failed, 0x%x", ntStatus)),
         Done);
 
     //
@@ -1504,7 +1504,7 @@ CAdapterCommon::InstallSubdevice
     _In_            REFGUID                                 MiniportClassId,
     _In_opt_        PFNCREATEMINIPORT                       MiniportCreate,
     _In_            ULONG                                   cPropertyCount,
-    _In_reads_opt_(cPropertyCount) const SIMPLEAUDIOSAMPLE_DEVPROPERTY * pProperties,
+    _In_reads_opt_(cPropertyCount) const VOCALINKAUDIO_DEVPROPERTY * pProperties,
     _In_opt_        PVOID                                   DeviceContext,
     _In_            PENDPOINT_MINIPAIR                      MiniportPair,
     _In_opt_        PRESOURCELIST                           ResourceList,
@@ -2156,10 +2156,10 @@ CAdapterCommon::InstallEndpointFilters
     {
         bTopologyCreated = TRUE;
 
-        // Install Simple Audio Sample topology miniport for the render endpoint.
+        // Install Vocal Ink Audio topology miniport for the render endpoint.
         //
         ntStatus = InstallSubdevice(Irp,
-                                    MiniportPair->TopoName, // make sure this name matches with SIMPLEAUDIOSAMPLE.<TopoName>.szPname in the inf's [Strings] section
+                                    MiniportPair->TopoName, // make sure this name matches with VOCALINKAUDIO.<TopoName>.szPname in the inf's [Strings] section
                                     MiniportPair->TemplateTopoName,
                                     CLSID_PortTopology,
                                     CLSID_PortTopology, 
@@ -2185,10 +2185,10 @@ CAdapterCommon::InstallEndpointFilters
     {
         bWaveCreated = TRUE;
 
-        // Install Simple Audio Sample wave miniport for the render endpoint.
+        // Install Vocal Ink Audio wave miniport for the render endpoint.
         //
         ntStatus = InstallSubdevice(Irp,
-                                    MiniportPair->WaveName, // make sure this name matches with SIMPLEAUDIOSAMPLE.<WaveName>.szPname in the inf's [Strings] section
+                                    MiniportPair->WaveName, // make sure this name matches with VOCALINKAUDIO.<WaveName>.szPname in the inf's [Strings] section
                                     MiniportPair->TemplateWaveName,
                                     CLSID_PortWaveRT,
                                     CLSID_PortWaveRT,   

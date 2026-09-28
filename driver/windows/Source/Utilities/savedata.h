@@ -8,13 +8,13 @@ Module Name:
 
 Abstract:
 
-    Declaration of Simple Audio Sample data saving class. This class supplies services
+    Declaration of Vocal Ink Audio data saving class. This class supplies services
 to save data to disk.
 
 --*/
 
-#ifndef _SIMPLEAUDIOSAMPLE_SAVEDATA_H
-#define _SIMPLEAUDIOSAMPLE_SAVEDATA_H
+#ifndef _VOCALINKAUDIO_SAVEDATA_H
+#define _VOCALINKAUDIO_SAVEDATA_H
 
 //-----------------------------------------------------------------------------
 //  Forward declaration

@@ -13,8 +13,8 @@ Abstract:
 
 --*/
 
-#ifndef _SIMPLEAUDIOSAMPLE_MICARRAYTOPO_H_
-#define _SIMPLEAUDIOSAMPLE_MICARRAYTOPO_H_
+#ifndef _VOCALINKAUDIO_MICARRAYTOPO_H_
+#define _VOCALINKAUDIO_MICARRAYTOPO_H_
 
 #include "basetopo.h"
 
@@ -28,7 +28,7 @@ Abstract:
 
 #pragma code_seg()
 class CMicArrayMiniportTopology :
-    public CMiniportTopologySimpleAudioSample,
+    public CMiniportTopologyVocalInkAudio,
     public IMiniportTopology,
     public CUnknown
 {
@@ -42,7 +42,7 @@ public:
         _In_        eDeviceType             DeviceType
     )
         : CUnknown(UnknownOuter),
-        CMiniportTopologySimpleAudioSample(FilterDesc, DeviceMaxChannels),
+        CMiniportTopologyVocalInkAudio(FilterDesc, DeviceMaxChannels),
         m_DeviceType(DeviceType)
     {
         ASSERT(m_DeviceType == eMicArrayDevice1);
@@ -94,4 +94,4 @@ CreateMicArrayMiniportTopology(
 NTSTATUS PropertyHandler_MicArrayTopoFilter(_In_ PPCPROPERTY_REQUEST PropertyRequest);
 NTSTATUS PropertyHandler_MicArrayTopology(_In_ PPCPROPERTY_REQUEST PropertyRequest);
 
-#endif // _SIMPLEAUDIOSAMPLE_MICARRAYTOPO_H_
+#endif // _VOCALINKAUDIO_MICARRAYTOPO_H_

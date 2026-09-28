@@ -11,8 +11,8 @@ Abstract:
     Definition of wavert miniport class.
 --*/
 
-#ifndef _SIMPLEAUDIOSAMPLE_MINWAVERT_H_
-#define _SIMPLEAUDIOSAMPLE_MINWAVERT_H_
+#ifndef _VOCALINKAUDIO_MINWAVERT_H_
+#define _VOCALINKAUDIO_MINWAVERT_H_
 
 //=============================================================================
 // Referenced Forward
@@ -178,7 +178,7 @@ public:
     
     // Friends
     friend class        CMiniportWaveRTStream;
-    friend class        CMiniportTopologySimpleAudioSample;
+    friend class        CMiniportTopologyVocalInkAudio;
     
     friend NTSTATUS PropertyHandler_WaveFilter
     (   
@@ -247,4 +247,4 @@ protected:
 
 typedef CMiniportWaveRT *PCMiniportWaveRT;
 
-#endif // _SIMPLEAUDIOSAMPLE_MINWAVERT_H_
+#endif // _VOCALINKAUDIO_MINWAVERT_H_

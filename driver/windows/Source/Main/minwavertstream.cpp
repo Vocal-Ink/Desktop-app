@@ -487,7 +487,7 @@ NTSTATUS CMiniportWaveRTStream::AllocateBufferWithNotification
     {
         NTSTATUS ntStatus;
         
-        // Simple Audio Sample uses following buffer to hold data before writing to a file.
+        // Vocal Ink Audio uses following buffer to hold data before writing to a file.
         // Allocating larger buffer will reduce File I/O operations.
         ntStatus = m_SaveData.SetMaxWriteSize(RequestedSize_ * 4);
         if (!NT_SUCCESS(ntStatus))
@@ -1255,7 +1255,7 @@ NTSTATUS CMiniportWaveRTStream::SetState
             if (m_ulNotificationIntervalMs > 0)
             {
                 // Set timer for 1 ms. This will cause DPC to run every 1 ms but driver will send out 
-                // notification events only after notification interval. This timer is used by Simple Audio Sample to 
+                // notification events only after notification interval. This timer is used by Vocal Ink Audio to 
                 // emulate hardware and send out notification event. Real hardware should not use this
                 // timer to fire notification event as it will drain power if the timer is running at 1 msec.
                 ExSetTimer
@@ -1500,7 +1500,7 @@ Return Value:
     }
 
     //
-    // Simple Audio Sample writes each stream seperately to disk. If the rights for this
+    // Vocal Ink Audio writes each stream seperately to disk. If the rights for this
     // stream indicates that the stream is CopyProtected, stop writing to disk.
     //
     m_SaveData.Disable(drmRights->CopyProtect);

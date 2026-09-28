@@ -8,20 +8,20 @@ Module Name:
 
 Abstract:
 
-    Implementation of Simple Audio Sample HW class. 
-    Simple Audio Sample HW has an array for storing mixer and volume settings
+    Implementation of Vocal Ink Audio HW class. 
+    Vocal Ink Audio HW has an array for storing mixer and volume settings
     for the topology.
 --*/
 #include "definitions.h"
 #include "hw.h"
 
 //=============================================================================
-// CSimpleAudioSampleHW
+// CVocalInkAudioHW
 //=============================================================================
 
 //=============================================================================
 #pragma code_seg("PAGE")
-CSimpleAudioSampleHW::CSimpleAudioSampleHW()
+CVocalInkAudioHW::CVocalInkAudioHW()
 : m_ulMux(0),
     m_bDevSpecific(FALSE),
     m_iDevSpecific(0),
@@ -30,7 +30,7 @@ CSimpleAudioSampleHW::CSimpleAudioSampleHW()
 
 Routine Description:
 
-    Constructor for SimpleAudioSampleHW. 
+    Constructor for VocalInkAudioHW. 
 
 Arguments:
 
@@ -43,13 +43,13 @@ Return Value:
     PAGED_CODE();
     
     MixerReset();
-} // SimpleAudioSampleHW
+} // VocalInkAudioHW
 #pragma code_seg()
 
 
 //=============================================================================
 BOOL
-CSimpleAudioSampleHW::bGetDevSpecific()
+CVocalInkAudioHW::bGetDevSpecific()
 /*++
 
 Routine Description:
@@ -71,7 +71,7 @@ Return Value:
 
 //=============================================================================
 void
-CSimpleAudioSampleHW::bSetDevSpecific
+CVocalInkAudioHW::bSetDevSpecific
 (
     _In_  BOOL                bDevSpecific
 )
@@ -96,7 +96,7 @@ Return Value:
 
 //=============================================================================
 INT
-CSimpleAudioSampleHW::iGetDevSpecific()
+CVocalInkAudioHW::iGetDevSpecific()
 /*++
 
 Routine Description:
@@ -118,7 +118,7 @@ Return Value:
 
 //=============================================================================
 void
-CSimpleAudioSampleHW::iSetDevSpecific
+CVocalInkAudioHW::iSetDevSpecific
 (
     _In_  INT                 iDevSpecific
 )
@@ -143,7 +143,7 @@ Return Value:
 
 //=============================================================================
 UINT
-CSimpleAudioSampleHW::uiGetDevSpecific()
+CVocalInkAudioHW::uiGetDevSpecific()
 /*++
 
 Routine Description:
@@ -165,7 +165,7 @@ Return Value:
 
 //=============================================================================
 void
-CSimpleAudioSampleHW::uiSetDevSpecific
+CVocalInkAudioHW::uiSetDevSpecific
 (
     _In_  UINT                uiDevSpecific
 )
@@ -191,7 +191,7 @@ Return Value:
 
 //=============================================================================
 BOOL
-CSimpleAudioSampleHW::GetMixerMute
+CVocalInkAudioHW::GetMixerMute
 (
     _In_  ULONG                   ulNode,
     _In_  ULONG                   ulChannel
@@ -200,7 +200,7 @@ CSimpleAudioSampleHW::GetMixerMute
 
 Routine Description:
 
-  Gets the HW (!) mute levels for Simple Audio Sample
+  Gets the HW (!) mute levels for Vocal Ink Audio
 
 Arguments:
 
@@ -226,7 +226,7 @@ Return Value:
 
 //=============================================================================
 ULONG                       
-CSimpleAudioSampleHW::GetMixerMux()
+CVocalInkAudioHW::GetMixerMux()
 /*++
 
 Routine Description:
@@ -246,7 +246,7 @@ Return Value:
 
 //=============================================================================
 LONG
-CSimpleAudioSampleHW::GetMixerVolume
+CVocalInkAudioHW::GetMixerVolume
 (   
     _In_  ULONG                   ulNode,
     _In_  ULONG                   ulChannel
@@ -255,7 +255,7 @@ CSimpleAudioSampleHW::GetMixerVolume
 
 Routine Description:
 
-  Gets the HW (!) volume for Simple Audio Sample.
+  Gets the HW (!) volume for Vocal Ink Audio.
 
 Arguments:
 
@@ -281,7 +281,7 @@ Return Value:
 
 //=============================================================================
 LONG
-CSimpleAudioSampleHW::GetMixerPeakMeter
+CVocalInkAudioHW::GetMixerPeakMeter
 (   
     _In_  ULONG                   ulNode,
     _In_  ULONG                   ulChannel
@@ -290,7 +290,7 @@ CSimpleAudioSampleHW::GetMixerPeakMeter
 
 Routine Description:
 
-  Gets the HW (!) peak meter for Simple Audio Sample.
+  Gets the HW (!) peak meter for Vocal Ink Audio.
 
 Arguments:
 
@@ -317,7 +317,7 @@ Return Value:
 //=============================================================================
 #pragma code_seg("PAGE")
 void 
-CSimpleAudioSampleHW::MixerReset()
+CVocalInkAudioHW::MixerReset()
 /*++
 
 Routine Description:
@@ -350,7 +350,7 @@ Return Value:
 
 //=============================================================================
 void
-CSimpleAudioSampleHW::SetMixerMute
+CVocalInkAudioHW::SetMixerMute
 (
     _In_  ULONG                   ulNode,
     _In_  ULONG                   ulChannel,
@@ -360,7 +360,7 @@ CSimpleAudioSampleHW::SetMixerMute
 
 Routine Description:
 
-  Sets the HW (!) mute levels for Simple Audio Sample
+  Sets the HW (!) mute levels for Vocal Ink Audio
 
 Arguments:
 
@@ -386,7 +386,7 @@ Return Value:
 
 //=============================================================================
 void                        
-CSimpleAudioSampleHW::SetMixerMux
+CVocalInkAudioHW::SetMixerMux
 (
     _In_  ULONG                   ulNode
 )
@@ -411,7 +411,7 @@ Return Value:
 
 //=============================================================================
 void  
-CSimpleAudioSampleHW::SetMixerVolume
+CVocalInkAudioHW::SetMixerVolume
 (   
     _In_  ULONG                   ulNode,
     _In_  ULONG                   ulChannel,
@@ -421,7 +421,7 @@ CSimpleAudioSampleHW::SetMixerVolume
 
 Routine Description:
 
-  Sets the HW (!) volume for Simple Audio Sample.
+  Sets the HW (!) volume for Vocal Ink Audio.
 
 Arguments:
 

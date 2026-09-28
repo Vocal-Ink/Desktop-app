@@ -9,7 +9,7 @@ Module Name:
 Abstract:
 
     Implementation of topology miniport. This the base class for 
-    all simple audio sample drivers
+    all Vocal Ink audio drivers
 --*/
 
 //4127: conditional expression is constant
@@ -20,7 +20,7 @@ Abstract:
 
 //=============================================================================
 #pragma code_seg("PAGE")
-CMiniportTopologySimpleAudioSample::CMiniportTopologySimpleAudioSample
+CMiniportTopologyVocalInkAudio::CMiniportTopologyVocalInkAudio
 (
     _In_        PCFILTER_DESCRIPTOR    *FilterDesc,
     _In_        USHORT                  DeviceMaxChannels
@@ -55,9 +55,9 @@ Return Value:
     
     ASSERT(DeviceMaxChannels > 0);
     m_DeviceMaxChannels = DeviceMaxChannels;
-} // CMiniportTopologySimpleAudioSample
+} // CMiniportTopologyVocalInkAudio
 
-CMiniportTopologySimpleAudioSample::~CMiniportTopologySimpleAudioSample
+CMiniportTopologyVocalInkAudio::~CMiniportTopologyVocalInkAudio
 (
     void
 )
@@ -81,12 +81,12 @@ Return Value:
 
     SAFE_RELEASE(m_AdapterCommon);
     SAFE_RELEASE(m_PortEvents);
-} // ~CMiniportTopologySimpleAudioSample
+} // ~CMiniportTopologyVocalInkAudio
 
 //=============================================================================
 #pragma code_seg("PAGE")
 NTSTATUS
-CMiniportTopologySimpleAudioSample::DataRangeIntersection
+CMiniportTopologyVocalInkAudio::DataRangeIntersection
 ( 
     _In_  ULONG                 PinId,
     _In_  PKSDATARANGE          ClientDataRange,
@@ -146,7 +146,7 @@ Return Value:
 //=============================================================================
 #pragma code_seg("PAGE")
 NTSTATUS
-CMiniportTopologySimpleAudioSample::GetDescription
+CMiniportTopologyVocalInkAudio::GetDescription
 ( 
     _Out_ PPCFILTER_DESCRIPTOR *  OutFilterDescriptor 
 )
@@ -183,7 +183,7 @@ Return Value:
 //=============================================================================
 #pragma code_seg("PAGE")
 NTSTATUS
-CMiniportTopologySimpleAudioSample::Init
+CMiniportTopologyVocalInkAudio::Init
 ( 
     _In_  PUNKNOWN          UnknownAdapter_,
     _In_  PPORTTOPOLOGY     Port_ 
@@ -211,7 +211,7 @@ Return Value:
     ASSERT(UnknownAdapter_);
     ASSERT(Port_);
 
-    DPF_ENTER(("[CMiniportTopologySimpleAudioSample::Init]"));
+    DPF_ENTER(("[CMiniportTopologyVocalInkAudio::Init]"));
 
     NTSTATUS    ntStatus;
 
@@ -248,7 +248,7 @@ Return Value:
 //=============================================================================
 #pragma code_seg("PAGE")
 NTSTATUS                            
-CMiniportTopologySimpleAudioSample::PropertyHandlerGeneric
+CMiniportTopologyVocalInkAudio::PropertyHandlerGeneric
 (
     _In_  PPCPROPERTY_REQUEST     PropertyRequest
 )
@@ -317,7 +317,7 @@ Return Value:
 //=============================================================================
 #pragma code_seg("PAGE")
 NTSTATUS                            
-CMiniportTopologySimpleAudioSample::PropertyHandlerMuxSource
+CMiniportTopologyVocalInkAudio::PropertyHandlerMuxSource
 (
     _In_  PPCPROPERTY_REQUEST     PropertyRequest
 )
@@ -388,7 +388,7 @@ Return Value:
 //=============================================================================
 #pragma code_seg("PAGE")
 NTSTATUS                            
-CMiniportTopologySimpleAudioSample::PropertyHandlerDevSpecific(
+CMiniportTopologyVocalInkAudio::PropertyHandlerDevSpecific(
     _In_  PPCPROPERTY_REQUEST     PropertyRequest
 )
 /*++
@@ -613,7 +613,7 @@ Return Value:
 //=============================================================================
 #pragma code_seg("PAGE")
 VOID
-CMiniportTopologySimpleAudioSample::AddEventToEventList
+CMiniportTopologyVocalInkAudio::AddEventToEventList
 (
     _In_  PKSEVENT_ENTRY    EventEntry 
 )
@@ -640,7 +640,7 @@ Arguments:
 //=============================================================================
 #pragma code_seg()
 VOID
-CMiniportTopologySimpleAudioSample::GenerateEventList
+CMiniportTopologyVocalInkAudio::GenerateEventList
 (
     _In_opt_    GUID   *Set,
     _In_        ULONG   EventId,
@@ -672,7 +672,7 @@ Arguments:
 
 --*/
 {
-    DPF_ENTER(("[CMiniportTopologySimpleAudioSample::GenerateEventList]"));
+    DPF_ENTER(("[CMiniportTopologyVocalInkAudio::GenerateEventList]"));
 
     ASSERT(m_PortEvents != NULL);
 

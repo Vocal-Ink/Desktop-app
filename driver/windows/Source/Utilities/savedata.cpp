@@ -8,7 +8,7 @@ Module Name:
 
 Abstract:
 
-    Implementation of Simple Audio Sample data saving class.
+    Implementation of Vocal Ink Audio data saving class.
 
     To save the playback data to disk, this class maintains a circular data
     buffer, associated frame structures and worker items to save frames to
@@ -45,8 +45,8 @@ Abstract:
 #define DEFAULT_BUFFER_SIZE         DEFAULT_FRAME_SIZE * DEFAULT_FRAME_COUNT
 
 #define DEFAULT_FILE_FOLDER1        L"\\DriverData\\Audio_Samples"
-#define DEFAULT_FILE_FOLDER2        L"\\DriverData\\Audio_Samples\\SimpleAudioSample"
-#define DEFAULT_FILE_NAME           L"\\DriverData\\Audio_Samples\\SimpleAudioSample\\STREAM"
+#define DEFAULT_FILE_FOLDER2        L"\\DriverData\\Audio_Samples\\VocalInkAudio"
+#define DEFAULT_FILE_NAME           L"\\DriverData\\Audio_Samples\\VocalInkAudio\\STREAM"
 #define OFFLOAD_FILE_NAME           L"OFFLOAD"
 #define HOST_FILE_NAME              L"HOST"
 

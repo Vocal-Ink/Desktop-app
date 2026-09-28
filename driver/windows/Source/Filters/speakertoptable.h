@@ -11,8 +11,8 @@ Abstract:
     Declaration of topology tables.
 --*/
 
-#ifndef _SIMPLEAUDIOSAMPLE_SPEAKERTOPTABLE_H_
-#define _SIMPLEAUDIOSAMPLE_SPEAKERTOPTABLE_H_
+#ifndef _VOCALINKAUDIO_SPEAKERTOPTABLE_H_
+#define _VOCALINKAUDIO_SPEAKERTOPTABLE_H_
 
 //=============================================================================
 static
@@ -203,4 +203,4 @@ PCFILTER_DESCRIPTOR SpeakerTopoMiniportFilterDescriptor =
   NULL                                          // Categories
 };
 
-#endif // _SIMPLEAUDIOSAMPLE_SPEAKERTOPTABLE_H_
+#endif // _VOCALINKAUDIO_SPEAKERTOPTABLE_H_

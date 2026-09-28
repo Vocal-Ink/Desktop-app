@@ -12,18 +12,18 @@ Abstract:
     Declaration of topology miniport.
 --*/
 
-#ifndef _SIMPLEAUDIOSAMPLE_BASETOPO_H_
-#define _SIMPLEAUDIOSAMPLE_BASETOPO_H_
+#ifndef _VOCALINKAUDIO_BASETOPO_H_
+#define _VOCALINKAUDIO_BASETOPO_H_
 
 //=============================================================================
 // Classes
 //=============================================================================
 
 ///////////////////////////////////////////////////////////////////////////////
-// CMiniportTopologySimpleAudioSample
+// CMiniportTopologyVocalInkAudio
 //
 
-class CMiniportTopologySimpleAudioSample
+class CMiniportTopologyVocalInkAudio
 {
   protected:
     PADAPTERCOMMON              m_AdapterCommon;        // Adapter common object.
@@ -32,12 +32,12 @@ class CMiniportTopologySimpleAudioSample
     USHORT                      m_DeviceMaxChannels;    // Max device channels.
 
   public:
-    CMiniportTopologySimpleAudioSample(
+    CMiniportTopologyVocalInkAudio(
         _In_        PCFILTER_DESCRIPTOR    *FilterDesc,
         _In_        USHORT                  DeviceMaxChannels
         );
     
-    ~CMiniportTopologySimpleAudioSample();
+    ~CMiniportTopologyVocalInkAudio();
 
     NTSTATUS                    GetDescription
     (   

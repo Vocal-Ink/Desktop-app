@@ -8,10 +8,10 @@ Module Name:
 
 Abstract:
 
-    Helper functions for simple audio sample
+    Helper functions for Vocal Ink audio
 --*/
-#ifndef _SIMPLEAUDIOSAMPLE_KSHELPER_H_
-#define _SIMPLEAUDIOSAMPLE_KSHELPER_H_
+#ifndef _VOCALINKAUDIO_KSHELPER_H_
+#define _VOCALINKAUDIO_KSHELPER_H_
 
 #include <portcls.h>
 #include <ksdebug.h>
@@ -94,14 +94,14 @@ PropertyHandler_PeakMeter2
 //=============================================================================
 
 NTSTATUS
-SimpleAudioSamplePropertyDispatch
+VocalInkAudioPropertyDispatch
 (
     _In_ PPCPROPERTY_REQUEST PropertyRequest
 );
 
 // Use this structure to define property items with extra data allowing easier
 // definition of separate get, set, and support handlers dispatched through
-// SimpleAudioSamplePropertyDispatch.
+// VocalInkAudioPropertyDispatch.
 typedef struct
 {
     PCPROPERTY_ITEM         PropertyItem;       // Standard PCPROPERTY_ITEM
@@ -112,7 +112,7 @@ typedef struct
     PCPFNPROPERTY_HANDLER   SupportHandler;     // Property support handler (NULL for common handler)
     VOID                    *ContextData;        // Optional context information for the handler, NULL for unused
     ULONG                   ContextDataSize;     // Size of the data held at ContextData, 0 for unused
-} SIMPLEAUDIOSAMPLE_PROPERTY_ITEM;
+} VOCALINKAUDIO_PROPERTY_ITEM;
 
 // The following macros facilitate adding property handlers to a class, allowing
 // easier declaration and definition of a "thunk" routine that directly handles
@@ -156,4 +156,4 @@ NTSTATUS theClass::theMethod                                                    
 
 
 
-#endif  // _SIMPLEAUDIOSAMPLE_KSHELPER_H_
+#endif  // _VOCALINKAUDIO_KSHELPER_H_

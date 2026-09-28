@@ -8,7 +8,7 @@ Module Name:
 
 Abstract:
 
-    Implementation of Simple Audio Sample sine wave generator
+    Implementation of Vocal Ink Audio sine wave generator
 
 --*/
 #include "definitions.h"
@@ -67,7 +67,7 @@ ToneGenerator::~ToneGenerator()
 {
     if (m_PartialFrame)
     {
-        ExFreePoolWithTag(m_PartialFrame, SIMPLEAUDIOSAMPLE_POOLTAG);
+        ExFreePoolWithTag(m_PartialFrame, VOCALINKAUDIO_POOLTAG);
         m_PartialFrame = NULL;
         m_PartialFrameBytes = 0;
     }
@@ -278,7 +278,7 @@ NTSTATUS ToneGenerator::Init
     m_PartialFrame = (BYTE*)ExAllocatePool2(
                                     POOL_FLAG_NON_PAGED,
                                     m_FrameSize,
-                                    SIMPLEAUDIOSAMPLE_POOLTAG);
+                                    VOCALINKAUDIO_POOLTAG);
 
     IF_TRUE_ACTION_JUMP(m_PartialFrame == NULL, status = STATUS_INSUFFICIENT_RESOURCES, Done);
     

@@ -8,7 +8,7 @@ Module Name:
 
 Abstract:
 
-    Setup and miniport installation.  No resources are used by simple audio sample.
+    Setup and miniport installation.  No resources are used by Vocal Ink audio.
     This sample is to demonstrate how to develop a full featured audio miniport driver.
 --*/
 

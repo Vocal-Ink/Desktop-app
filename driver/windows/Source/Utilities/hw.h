@@ -8,13 +8,13 @@ Module Name:
 
 Abstract:
 
-    Declaration of Simple Audio Sample HW class. 
-    Simple Audio Sample HW has an array for storing mixer and volume settings
+    Declaration of Vocal Ink Audio HW class. 
+    Vocal Ink Audio HW has an array for storing mixer and volume settings
     for the topology.
 --*/
 
-#ifndef _SIMPLEAUDIOSAMPLE_HW_H_
-#define _SIMPLEAUDIOSAMPLE_HW_H_
+#ifndef _VOCALINKAUDIO_HW_H_
+#define _VOCALINKAUDIO_HW_H_
 
 //=============================================================================
 // Defines
@@ -26,11 +26,11 @@ Abstract:
 // Classes
 //=============================================================================
 ///////////////////////////////////////////////////////////////////////////////
-// CSimpleAudioSampleHW
-// This class represents virtual Simple Audio Sample HW. An array representing volume
+// CVocalInkAudioHW
+// This class represents virtual Vocal Ink Audio HW. An array representing volume
 // registers and mute registers.
 
-class CSimpleAudioSampleHW
+class CVocalInkAudioHW
 {
 public:
 protected:
@@ -45,7 +45,7 @@ protected:
 private:
 
 public:
-    CSimpleAudioSampleHW();
+    CVocalInkAudioHW();
     
     void                        MixerReset();
     BOOL                        bGetDevSpecific();
@@ -100,6 +100,6 @@ public:
 protected:
 private:
 };
-typedef CSimpleAudioSampleHW    *PCSimpleAudioSampleHW;
+typedef CVocalInkAudioHW    *PCVocalInkAudioHW;
 
-#endif  // _SIMPLEAUDIOSAMPLE_HW_H_
+#endif  // _VOCALINKAUDIO_HW_H_

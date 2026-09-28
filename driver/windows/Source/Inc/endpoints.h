@@ -8,18 +8,18 @@ Module Name:
 
 Abstract:
 
-    Node and Pin numbers and other common definitions for simple audio sample.
+    Node and Pin numbers and other common definitions for Vocal Ink audio.
 --*/
 
-#ifndef _SIMPLEAUDIOSAMPLE_ENDPOINTS_H_
-#define _SIMPLEAUDIOSAMPLE_ENDPOINTS_H_
+#ifndef _VOCALINKAUDIO_ENDPOINTS_H_
+#define _VOCALINKAUDIO_ENDPOINTS_H_
 
 // Name Guid
 // {0104947F-82AE-4291-A6F3-5E2DE1AD7DC2}
-#define STATIC_NAME_SIMPLE_AUDIO_SAMPLE\
+#define STATIC_NAME_VOCALINK_AUDIO\
     0x104947f, 0x82ae, 0x4291, 0xa6, 0xf3, 0x5e, 0x2d, 0xe1, 0xad, 0x7d, 0xc2
-DEFINE_GUIDSTRUCT("0104947F-82AE-4291-A6F3-5E2DE1AD7DC2", NAME_SIMPLE_AUDIO_SAMPLE);
-#define NAME_SIMPLE_AUDIO_SAMPLE DEFINE_GUIDNAMED(NAME_SIMPLE_AUDIO_SAMPLE)
+DEFINE_GUIDSTRUCT("0104947F-82AE-4291-A6F3-5E2DE1AD7DC2", NAME_VOCALINK_AUDIO);
+#define NAME_VOCALINK_AUDIO DEFINE_GUIDNAMED(NAME_VOCALINK_AUDIO)
 
 //----------------------------------------------------
 // New defines for the render endpoints.
@@ -130,4 +130,4 @@ KSATTRIBUTE_LIST PinDataRangeAttributeList =
     PinDataRangeAttributes,
 };
 
-#endif // _SIMPLEAUDIOSAMPLE_ENDPOINTS_H_
+#endif // _VOCALINKAUDIO_ENDPOINTS_H_

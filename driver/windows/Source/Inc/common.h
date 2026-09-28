@@ -11,8 +11,8 @@ Abstract:
     CAdapterCommon class declaration.
 --*/
 
-#ifndef _SIMPLEAUDIOSAMPLE_COMMON_H_
-#define _SIMPLEAUDIOSAMPLE_COMMON_H_
+#ifndef _VOCALINKAUDIO_COMMON_H_
+#define _VOCALINKAUDIO_COMMON_H_
 
 #define HNSTIME_PER_MILLISECOND 10000
 
@@ -185,12 +185,12 @@ typedef HRESULT (*PFNCREATEMINIPORT)(
 //=============================================================================
 //
 //=============================================================================
-typedef struct _SIMPLEAUDIOSAMPLE_DEVPROPERTY {
+typedef struct _VOCALINKAUDIO_DEVPROPERTY {
     const DEVPROPKEY   *PropertyKey;
     DEVPROPTYPE Type;
     ULONG BufferSize;
     __field_bcount_opt(BufferSize) PVOID Buffer;
-} SIMPLEAUDIOSAMPLE_DEVPROPERTY, PSIMPLEAUDIOSAMPLE_DEVPROPERTY;
+} VOCALINKAUDIO_DEVPROPERTY, PVOCALINKAUDIO_DEVPROPERTY;
 
 #define ENDPOINT_NO_FLAGS                       0x00000000
 #define ENDPOINT_CELLULAR_PROVIDER1             0x00000008
@@ -204,20 +204,20 @@ typedef struct _ENDPOINT_MINIPAIR
     eDeviceType                     DeviceType;
 
     // Topology miniport.
-    PWSTR                           TopoName;               // make sure this or the template name matches with SIMPLEAUDIOSAMPLE.<TopoName>.szPname in the inf's [Strings] section
+    PWSTR                           TopoName;               // make sure this or the template name matches with VOCALINKAUDIO.<TopoName>.szPname in the inf's [Strings] section
     PWSTR                           TemplateTopoName;       // optional template name
     PFNCREATEMINIPORT               TopoCreateCallback;
     PCFILTER_DESCRIPTOR*            TopoDescriptor;
     ULONG                           TopoInterfacePropertyCount;
-    const SIMPLEAUDIOSAMPLE_DEVPROPERTY*       TopoInterfaceProperties;
+    const VOCALINKAUDIO_DEVPROPERTY*       TopoInterfaceProperties;
 
     // Wave RT miniport.
-    PWSTR                           WaveName;               // make sure this or the template name matches with SIMPLEAUDIOSAMPLE.<WaveName>.szPname in the inf's [Strings] section
+    PWSTR                           WaveName;               // make sure this or the template name matches with VOCALINKAUDIO.<WaveName>.szPname in the inf's [Strings] section
     PWSTR                           TemplateWaveName;       // optional template name
     PFNCREATEMINIPORT               WaveCreateCallback;
     PCFILTER_DESCRIPTOR*            WaveDescriptor;
     ULONG                           WaveInterfacePropertyCount;
-    const SIMPLEAUDIOSAMPLE_DEVPROPERTY*       WaveInterfaceProperties;
+    const VOCALINKAUDIO_DEVPROPERTY*       WaveInterfaceProperties;
 
     USHORT                          DeviceMaxChannels;
     PIN_DEVICE_FORMATS_AND_MODES*   PinDeviceFormatsAndModes;
@@ -385,7 +385,7 @@ DECLARE_INTERFACE_(IAdapterCommon, IUnknown)
         _In_            REFGUID                                     MiniportClassId,
         _In_opt_        PFNCREATEMINIPORT                           MiniportCreate,
         _In_            ULONG                                       cPropertyCount,
-        _In_reads_opt_(cPropertyCount) const SIMPLEAUDIOSAMPLE_DEVPROPERTY   * pProperties,
+        _In_reads_opt_(cPropertyCount) const VOCALINKAUDIO_DEVPROPERTY   * pProperties,
         _In_opt_        PVOID                                       DeviceContext,
         _In_            PENDPOINT_MINIPAIR                          MiniportPair,
         _In_opt_        PRESOURCELIST                               ResourceList,
@@ -474,4 +474,4 @@ NewAdapterCommon
     _In_        POOL_FLAGS              PoolFlags
 );
 
-#endif  //_SIMPLEAUDIOSAMPLE_COMMON_H_
+#endif  //_VOCALINKAUDIO_COMMON_H_
