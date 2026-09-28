@@ -298,9 +298,9 @@ Item {
                     Repeater {
                         model: [
                             { keys: "Return", label: qsTr("speak") },
-                            { keys: App.prefs["keybinds/listen.ptt"] || "Ctrl+Alt+Space", label: qsTr("hold to dictate") },
+                            { keys: App.shortcuts["listen.ptt"] || "", label: qsTr("hold to dictate") },
                             { keys: "Ctrl+K", label: qsTr("find anything") },
-                            { keys: App.prefs["keybinds/window.quickType"] || "Ctrl+Alt+T", label: qsTr("type over a game") }
+                            { keys: App.shortcuts["window.quickType"] || "", label: qsTr("type over a game") }
                         ]
                         Row {
                             required property var modelData

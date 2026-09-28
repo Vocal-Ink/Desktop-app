@@ -174,7 +174,16 @@ int main(int argc, char *argv[])
     if (smokeTest && window) {
         const QString path = parser.value(screenshot);
         QTimer::singleShot(3000, window, [window, path] {
-            const bool ok = window->grabWindow().save(path);
+            // Capture a secondary window opened with --show (quick type,
+            // compact bar...) when there is one, otherwise the main window.
+            QQuickWindow *target = window;
+            const auto windows = QGuiApplication::topLevelWindows();
+            for (QWindow *w : windows) {
+                auto *qw = qobject_cast<QQuickWindow *>(w);
+                if (qw && qw != window && qw->isVisible())
+                    target = qw;
+            }
+            const bool ok = target->grabWindow().save(path);
             QCoreApplication::exit(ok ? 0 : 1);
         });
     }

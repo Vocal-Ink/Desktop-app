@@ -28,7 +28,10 @@ Item {
         // Section list (a row of chips on narrow windows).
         ColumnLayout {
             visible: !page.narrow
+            // Children fill this column; don't let that make the column fill the row.
+            Layout.fillWidth: false
             Layout.preferredWidth: Math.round(220 * Math.min(1.3, Theme.scale))
+            Layout.maximumWidth: Layout.preferredWidth
             Layout.fillHeight: true
             Layout.topMargin: Theme.s8
             Layout.leftMargin: Theme.s4

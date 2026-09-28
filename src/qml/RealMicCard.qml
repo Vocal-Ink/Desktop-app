@@ -75,7 +75,7 @@ Card {
         ShortcutField {
             readonly property string actionId: card.mode === "hold" ? "mic.hold" : "mic.toggle"
             label: card.mode === "hold" ? qsTr("Hold to talk") : qsTr("Toggle real mic")
-            sequence: App.prefs["keybinds/" + actionId] || ""
+            sequence: App.shortcuts[actionId] || ""
             onRecorded: (seq) => {
                 const clash = App.keybinds.bind(actionId, seq, false)
                 if (clash.length > 0) { conflict.seq = seq; conflict.action = actionId; conflict.names = clash; conflict.open() }

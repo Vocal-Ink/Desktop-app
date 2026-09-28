@@ -102,7 +102,7 @@ QString OpenAiSttEngine::notReadyReason() const
 {
     if (isReady())
         return {};
-    return tr("Add your OpenAI API key in Settings → Speech recognition to use cloud speech recognition.");
+    return tr("Add your OpenAI API key in Settings → Speech input to use cloud speech recognition.");
 }
 
 void OpenAiSttEngine::failLater(quint64 requestId, const QString &error)

@@ -89,7 +89,7 @@ void SttController::setVadSensitivity(int percent)
 QString SttController::unavailableReason() const
 {
     if (!m_engine)
-        return tr("Speech recognition is not set up. Choose a recogniser in Settings → Speech recognition.");
+        return tr("Speech recognition is not set up. Choose a recogniser in Settings → Speech input.");
     if (m_engine->isReady())
         return {};
     const QString reason = m_engine->notReadyReason();

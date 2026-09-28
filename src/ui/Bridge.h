@@ -98,6 +98,8 @@ class Bridge : public QObject
     Q_PROPERTY(int secretsRevision READ secretsRevision NOTIFY secretsChanged)
     Q_PROPERTY(int learnedWords READ learnedWords NOTIFY learnedWordsChanged)
     Q_PROPERTY(QString dataFolder READ dataFolder CONSTANT)
+    // Action id -> current shortcut (portable text), including defaults.
+    Q_PROPERTY(QVariantMap shortcuts READ shortcuts NOTIFY shortcutsChanged)
 
 public:
     explicit Bridge(AppContext *context, QObject *parent = nullptr);
@@ -169,6 +171,7 @@ public:
     int secretsRevision() const { return m_secretsRevision; }
     int learnedWords() const;
     QString dataFolder() const;
+    QVariantMap shortcuts() const;
 
     // --- Speaking ---
     Q_INVOKABLE quint64 speak(const QString &text, const QString &voiceKey = QString());
@@ -275,6 +278,7 @@ signals:
     void updateChanged();
     void secretsChanged();
     void learnedWordsChanged();
+    void shortcutsChanged();
 
     void notify(const QString &message, int level);
     void transcriptReady(const QString &text);

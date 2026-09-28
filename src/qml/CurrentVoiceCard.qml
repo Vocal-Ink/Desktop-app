@@ -127,7 +127,7 @@ Card {
     Sheet {
         id: presetSheet
         title: qsTr("Save as preset")
-        message: qsTr("A preset remembers the voice, speed, pitch and effect. Switch presets from Talk or with Ctrl+Alt+F1–F3.")
+        message: qsTr("A preset remembers the voice, speed, pitch and effect. Switch presets from Talk, or give them shortcuts in Settings → Shortcuts.")
         iconName: "sliders-horizontal"
         Field { id: presetName; Layout.fillWidth: true; placeholderText: qsTr("e.g. Chill stream, Work calls"); label: qsTr("Preset name") }
         footer: [

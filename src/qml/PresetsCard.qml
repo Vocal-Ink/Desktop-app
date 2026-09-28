@@ -50,7 +50,7 @@ Card {
                         text: [App.voiceInfo(item.voiceKey).name, qsTr("speed %1%").arg(item.rate), item.effect && item.effect !== "none" ? item.effect : ""].filter(s => s).join(" · ")
                     }
                 }
-                KeyCombo { visible: item.index < 3; sequence: App.prefs["keybinds/preset." + (item.index + 1)] || "" }
+                KeyCombo { visible: item.index < 3; sequence: App.shortcuts["preset." + (item.index + 1)] || "" }
                 PillButton { small: true; text: qsTr("Apply"); onClicked: App.applyPreset(item.presetId) }
                 IconButton { small: true; iconName: "trash-2"; tip: qsTr("Delete preset “%1”").arg(item.name); onClicked: App.presets.remove(item.presetId) }
             }

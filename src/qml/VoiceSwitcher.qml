@@ -59,7 +59,7 @@ Popup {
                         Txt { text: fav.info.name; role: "label"; elide: Text.ElideRight; wrapMode: Text.NoWrap; Layout.fillWidth: true }
                         Txt { text: fav.info.providerName + " · " + fav.info.language; role: "caption"; elide: Text.ElideRight; wrapMode: Text.NoWrap; Layout.fillWidth: true }
                     }
-                    KeyCombo { visible: fav.index < 5; sequence: App.prefs["keybinds/voice.fav" + (fav.index + 1)] || "" }
+                    KeyCombo { visible: fav.index < 5; sequence: App.shortcuts["voice.fav" + (fav.index + 1)] || "" }
                     Icon { visible: fav.current; name: "check"; color: Theme.accentText; size: Math.round(18 * Theme.scale) }
                 }
                 background: Rectangle {

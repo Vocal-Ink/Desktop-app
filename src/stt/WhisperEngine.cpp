@@ -262,8 +262,8 @@ QString WhisperEngine::notReadyReason() const
     if (m_loading)
         return tr("Loading speech model…");
     if (!m_loadError.isEmpty())
-        return tr("%1 Download it again in Settings → Speech recognition.").arg(m_loadError);
-    return tr("Download a speech recognition model in Settings → Speech recognition");
+        return tr("%1 Download it again in Settings → Speech input.").arg(m_loadError);
+    return tr("Download a speech recognition model in Settings → Speech input");
 #endif
 }
 

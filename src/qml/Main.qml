@@ -39,7 +39,14 @@ ApplicationWindow {
         win.requestActivate()
     }
 
-    Component.onCompleted: {
+    Component.onCompleted: launchTimer.start()
+    // Open what --show asked for once the main window is up.
+    Timer {
+        id: launchTimer
+        interval: 400
+        onTriggered: win.openLaunchPage()
+    }
+    function openLaunchPage() {
         if (typeof launchPage !== "undefined" && launchPage !== "") {
             if (launchPage.startsWith("onboarding")) {
                 onboardingLoader.startStep = parseInt(launchPage.split(":")[1] || "0")

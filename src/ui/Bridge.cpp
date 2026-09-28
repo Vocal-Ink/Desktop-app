@@ -225,6 +225,8 @@ Bridge::Bridge(AppContext *context, QObject *parent)
         emit secretsChanged();
     });
     connect(m_ctx->predictor(), &WordPredictor::learnedChanged, this, &Bridge::learnedWordsChanged);
+    connect(m_ctx->actions(), &ActionRegistry::shortcutChanged, this, &Bridge::shortcutsChanged);
+    connect(m_ctx->actions(), &ActionRegistry::shortcutsReset, this, &Bridge::shortcutsChanged);
     UpdateChecker *updates = m_ctx->updates();
     connect(updates, &UpdateChecker::updateAvailable, this,
             [this](const QString &version, const QUrl &page, const QString &notes) {
@@ -583,6 +585,15 @@ QStringList Bridge::shortcutParts(const QString &portable) const
         key = QStringLiteral("Esc");
     parts << key;
     return parts;
+}
+
+QVariantMap Bridge::shortcuts() const
+{
+    QVariantMap out;
+    const QList<ActionDef> defs = m_ctx->actions()->actions();
+    for (const ActionDef &d : defs)
+        out.insert(d.id, m_ctx->actions()->shortcut(d.id));
+    return out;
 }
 
 QString Bridge::shortcutFor(const QString &actionId) const
