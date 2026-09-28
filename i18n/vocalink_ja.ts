@@ -630,7 +630,7 @@
         <message>
             <location line="+1" />
             <source>Where Vocal Ink plays your voice, and whether you hear it too.</source>
-            <translation>Vocal Inkがボイスを再生する場所と、自分にも聞こえるようにするかどうか。</translation>
+            <translation>Vocal Inkがボイスを再生する場所と、自分でも聞くかどうかを設定します。</translation>
         </message>
         <message>
             <location line="+4" />
@@ -1470,7 +1470,7 @@
         <message>
             <location line="+10" />
             <source>You have the latest version (%1).</source>
-            <translation>最新バージョン（%1）です。</translation>
+            <translation>最新バージョン（%1）を使用しています。</translation>
         </message>
         <message>
             <location line="+4" />
@@ -3738,7 +3738,7 @@
         <message>
             <location line="-3" />
             <source>Its exact name, as your system lists it.</source>
-            <translation>システムに表示されているとおりの正確な名前です。</translation>
+            <translation>システムに表示されているとおりの正確なフォント名を入力します。</translation>
         </message>
         <message>
             <location line="+11" />
@@ -7759,7 +7759,7 @@
         <message>
             <location line="+17" />
             <source>The system voice "%1" is not installed any more.</source>
-            <translation>システムボイス「%1」はインストールされていません。</translation>
+            <translation>システムボイス「%1」はもうインストールされていません。</translation>
         </message>
         <message>
             <location line="+62" />

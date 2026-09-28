@@ -2760,7 +2760,7 @@
         <message>
             <location filename="../src/qml/OnbHear.qml" line="+7" />
             <source>Do you want to hear it too?</source>
-            <translation>나도 들을까요?</translation>
+            <translation>내 음성을 나도 들을까요?</translation>
         </message>
         <message>
             <location line="+1" />
