@@ -59,6 +59,21 @@ struct Rig
             QTest::qWait(30);
         }
     }
+    // Keeps feeding until the condition holds: slow CI machines can go a
+    // while between frames.
+    template<typename Pred>
+    bool feedUntil(float level, Pred done, int timeoutMs = 3000)
+    {
+        QElapsedTimer t;
+        t.start();
+        while (!done()) {
+            if (t.elapsed() > timeoutMs)
+                return false;
+            avatar->onSpeechLevel(level);
+            QTest::qWait(30);
+        }
+        return true;
+    }
 };
 
 struct Receiver
@@ -425,25 +440,26 @@ private slots:
         rig.set(Keys::AvatarSmoothing, 0);
         rig.apply();
         rig.avatar->onSpeechStarted(1, QStringLiteral("moo ha"));
+        const auto viseme = [&rig] { return rig.avatar->viseme(); };
         rig.avatar->onSpeechProgress(1, 0.34); // "o" of "oo"
-        rig.feed(0.5f, 70);
-        QCOMPARE(rig.avatar->viseme(), QStringLiteral("U"));
+        QVERIFY(rig.feedUntil(0.5f, [&] { return viseme() == QStringLiteral("U"); }));
         rig.avatar->onSpeechProgress(1, 0.5); // the space: keeps the shape
-        rig.feed(0.5f, 70);
-        QCOMPARE(rig.avatar->viseme(), QStringLiteral("U"));
+        rig.feed(0.5f, 150);
+        QCOMPARE(viseme(), QStringLiteral("U"));
         rig.avatar->onSpeechProgress(2, 0.9); // another utterance: ignored
-        rig.feed(0.5f, 70);
-        QCOMPARE(rig.avatar->viseme(), QStringLiteral("U"));
+        rig.feed(0.5f, 150);
+        QCOMPARE(viseme(), QStringLiteral("U"));
         rig.avatar->onSpeechProgress(1, 0.9);
-        rig.feed(0.5f, 70);
-        QCOMPARE(rig.avatar->viseme(), QStringLiteral("A"));
+        QVERIFY(rig.feedUntil(0.5f, [&] { return viseme() == QStringLiteral("A"); }));
         QCOMPARE(rig.avatar->visemeValue(), Viseme::A);
 
+        rig.avatar->onSpeechProgress(1, 0.34);
+        QVERIFY(rig.feedUntil(0.5f, [&] { return viseme() == QStringLiteral("U"); }));
         rig.set(Keys::AvatarVisemes, false);
         rig.apply();
-        rig.avatar->onSpeechProgress(1, 0.34);
-        rig.feed(0.5f, 70);
-        QCOMPARE(rig.avatar->viseme(), QStringLiteral("A")); // open/closed only
+        QVERIFY(rig.feedUntil(0.5f, [&] { return viseme() == QStringLiteral("A"); })); // open/closed only
+        rig.feed(0.5f, 150);
+        QCOMPARE(viseme(), QStringLiteral("A"));
         rig.avatar->onSpeechLevel(0.0f);
         QTRY_COMPARE(rig.avatar->viseme(), QString());
         rig.avatar->onSpeechFinished(1);
