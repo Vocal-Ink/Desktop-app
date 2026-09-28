@@ -140,26 +140,36 @@
         </message>
         <message>
             <location line="+1" />
-            <source>Next favorite voice</source>
+            <source>Next favourite voice</source>
             <translation>下一个收藏的声音</translation>
         </message>
         <message>
             <location line="+1" />
-            <source>Cycles forward through your favorite voices.</source>
+            <source>Cycles forward through your favourite voices.</source>
             <translation>按顺序切换到下一个收藏的声音。</translation>
         </message>
         <message>
             <location line="+1" />
-            <source>Previous favorite voice</source>
+            <source>Previous favourite voice</source>
             <translation>上一个收藏的声音</translation>
         </message>
         <message>
             <location line="+1" />
-            <source>Cycles back through your favorite voices.</source>
+            <source>Cycles back through your favourite voices.</source>
             <translation>按顺序切换到上一个收藏的声音。</translation>
         </message>
         <message>
+            <location line="+23" />
+            <source>Favourite voice %1</source>
+            <translation>收藏的声音 %1</translation>
+        </message>
+        <message>
             <location line="+1" />
+            <source>Switches to favourite voice number %1.</source>
+            <translation>切换到第 %1 个收藏的声音。</translation>
+        </message>
+        <message>
+            <location line="-23" />
             <source>Speak faster</source>
             <translation>说快一点</translation>
         </message>
@@ -279,17 +289,7 @@
             <translation>停止（或恢复）把你说的话发送到直播。</translation>
         </message>
         <message>
-            <location line="+3" />
-            <source>Favorite voice %1</source>
-            <translation>收藏的声音 %1</translation>
-        </message>
-        <message>
-            <location line="+1" />
-            <source>Switches to favorite voice number %1.</source>
-            <translation>切换到第 %1 个收藏的声音。</translation>
-        </message>
-        <message>
-            <location line="+3" />
+            <location line="+7" />
             <source>Voice preset %1</source>
             <translation>声音预设 %1</translation>
         </message>
@@ -350,7 +350,7 @@
     <context>
         <name>AppContext</name>
         <message>
-            <location filename="../src/app/AppContext.cpp" line="+183" />
+            <location filename="../src/app/AppContext.cpp" line="+186" />
             <source>OBS: %1</source>
             <translation>OBS：%1</translation>
         </message>
@@ -391,12 +391,7 @@
             <translation>字幕已恢复</translation>
         </message>
         <message>
-            <location line="+43" />
-            <source>Real-mic passthrough is off. Turn it on in Audio → Your real microphone.</source>
-            <translation>真实麦克风直通已关闭。请在“音频与麦克风 → 你的真实麦克风”中打开。</translation>
-        </message>
-        <message>
-            <location line="+17" />
+            <location line="+60" />
             <location line="+2" />
             <source>Speed %1%</source>
             <translation>语速 %1%</translation>
@@ -418,9 +413,14 @@
             <translation>还没有第 %1 个收藏的声音。在“声音”页给声音加星标即可收藏。</translation>
         </message>
         <message>
-            <location line="+8" />
-            <source>No preset #%1 yet. Save one in Voices → Presets.</source>
-            <translation>还没有第 %1 个预设。请在“声音 → 预设”中保存一个。</translation>
+            <location line="-42" />
+            <source>Real-mic passthrough is off. Turn it on in Audio &amp; mic → Your real microphone.</source>
+            <translation>真实麦克风直通已关闭。请在“音频与麦克风 → 你的真实麦克风”中打开。</translation>
+        </message>
+        <message>
+            <location line="+50" />
+            <source>No preset #%1 yet. Save one in Voices → Tune &amp; presets.</source>
+            <translation>还没有第 %1 个预设。请在“声音 → 调整与预设”中保存一个。</translation>
         </message>
         <message>
             <location line="+129" />
@@ -463,8 +463,9 @@
             <translation>主播</translation>
         </message>
         <message>
-            <location line="+1" />
+            <location line="+2" />
             <source>Mod</source>
+            <extracomment>Short Twitch chat badges: moderator, VIP, subscriber</extracomment>
             <translation>房管</translation>
         </message>
         <message>
@@ -1223,8 +1224,8 @@
         <name>AzureTtsEngine</name>
         <message>
             <location filename="../src/tts/AzureTtsEngine.cpp" line="+67" />
-            <source>Add your Microsoft Azure Speech key in Settings → Voices.</source>
-            <translation>请在“设置 → 声音”中添加你的 Microsoft Azure 语音服务密钥。</translation>
+            <source>Add your Microsoft Azure Speech key in Settings → Voice providers.</source>
+            <translation>请在“设置 → 声音服务商”中添加你的 Microsoft Azure Speech 密钥。</translation>
         </message>
         <message>
             <location line="+80" />
@@ -1357,7 +1358,7 @@
     <context>
         <name>Bridge</name>
         <message>
-            <location filename="../src/ui/Bridge.cpp" line="+337" />
+            <location filename="../src/ui/Bridge.cpp" line="+341" />
             <source>Hey! Sorry, I don't talk out loud, so I type.</source>
             <translation>嗨！不好意思，我不开口说话，所以我打字。</translation>
         </message>
@@ -1453,8 +1454,9 @@
             <translation>这就是你的话在直播中被说出时的样子。</translation>
         </message>
         <message>
-            <location line="+2" />
+            <location line="+3" />
             <source>Test</source>
+            <extracomment>Shown on stream overlays as the voice name of a test caption</extracomment>
             <translation>测试</translation>
         </message>
         <message>
@@ -2006,7 +2008,7 @@
             <translation>下载完成。</translation>
         </message>
         <message numerus="yes">
-            <location line="+67" />
+            <location line="+92" />
             <source>%n speaker(s)</source>
             <translation>
                 <numerusform>%n 个说话人</numerusform>
@@ -2017,8 +2019,8 @@
         <name>ElevenLabsTtsEngine</name>
         <message>
             <location filename="../src/tts/ElevenLabsTtsEngine.cpp" line="+34" />
-            <source>Add your ElevenLabs API key in Settings → Voices.</source>
-            <translation>请在“设置 → 声音”中添加你的 ElevenLabs API 密钥。</translation>
+            <source>Add your ElevenLabs API key in Settings → Voice providers.</source>
+            <translation>请在“设置 → 声音服务商”中添加你的 ElevenLabs API 密钥。</translation>
         </message>
     </context>
     <context>
@@ -2048,8 +2050,8 @@
         <name>FishAudioTtsEngine</name>
         <message>
             <location filename="../src/tts/FishAudioTtsEngine.cpp" line="+33" />
-            <source>Add your Fish Audio API key in Settings → Voices.</source>
-            <translation>请在“设置 → 声音”中添加你的 Fish Audio API 密钥。</translation>
+            <source>Add your Fish Audio API key in Settings → Voice providers.</source>
+            <translation>请在“设置 → 声音服务商”中添加你的 Fish Audio API 密钥。</translation>
         </message>
         <message>
             <location line="+46" />
@@ -2329,7 +2331,7 @@
             <translation>无法读取 Piper 声音列表。</translation>
         </message>
         <message>
-            <location line="+41" />
+            <location line="+40" />
             <source>Tiny (English)</source>
             <translation>Tiny（英语）</translation>
         </message>
@@ -2345,8 +2347,8 @@
         </message>
         <message>
             <location line="+1" />
-            <source>Recommended: fast and accurate for English.</source>
-            <translation>推荐：英语识别又快又准。</translation>
+            <source>Fast and accurate for English.</source>
+            <translation>英语识别又快又准。</translation>
         </message>
         <message>
             <location line="+1" />
@@ -2409,7 +2411,7 @@
             <translation>声音“%1”不在 Piper 声音列表中。请刷新列表后重试。</translation>
         </message>
         <message>
-            <location line="+45" />
+            <location line="+104" />
             <source>Download cancelled.</source>
             <translation>下载已取消。</translation>
         </message>
@@ -2686,8 +2688,8 @@
         </message>
         <message>
             <location line="+1" />
-            <source>If you can whisper, mouth or speak softly, Vocal Ink can write it down for you to check and send. It runs on this computer.</source>
-            <translation>如果你能耳语、做口型或轻声说话，Vocal Ink 可以帮你写成文字，由你检查后再发送。它在这台电脑上运行。</translation>
+            <source>If you can whisper or speak softly, Vocal Ink can write it down for you to check and send. It runs on this computer.</source>
+            <translation>如果你能耳语或轻声说话，Vocal Ink 可以帮你写成文字，由你检查后再发送。它在这台电脑上运行。</translation>
         </message>
         <message>
             <location line="+7" />
@@ -3049,7 +3051,7 @@
             <translation>即使游戏或其他应用处于前台，这些快捷键也能用。点击一个快捷键并按下新的按键即可更改。</translation>
         </message>
         <message>
-            <location line="+8" />
+            <location line="+9" />
             <source>Pop up a box to type over any app</source>
             <translation>弹出一个输入框，在任何应用上打字</translation>
         </message>
@@ -3078,10 +3080,12 @@
             <source>Show or hide Vocal Ink</source>
             <translation>显示或隐藏 Vocal Ink</translation>
         </message>
-        <message>
-            <location line="+16" />
-            <source>Phrases and sounds can have shortcuts too. There are 26 more actions in Settings → Shortcuts.</source>
-            <translation>短语和音效也可以设置快捷键。“设置 → 快捷键”中还有另外 26 个操作。</translation>
+        <message numerus="yes">
+            <location line="+19" />
+            <source>Phrases and sounds can have shortcuts too. There are %n more action(s) in Settings → Shortcuts.</source>
+            <translation>
+                <numerusform>短语和音效也可以设置快捷键。“设置 → 快捷键”中还有另外 %n 个操作。</numerusform>
+            </translation>
         </message>
     </context>
     <context>
@@ -3227,8 +3231,8 @@
         </message>
         <message>
             <location line="+0" />
-            <source>Presentations, classes, desks</source>
-            <translation>演示、课堂、工位</translation>
+            <source>Presentations, classes, the office</source>
+            <translation>演示、课堂、办公室</translation>
         </message>
         <message>
             <location line="+1" />
@@ -3493,13 +3497,14 @@
             <translation>快捷键</translation>
         </message>
         <message>
-            <location line="+43" />
+            <location line="+44" />
             <source>Step %1 of %2: %3</source>
             <translation>第 %1 步，共 %2 步：%3</translation>
         </message>
         <message>
             <location line="-42" />
             <source>Look</source>
+            <extracomment>Setup step about the app's appearance (theme, colours)</extracomment>
             <translation>外观</translation>
         </message>
         <message>
@@ -3580,8 +3585,8 @@
         </message>
         <message>
             <location line="+26" />
-            <source>Add your OpenAI API key in Settings → Voices.</source>
-            <translation>请在“设置 → 声音”中添加你的 OpenAI API 密钥。</translation>
+            <source>Add your OpenAI API key in Settings → Voice providers.</source>
+            <translation>请在“设置 → 声音服务商”中添加你的 OpenAI API 密钥。</translation>
         </message>
     </context>
     <context>
@@ -4532,8 +4537,8 @@
         </message>
         <message>
             <location line="+3" />
-            <source>You can use {time}, {date}, {clipboard} and your own {variables}.</source>
-            <translation>你可以使用 {time}、{date}、{clipboard} 以及你自己的 {variables}。</translation>
+            <source>You can use {time}, {date}, {clipboard} and your own variables, like {name}.</source>
+            <translation>你可以使用 {time}、{date}、{clipboard} 以及你自己的变量，比如 {name}。</translation>
         </message>
         <message>
             <location line="+8" />
@@ -4605,7 +4610,7 @@
     <context>
         <name>PhraseModel</name>
         <message>
-            <location filename="../src/ui/Models.cpp" line="-410" />
+            <location filename="../src/ui/Models.cpp" line="-435" />
             <source>Basics</source>
             <translation>基础</translation>
         </message>
@@ -4796,24 +4801,24 @@
     <context>
         <name>PiperTtsEngine</name>
         <message>
-            <location filename="../src/tts/PiperTtsEngine.cpp" line="+79" />
-            <source>Download the Piper voice engine in Settings → Voices.</source>
-            <translation>请在“设置 → 声音”中下载 Piper 声音引擎。</translation>
-        </message>
-        <message>
-            <location line="+2" />
-            <source>Download a Piper voice in Settings → Voices.</source>
-            <translation>请在“设置 → 声音”中下载一个 Piper 声音。</translation>
-        </message>
-        <message>
-            <location line="+124" />
-            <source>The Piper voice "%1" is not installed. Download it in Settings → Voices.</source>
-            <translation>Piper 声音“%1”尚未安装。请在“设置 → 声音”中下载。</translation>
-        </message>
-        <message>
             <location filename="../src/tts/PiperTtsEngine.h" line="+16" />
             <source>Piper (local)</source>
             <translation>Piper（本地）</translation>
+        </message>
+        <message>
+            <location filename="../src/tts/PiperTtsEngine.cpp" line="+79" />
+            <source>Download the Piper voice engine in Voices → Download.</source>
+            <translation>请在“声音 → 下载”中下载 Piper 声音引擎。</translation>
+        </message>
+        <message>
+            <location line="+2" />
+            <source>Download a Piper voice in Voices → Download.</source>
+            <translation>请在“声音 → 下载”中下载一个 Piper 声音。</translation>
+        </message>
+        <message>
+            <location line="+124" />
+            <source>The Piper voice "%1" is not installed. Download it in Voices → Download.</source>
+            <translation>Piper 声音“%1”尚未安装。请在“声音 → 下载”中下载。</translation>
         </message>
     </context>
     <context>
@@ -4943,12 +4948,22 @@
             <translation>%1 拒绝了请求</translation>
         </message>
         <message>
-            <location line="+4" />
-            <source>%1 did not accept the API key. Check it in Settings → Voices</source>
-            <translation>%1 不接受该 API 密钥。请在“设置 → 声音”中检查</translation>
+            <location line="+6" />
+            <source>%1 did not accept the API key. Check it in Settings → Voice providers</source>
+            <translation>%1 不接受该 API 密钥。请在“设置 → 声音服务商”中检查</translation>
         </message>
         <message>
             <location line="+3" />
+            <source>%1 did not accept the API key. Check it in Settings → Speech input</source>
+            <translation>%1 不接受该 API 密钥。请在“设置 → 语音输入”中检查</translation>
+        </message>
+        <message>
+            <location line="+3" />
+            <source>%1 refused the request (HTTP %2)</source>
+            <translation>%1 拒绝了请求（HTTP %2）</translation>
+        </message>
+        <message>
+            <location line="+5" />
             <source>%1 says the account is out of credit or needs a paid plan</source>
             <translation>%1 表示账户余额不足或需要付费套餐</translation>
         </message>
@@ -5012,8 +5027,8 @@
         <name>QtAudioLane</name>
         <message>
             <location filename="../src/audio/AudioOutputLane.cpp" line="+147" />
-            <source>Audio output "%1" failed (error %2). Check the device in Settings → Audio.</source>
-            <translation>音频输出“%1”失败（错误 %2）。请在“设置 → 音频”中检查设备。</translation>
+            <source>Audio output "%1" failed (error %2). Check the device in Audio &amp; mic.</source>
+            <translation>音频输出“%1”失败（错误 %2）。请在“音频与麦克风”中检查设备。</translation>
         </message>
     </context>
     <context>
@@ -5078,12 +5093,12 @@
         </message>
         <message>
             <location line="+3" />
-            <location line="+78" />
+            <location line="+79" />
             <source>Off</source>
             <translation>关闭</translation>
         </message>
         <message>
-            <location line="-77" />
+            <location line="-78" />
             <source>While I hold a key</source>
             <translation>按住按键时</translation>
         </message>
@@ -5133,14 +5148,27 @@
             <translation>在任何应用中都有效，即使游戏处于前台。</translation>
         </message>
         <message>
+            <location line="+44" />
             <location line="+3" />
-            <source>Hold to talk</source>
-            <translation>按住说话</translation>
+            <source>Lower my mic while Vocal Ink speaks</source>
+            <translation>Vocal Ink 说话时降低我的麦克风音量</translation>
+        </message>
+        <message>
+            <location line="+7" />
+            <location line="+3" />
+            <source>Show a red MIC LIVE badge on screen</source>
+            <translation>在屏幕上显示红色的“麦克风已开启”标志</translation>
+        </message>
+        <message>
+            <location line="-53" />
+            <source>Toggle real mic</source>
+            <translation>切换真实麦克风</translation>
         </message>
         <message>
             <location line="+0" />
-            <source>Toggle real mic</source>
-            <translation>切换真实麦克风</translation>
+            <source>Hold to talk on your real mic</source>
+            <extracomment>Shortcut name: hold the key to open your real microphone</extracomment>
+            <translation>按住用真实麦克风说话</translation>
         </message>
         <message>
             <location line="+12" />
@@ -5176,24 +5204,12 @@
             <translation>低于这个音量时让麦克风静音，把键盘声和风扇声挡在外面。</translation>
         </message>
         <message>
-            <location line="+11" />
-            <location line="+3" />
-            <source>Lower my mic while the voice speaks</source>
-            <translation>Vocal Ink 说话时降低我的麦克风音量</translation>
-        </message>
-        <message>
-            <location line="-2" />
+            <location line="+12" />
             <source>Keeps your typed messages clear over background sound.</source>
             <translation>让你打字发出的消息在背景声中也清晰可闻。</translation>
         </message>
         <message>
-            <location line="+9" />
-            <location line="+3" />
-            <source>Show a red LIVE badge on screen</source>
-            <translation>在屏幕上显示红色的“麦克风已开启”标志</translation>
-        </message>
-        <message>
-            <location line="-2" />
+            <location line="+10" />
             <source>Stays on top of games and other apps while your mic is live.</source>
             <translation>麦克风开启期间，它会一直显示在游戏和其他应用的上层。</translation>
         </message>
@@ -5258,16 +5274,21 @@
         </message>
         <message>
             <location line="+5" />
-            <source> (not connected)</source>
-            <translation> （未连接）</translation>
+            <source>%1 (not connected)</source>
+            <translation>%1（未连接）</translation>
+        </message>
+        <message>
+            <location line="+1" />
+            <source>%1, then %2</source>
+            <translation>%1，然后是 %2</translation>
         </message>
     </context>
     <context>
         <name>RoutingCheck</name>
         <message>
             <location filename="../src/audio/RoutingCheck.cpp" line="+335" />
-            <source>The voice output device isn't connected. Pick it again in Settings → Audio.</source>
-            <translation>声音输出设备没有连接。请在“设置 → 音频”中重新选择。</translation>
+            <source>The voice output device isn't connected. Pick it again in Audio &amp; mic.</source>
+            <translation>声音输出设备没有连接。请在“音频与麦克风”中重新选择。</translation>
         </message>
         <message>
             <location line="+7" />
@@ -5493,8 +5514,8 @@
         <message>
             <location line="+4" />
             <location line="+2" />
-            <source>Tap to talk instead of holding</source>
-            <translation>点按说话，而不是按住</translation>
+            <source>Tap to dictate instead of holding</source>
+            <translation>点按听写，而不是按住</translation>
         </message>
         <message>
             <location line="-1" />
@@ -5518,12 +5539,13 @@
         </message>
         <message>
             <location line="+2" />
-            <location line="+59" />
+            <location line="+60" />
             <source>Off</source>
+            <extracomment>Typing echo: read back nothing / each word as it is typed / each sentence as it is finished</extracomment>
             <translation>关闭</translation>
         </message>
         <message>
-            <location line="-59" />
+            <location line="-60" />
             <source>%1 ms</source>
             <comment>milliseconds</comment>
             <translation>%1 毫秒</translation>
@@ -5609,7 +5631,7 @@
             <translation>每打完一个词或一句话就读给你听，只在你自己的扬声器上播放。</translation>
         </message>
         <message>
-            <location line="+4" />
+            <location line="+5" />
             <source>Words</source>
             <translation>词</translation>
         </message>
@@ -5925,12 +5947,12 @@
         </message>
         <message>
             <location line="+0" />
-            <location line="+148" />
+            <location line="+149" />
             <source>Off</source>
             <translation>关闭</translation>
         </message>
         <message>
-            <location line="-143" />
+            <location line="-144" />
             <location line="+2" />
             <source>Fill words with ink as they're spoken</source>
             <translation>说出时用墨色填充文字</translation>
@@ -5963,8 +5985,9 @@
             <translation>说出的文字所用字体</translation>
         </message>
         <message>
-            <location line="+2" />
+            <location line="+3" />
             <source>Display</source>
+            <extracomment>Fonts for the big spoken words: the decorative display font / the plain reading font / a serif font</extracomment>
             <translation>展示字体</translation>
         </message>
         <message>
@@ -6518,7 +6541,7 @@
         </message>
         <message>
             <location line="+7" />
-            <source>A red LIVE badge appears on screen and a tone plays whenever it's on. You can change this in Audio &amp; mic.</source>
+            <source>A red MIC LIVE badge appears on screen and a tone plays whenever it's on. You can change this in Audio &amp; mic.</source>
             <translation>只要它开启，屏幕上就会出现红色的“麦克风已开启”标志并播放提示音。你可以在“音频与麦克风”中更改。</translation>
         </message>
         <message>
@@ -6636,12 +6659,7 @@
             <translation>听写模式</translation>
         </message>
         <message>
-            <location line="+2" />
-            <source>Hold to talk</source>
-            <translation>按住说话</translation>
-        </message>
-        <message>
-            <location line="+0" />
+            <location line="+3" />
             <source>Tap on/off</source>
             <translation>按一下开/关</translation>
         </message>
@@ -6649,6 +6667,12 @@
             <location line="+0" />
             <source>Hands-free</source>
             <translation>免按键</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Hold to dictate</source>
+            <extracomment>Dictation modes: hold a key while speaking / press once to start and again to stop / listens on its own</extracomment>
+            <translation>按住听写</translation>
         </message>
         <message>
             <location line="+6" />
@@ -6816,7 +6840,7 @@
         </message>
         <message>
             <location line="+1" />
-            <source>Type less and sound right: word suggestions, shortcuts that expand, and how emoji and links are read.</source>
+            <source>Type less and sound right: word suggestions, abbreviations that expand, and how emoji and links are read.</source>
             <translation>少打点字，说得更准：联想词、可展开的缩写，以及表情符号和链接的读法。</translation>
         </message>
         <message>
@@ -7329,8 +7353,8 @@
         <name>SpeechQueue</name>
         <message>
             <location filename="../src/core/SpeechQueue.cpp" line="+90" />
-            <source>No voice is selected. Pick a voice in the toolbar, or install one in Settings → Voices.</source>
-            <translation>没有选择声音。请在工具栏中选择一个声音，或在“设置 → 声音”中安装一个。</translation>
+            <source>No voice is selected. Pick a voice in the toolbar, or download one in Voices → Download.</source>
+            <translation>没有选择声音。请在工具栏中选择一个声音，或在“声音 → 下载”中下载一个。</translation>
         </message>
         <message>
             <location line="+6" />
@@ -8186,21 +8210,6 @@
             <translation>pactl %1 失败</translation>
         </message>
         <message>
-            <location line="+13" />
-            <source>&lt;p&gt;Install the free &lt;b&gt;VB-CABLE&lt;/b&gt; virtual audio device from &lt;a href="https://vb-audio.com/Cable/"&gt;vb-audio.com/Cable&lt;/a&gt; and restart Vocal Ink.&lt;/p&gt;&lt;ol&gt;&lt;li&gt;Choose &lt;b&gt;CABLE Input (VB-Audio Virtual Cable)&lt;/b&gt; as Vocal Ink's &lt;i&gt;voice output&lt;/i&gt;.&lt;/li&gt;&lt;li&gt;In Discord, games or OBS choose &lt;b&gt;CABLE Output (VB-Audio Virtual Cable)&lt;/b&gt; as the microphone.&lt;/li&gt;&lt;li&gt;Keep &lt;i&gt;Also play on my speakers&lt;/i&gt; on to hear yourself.&lt;/li&gt;&lt;/ol&gt;</source>
-            <translation>&lt;p&gt;从 &lt;a href="https://vb-audio.com/Cable/"&gt;vb-audio.com/Cable&lt;/a&gt; 安装免费的 &lt;b&gt;VB-CABLE&lt;/b&gt; 虚拟音频设备，然后重新启动 Vocal Ink。&lt;/p&gt;&lt;ol&gt;&lt;li&gt;选择 &lt;b&gt;CABLE Input (VB-Audio Virtual Cable)&lt;/b&gt; 作为 Vocal Ink 的&lt;i&gt;声音输出&lt;/i&gt;。&lt;/li&gt;&lt;li&gt;在 Discord、游戏或 OBS 中选择 &lt;b&gt;CABLE Output (VB-Audio Virtual Cable)&lt;/b&gt; 作为麦克风。&lt;/li&gt;&lt;li&gt;保持&lt;i&gt;同时在我的扬声器上播放&lt;/i&gt;处于开启状态，就能听到自己的声音。&lt;/li&gt;&lt;/ol&gt;</translation>
-        </message>
-        <message>
-            <location line="+6" />
-            <source>&lt;p&gt;Install the free &lt;b&gt;BlackHole 2ch&lt;/b&gt; virtual audio driver from &lt;a href="https://existential.audio/blackhole/"&gt;existential.audio/blackhole&lt;/a&gt; (or &lt;code&gt;brew install blackhole-2ch&lt;/code&gt;) and restart Vocal Ink.&lt;/p&gt;&lt;ol&gt;&lt;li&gt;Choose &lt;b&gt;BlackHole 2ch&lt;/b&gt; as Vocal Ink's &lt;i&gt;voice output&lt;/i&gt;.&lt;/li&gt;&lt;li&gt;In Discord, games or OBS choose &lt;b&gt;BlackHole 2ch&lt;/b&gt; as the microphone.&lt;/li&gt;&lt;li&gt;Keep &lt;i&gt;Also play on my speakers&lt;/i&gt; on to hear yourself.&lt;/li&gt;&lt;/ol&gt;</source>
-            <translation>&lt;p&gt;从 &lt;a href="https://existential.audio/blackhole/"&gt;existential.audio/blackhole&lt;/a&gt; 安装免费的 &lt;b&gt;BlackHole 2ch&lt;/b&gt; 虚拟音频驱动（或运行 &lt;code&gt;brew install blackhole-2ch&lt;/code&gt;），然后重新启动 Vocal Ink。&lt;/p&gt;&lt;ol&gt;&lt;li&gt;选择 &lt;b&gt;BlackHole 2ch&lt;/b&gt; 作为 Vocal Ink 的&lt;i&gt;声音输出&lt;/i&gt;。&lt;/li&gt;&lt;li&gt;在 Discord、游戏或 OBS 中选择 &lt;b&gt;BlackHole 2ch&lt;/b&gt; 作为麦克风。&lt;/li&gt;&lt;li&gt;保持&lt;i&gt;同时在我的扬声器上播放&lt;/i&gt;处于开启状态，就能听到自己的声音。&lt;/li&gt;&lt;/ol&gt;</translation>
-        </message>
-        <message>
-            <location line="+7" />
-            <source>&lt;p&gt;Vocal Ink can create a virtual microphone for you (PulseAudio or PipeWire). Click &lt;b&gt;Create virtual microphone&lt;/b&gt;, then:&lt;/p&gt;&lt;ol&gt;&lt;li&gt;Choose &lt;b&gt;Vocal Ink Voice&lt;/b&gt; as Vocal Ink's &lt;i&gt;voice output&lt;/i&gt;.&lt;/li&gt;&lt;li&gt;In Discord, games or OBS choose &lt;b&gt;Vocal Ink Mic&lt;/b&gt; as the microphone (OBS can also capture &lt;i&gt;Monitor of Vocal Ink Voice&lt;/i&gt;).&lt;/li&gt;&lt;li&gt;Keep &lt;i&gt;Also play on my speakers&lt;/i&gt; on to hear yourself.&lt;/li&gt;&lt;/ol&gt;&lt;p&gt;The virtual devices last until you log out; Vocal Ink recreates them on request.&lt;/p&gt;</source>
-            <translation>&lt;p&gt;Vocal Ink 可以为你创建一个虚拟麦克风（PulseAudio 或 PipeWire）。点击&lt;b&gt;创建虚拟麦克风&lt;/b&gt;，然后：&lt;/p&gt;&lt;ol&gt;&lt;li&gt;选择 &lt;b&gt;Vocal Ink Voice&lt;/b&gt; 作为 Vocal Ink 的&lt;i&gt;声音输出&lt;/i&gt;。&lt;/li&gt;&lt;li&gt;在 Discord、游戏或 OBS 中选择 &lt;b&gt;Vocal Ink Mic&lt;/b&gt; 作为麦克风（OBS 也可以采集 &lt;i&gt;Monitor of Vocal Ink Voice&lt;/i&gt;）。&lt;/li&gt;&lt;li&gt;保持&lt;i&gt;同时在我的扬声器上播放&lt;/i&gt;处于开启状态，就能听到自己的声音。&lt;/li&gt;&lt;/ol&gt;&lt;p&gt;虚拟设备会一直保留到你注销；需要时 Vocal Ink 会重新创建它们。&lt;/p&gt;</translation>
-        </message>
-        <message>
             <location line="+31" />
             <source>Creating a virtual microphone is only supported on Linux with PulseAudio or PipeWire.</source>
             <translation>只有在使用 PulseAudio 或 PipeWire 的 Linux 上才支持创建虚拟麦克风。</translation>
@@ -8706,7 +8715,7 @@
     <context>
         <name>WhisperEngine</name>
         <message>
-            <location filename="../src/stt/WhisperEngine.cpp" line="+258" />
+            <location filename="../src/stt/WhisperEngine.cpp" line="+267" />
             <source>Local speech recognition is not included in this build.</source>
             <translation>此版本不包含本地语音识别。</translation>
         </message>
@@ -8716,8 +8725,9 @@
             <translation>正在加载语音模型…</translation>
         </message>
         <message>
-            <location line="+2" />
+            <location line="+3" />
             <source>%1 Download it again in Settings → Speech input.</source>
+            <extracomment>%1 is a full sentence saying why the speech model could not be loaded</extracomment>
             <translation>%1请在“设置 → 语音输入”中重新下载。</translation>
         </message>
         <message>
@@ -8734,12 +8744,12 @@
     <context>
         <name>WhisperWorker</name>
         <message>
-            <location filename="../src/stt/WhisperEngine.cpp" line="-148" />
+            <location filename="../src/stt/WhisperEngine.cpp" line="-163" />
             <source>"%1" is not a valid Whisper model.</source>
             <translation>“%1”不是有效的 Whisper 模型。</translation>
         </message>
         <message>
-            <location line="+2" />
+            <location line="+16" />
             <location line="+60" />
             <source>Local speech recognition is not included in this build.</source>
             <translation>此版本不包含本地语音识别。</translation>

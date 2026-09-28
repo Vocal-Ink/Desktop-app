@@ -140,26 +140,36 @@
         </message>
         <message>
             <location line="+1" />
-            <source>Next favorite voice</source>
+            <source>Next favourite voice</source>
             <translation>Voix favorite suivante</translation>
         </message>
         <message>
             <location line="+1" />
-            <source>Cycles forward through your favorite voices.</source>
+            <source>Cycles forward through your favourite voices.</source>
             <translation>Passe à la voix favorite suivante.</translation>
         </message>
         <message>
             <location line="+1" />
-            <source>Previous favorite voice</source>
+            <source>Previous favourite voice</source>
             <translation>Voix favorite précédente</translation>
         </message>
         <message>
             <location line="+1" />
-            <source>Cycles back through your favorite voices.</source>
+            <source>Cycles back through your favourite voices.</source>
             <translation>Revient à la voix favorite précédente.</translation>
         </message>
         <message>
+            <location line="+23" />
+            <source>Favourite voice %1</source>
+            <translation>Voix favorite %1</translation>
+        </message>
+        <message>
             <location line="+1" />
+            <source>Switches to favourite voice number %1.</source>
+            <translation>Passe à la voix favorite numéro %1.</translation>
+        </message>
+        <message>
+            <location line="-23" />
             <source>Speak faster</source>
             <translation>Parler plus vite</translation>
         </message>
@@ -279,17 +289,7 @@
             <translation>Arrête (ou reprend) l'envoi de ce que vous dites vers le stream.</translation>
         </message>
         <message>
-            <location line="+3" />
-            <source>Favorite voice %1</source>
-            <translation>Voix favorite %1</translation>
-        </message>
-        <message>
-            <location line="+1" />
-            <source>Switches to favorite voice number %1.</source>
-            <translation>Passe à la voix favorite numéro %1.</translation>
-        </message>
-        <message>
-            <location line="+3" />
+            <location line="+7" />
             <source>Voice preset %1</source>
             <translation>Préréglage de voix %1</translation>
         </message>
@@ -350,7 +350,7 @@
     <context>
         <name>AppContext</name>
         <message>
-            <location filename="../src/app/AppContext.cpp" line="+183" />
+            <location filename="../src/app/AppContext.cpp" line="+186" />
             <source>OBS: %1</source>
             <translation>OBS : %1</translation>
         </message>
@@ -391,12 +391,7 @@
             <translation>Sous-titres réactivés</translation>
         </message>
         <message>
-            <location line="+43" />
-            <source>Real-mic passthrough is off. Turn it on in Audio → Your real microphone.</source>
-            <translation>Le vrai micro est désactivé. Activez-le dans Audio et micro → Votre vrai microphone.</translation>
-        </message>
-        <message>
-            <location line="+17" />
+            <location line="+60" />
             <location line="+2" />
             <source>Speed %1%</source>
             <translation>Vitesse %1 %</translation>
@@ -418,9 +413,14 @@
             <translation>Pas encore de voix favorite n° %1. Ajoutez des voix aux favoris dans Voix.</translation>
         </message>
         <message>
-            <location line="+8" />
-            <source>No preset #%1 yet. Save one in Voices → Presets.</source>
-            <translation>Pas encore de préréglage n° %1. Enregistrez-en un dans Voix → Préréglages.</translation>
+            <location line="-42" />
+            <source>Real-mic passthrough is off. Turn it on in Audio &amp; mic → Your real microphone.</source>
+            <translation>Le vrai micro est désactivé. Activez-le dans Audio et micro → Votre vrai microphone.</translation>
+        </message>
+        <message>
+            <location line="+50" />
+            <source>No preset #%1 yet. Save one in Voices → Tune &amp; presets.</source>
+            <translation>Pas encore de préréglage n° %1. Enregistrez-en un dans Voix → Réglages et préréglages.</translation>
         </message>
         <message>
             <location line="+129" />
@@ -463,8 +463,9 @@
             <translation>Streamer</translation>
         </message>
         <message>
-            <location line="+1" />
+            <location line="+2" />
             <source>Mod</source>
+            <extracomment>Short Twitch chat badges: moderator, VIP, subscriber</extracomment>
             <translation>Modo</translation>
         </message>
         <message>
@@ -1223,7 +1224,7 @@
         <name>AzureTtsEngine</name>
         <message>
             <location filename="../src/tts/AzureTtsEngine.cpp" line="+67" />
-            <source>Add your Microsoft Azure Speech key in Settings → Voices.</source>
+            <source>Add your Microsoft Azure Speech key in Settings → Voice providers.</source>
             <translation>Ajoutez votre clé Microsoft Azure Speech dans Paramètres → Fournisseurs de voix.</translation>
         </message>
         <message>
@@ -1357,7 +1358,7 @@
     <context>
         <name>Bridge</name>
         <message>
-            <location filename="../src/ui/Bridge.cpp" line="+337" />
+            <location filename="../src/ui/Bridge.cpp" line="+341" />
             <source>Hey! Sorry, I don't talk out loud, so I type.</source>
             <translation>Salut ! Pardon, je ne parle pas à voix haute, alors j'écris.</translation>
         </message>
@@ -1453,8 +1454,9 @@
             <translation>Voici à quoi ressembleront vos mots en stream pendant qu'ils sont prononcés.</translation>
         </message>
         <message>
-            <location line="+2" />
+            <location line="+3" />
             <source>Test</source>
+            <extracomment>Shown on stream overlays as the voice name of a test caption</extracomment>
             <translation>Test</translation>
         </message>
         <message>
@@ -2006,7 +2008,7 @@
             <translation>Téléchargement terminé.</translation>
         </message>
         <message numerus="yes">
-            <location line="+67" />
+            <location line="+92" />
             <source>%n speaker(s)</source>
             <translation>
                 <numerusform>%n locuteur</numerusform>
@@ -2018,7 +2020,7 @@
         <name>ElevenLabsTtsEngine</name>
         <message>
             <location filename="../src/tts/ElevenLabsTtsEngine.cpp" line="+34" />
-            <source>Add your ElevenLabs API key in Settings → Voices.</source>
+            <source>Add your ElevenLabs API key in Settings → Voice providers.</source>
             <translation>Ajoutez votre clé API ElevenLabs dans Paramètres → Fournisseurs de voix.</translation>
         </message>
     </context>
@@ -2049,7 +2051,7 @@
         <name>FishAudioTtsEngine</name>
         <message>
             <location filename="../src/tts/FishAudioTtsEngine.cpp" line="+33" />
-            <source>Add your Fish Audio API key in Settings → Voices.</source>
+            <source>Add your Fish Audio API key in Settings → Voice providers.</source>
             <translation>Ajoutez votre clé API Fish Audio dans Paramètres → Fournisseurs de voix.</translation>
         </message>
         <message>
@@ -2330,7 +2332,7 @@
             <translation>Impossible de lire la liste des voix Piper.</translation>
         </message>
         <message>
-            <location line="+41" />
+            <location line="+40" />
             <source>Tiny (English)</source>
             <translation>Tiny (anglais)</translation>
         </message>
@@ -2346,8 +2348,8 @@
         </message>
         <message>
             <location line="+1" />
-            <source>Recommended: fast and accurate for English.</source>
-            <translation>Recommandé : rapide et précis pour l'anglais.</translation>
+            <source>Fast and accurate for English.</source>
+            <translation>Rapide et précis pour l'anglais.</translation>
         </message>
         <message>
             <location line="+1" />
@@ -2410,7 +2412,7 @@
             <translation>La voix « %1 » n'est pas dans la liste des voix Piper. Actualisez la liste et réessayez.</translation>
         </message>
         <message>
-            <location line="+45" />
+            <location line="+104" />
             <source>Download cancelled.</source>
             <translation>Téléchargement annulé.</translation>
         </message>
@@ -2687,8 +2689,8 @@
         </message>
         <message>
             <location line="+1" />
-            <source>If you can whisper, mouth or speak softly, Vocal Ink can write it down for you to check and send. It runs on this computer.</source>
-            <translation>Si vous pouvez chuchoter, articuler sans voix ou parler doucement, Vocal Ink peut l'écrire pour vous, pour que vous le vérifiiez et l'envoyiez. Tout se passe sur cet ordinateur.</translation>
+            <source>If you can whisper or speak softly, Vocal Ink can write it down for you to check and send. It runs on this computer.</source>
+            <translation>Si vous pouvez chuchoter ou parler doucement, Vocal Ink peut l'écrire pour vous, pour que vous le vérifiiez et l'envoyiez. Tout se passe sur cet ordinateur.</translation>
         </message>
         <message>
             <location line="+7" />
@@ -3050,7 +3052,7 @@
             <translation>Ils fonctionnent même quand un jeu ou une autre application est au premier plan. Cliquez sur l'un d'eux et appuyez sur de nouvelles touches pour le modifier.</translation>
         </message>
         <message>
-            <location line="+8" />
+            <location line="+9" />
             <source>Pop up a box to type over any app</source>
             <translation>Ouvrir une zone de saisie par-dessus n'importe quelle application</translation>
         </message>
@@ -3079,10 +3081,13 @@
             <source>Show or hide Vocal Ink</source>
             <translation>Afficher ou masquer Vocal Ink</translation>
         </message>
-        <message>
-            <location line="+16" />
-            <source>Phrases and sounds can have shortcuts too. There are 26 more actions in Settings → Shortcuts.</source>
-            <translation>Les phrases et les sons peuvent aussi avoir des raccourcis. Il y a 26 autres actions dans Paramètres → Raccourcis.</translation>
+        <message numerus="yes">
+            <location line="+19" />
+            <source>Phrases and sounds can have shortcuts too. There are %n more action(s) in Settings → Shortcuts.</source>
+            <translation>
+                <numerusform>Les phrases et les sons peuvent aussi avoir des raccourcis. Il y a %n autre action dans Paramètres → Raccourcis.</numerusform>
+                <numerusform>Les phrases et les sons peuvent aussi avoir des raccourcis. Il y a %n autres actions dans Paramètres → Raccourcis.</numerusform>
+            </translation>
         </message>
     </context>
     <context>
@@ -3228,7 +3233,7 @@
         </message>
         <message>
             <location line="+0" />
-            <source>Presentations, classes, desks</source>
+            <source>Presentations, classes, the office</source>
             <translation>Présentations, cours, bureau</translation>
         </message>
         <message>
@@ -3494,13 +3499,14 @@
             <translation>Raccourcis</translation>
         </message>
         <message>
-            <location line="+43" />
+            <location line="+44" />
             <source>Step %1 of %2: %3</source>
             <translation>Étape %1 sur %2 : %3</translation>
         </message>
         <message>
             <location line="-42" />
             <source>Look</source>
+            <extracomment>Setup step about the app's appearance (theme, colours)</extracomment>
             <translation>Style</translation>
         </message>
         <message>
@@ -3581,7 +3587,7 @@
         </message>
         <message>
             <location line="+26" />
-            <source>Add your OpenAI API key in Settings → Voices.</source>
+            <source>Add your OpenAI API key in Settings → Voice providers.</source>
             <translation>Ajoutez votre clé API OpenAI dans Paramètres → Fournisseurs de voix.</translation>
         </message>
     </context>
@@ -4533,8 +4539,8 @@
         </message>
         <message>
             <location line="+3" />
-            <source>You can use {time}, {date}, {clipboard} and your own {variables}.</source>
-            <translation>Vous pouvez utiliser {time}, {date}, {clipboard} et vos propres {variables}.</translation>
+            <source>You can use {time}, {date}, {clipboard} and your own variables, like {name}.</source>
+            <translation>Vous pouvez utiliser {time}, {date}, {clipboard} et vos propres variables, comme {name}.</translation>
         </message>
         <message>
             <location line="+8" />
@@ -4606,7 +4612,7 @@
     <context>
         <name>PhraseModel</name>
         <message>
-            <location filename="../src/ui/Models.cpp" line="-410" />
+            <location filename="../src/ui/Models.cpp" line="-435" />
             <source>Basics</source>
             <translation>Essentiels</translation>
         </message>
@@ -4797,24 +4803,24 @@
     <context>
         <name>PiperTtsEngine</name>
         <message>
+            <location filename="../src/tts/PiperTtsEngine.h" line="+16" />
+            <source>Piper (local)</source>
+            <translation>Piper (local)</translation>
+        </message>
+        <message>
             <location filename="../src/tts/PiperTtsEngine.cpp" line="+79" />
-            <source>Download the Piper voice engine in Settings → Voices.</source>
+            <source>Download the Piper voice engine in Voices → Download.</source>
             <translation>Téléchargez le moteur de voix Piper dans Voix → Télécharger.</translation>
         </message>
         <message>
             <location line="+2" />
-            <source>Download a Piper voice in Settings → Voices.</source>
+            <source>Download a Piper voice in Voices → Download.</source>
             <translation>Téléchargez une voix Piper dans Voix → Télécharger.</translation>
         </message>
         <message>
             <location line="+124" />
-            <source>The Piper voice "%1" is not installed. Download it in Settings → Voices.</source>
+            <source>The Piper voice "%1" is not installed. Download it in Voices → Download.</source>
             <translation>La voix Piper « %1 » n'est pas installée. Téléchargez-la dans Voix → Télécharger.</translation>
-        </message>
-        <message>
-            <location filename="../src/tts/PiperTtsEngine.h" line="+16" />
-            <source>Piper (local)</source>
-            <translation>Piper (local)</translation>
         </message>
     </context>
     <context>
@@ -4944,12 +4950,22 @@
             <translation>%1 a refusé la requête</translation>
         </message>
         <message>
-            <location line="+4" />
-            <source>%1 did not accept the API key. Check it in Settings → Voices</source>
+            <location line="+6" />
+            <source>%1 did not accept the API key. Check it in Settings → Voice providers</source>
             <translation>%1 n'a pas accepté la clé API. Vérifiez-la dans Paramètres → Fournisseurs de voix</translation>
         </message>
         <message>
             <location line="+3" />
+            <source>%1 did not accept the API key. Check it in Settings → Speech input</source>
+            <translation>%1 n'a pas accepté la clé API. Vérifiez-la dans Paramètres → Saisie vocale</translation>
+        </message>
+        <message>
+            <location line="+3" />
+            <source>%1 refused the request (HTTP %2)</source>
+            <translation>%1 a refusé la requête (HTTP %2)</translation>
+        </message>
+        <message>
+            <location line="+5" />
             <source>%1 says the account is out of credit or needs a paid plan</source>
             <translation>%1 indique que le compte n'a plus de crédit ou nécessite un forfait payant</translation>
         </message>
@@ -5013,8 +5029,8 @@
         <name>QtAudioLane</name>
         <message>
             <location filename="../src/audio/AudioOutputLane.cpp" line="+147" />
-            <source>Audio output "%1" failed (error %2). Check the device in Settings → Audio.</source>
-            <translation>La sortie audio « %1 » a échoué (erreur %2). Vérifiez le périphérique dans Audio et micro → Sortie de la voix.</translation>
+            <source>Audio output "%1" failed (error %2). Check the device in Audio &amp; mic.</source>
+            <translation>La sortie audio « %1 » a échoué (erreur %2). Vérifiez le périphérique dans Audio et micro.</translation>
         </message>
     </context>
     <context>
@@ -5079,12 +5095,12 @@
         </message>
         <message>
             <location line="+3" />
-            <location line="+78" />
+            <location line="+79" />
             <source>Off</source>
             <translation>Désactivé</translation>
         </message>
         <message>
-            <location line="-77" />
+            <location line="-78" />
             <source>While I hold a key</source>
             <translation>Touche maintenue</translation>
         </message>
@@ -5134,14 +5150,27 @@
             <translation>Fonctionne dans toute application, même quand un jeu est au premier plan.</translation>
         </message>
         <message>
+            <location line="+44" />
             <location line="+3" />
-            <source>Hold to talk</source>
-            <translation>Maintenir pour parler</translation>
+            <source>Lower my mic while Vocal Ink speaks</source>
+            <translation>Baisser mon micro quand Vocal Ink parle</translation>
+        </message>
+        <message>
+            <location line="+7" />
+            <location line="+3" />
+            <source>Show a red MIC LIVE badge on screen</source>
+            <translation>Afficher un badge rouge MICRO EN DIRECT à l'écran</translation>
+        </message>
+        <message>
+            <location line="-53" />
+            <source>Toggle real mic</source>
+            <translation>Activer/désactiver le vrai micro</translation>
         </message>
         <message>
             <location line="+0" />
-            <source>Toggle real mic</source>
-            <translation>Activer/désactiver le vrai micro</translation>
+            <source>Hold to talk on your real mic</source>
+            <extracomment>Shortcut name: hold the key to open your real microphone</extracomment>
+            <translation>Maintenir pour parler dans votre vrai micro</translation>
         </message>
         <message>
             <location line="+12" />
@@ -5177,24 +5206,12 @@
             <translation>Coupe le micro sous ce niveau, pour laisser de côté le bruit du clavier et du ventilateur.</translation>
         </message>
         <message>
-            <location line="+11" />
-            <location line="+3" />
-            <source>Lower my mic while the voice speaks</source>
-            <translation>Baisser mon micro quand la voix parle</translation>
-        </message>
-        <message>
-            <location line="-2" />
+            <location line="+12" />
             <source>Keeps your typed messages clear over background sound.</source>
             <translation>Vos messages tapés restent clairs par-dessus les sons d'ambiance.</translation>
         </message>
         <message>
-            <location line="+9" />
-            <location line="+3" />
-            <source>Show a red LIVE badge on screen</source>
-            <translation>Afficher un badge rouge EN DIRECT à l'écran</translation>
-        </message>
-        <message>
-            <location line="-2" />
+            <location line="+10" />
             <source>Stays on top of games and other apps while your mic is live.</source>
             <translation>Reste au-dessus des jeux et des autres applications tant que votre micro est en direct.</translation>
         </message>
@@ -5259,16 +5276,21 @@
         </message>
         <message>
             <location line="+5" />
-            <source> (not connected)</source>
-            <translation> (non connecté)</translation>
+            <source>%1 (not connected)</source>
+            <translation>%1 (non connecté)</translation>
+        </message>
+        <message>
+            <location line="+1" />
+            <source>%1, then %2</source>
+            <translation>%1, puis %2</translation>
         </message>
     </context>
     <context>
         <name>RoutingCheck</name>
         <message>
             <location filename="../src/audio/RoutingCheck.cpp" line="+335" />
-            <source>The voice output device isn't connected. Pick it again in Settings → Audio.</source>
-            <translation>Le périphérique de sortie de la voix n'est pas connecté. Choisissez-le à nouveau dans Audio et micro → Sortie de la voix.</translation>
+            <source>The voice output device isn't connected. Pick it again in Audio &amp; mic.</source>
+            <translation>Le périphérique de sortie de la voix n'est pas connecté. Choisissez-le à nouveau dans Audio et micro.</translation>
         </message>
         <message>
             <location line="+7" />
@@ -5494,8 +5516,8 @@
         <message>
             <location line="+4" />
             <location line="+2" />
-            <source>Tap to talk instead of holding</source>
-            <translation>Appuyer pour parler au lieu de maintenir</translation>
+            <source>Tap to dictate instead of holding</source>
+            <translation>Appuyer pour dicter au lieu de maintenir</translation>
         </message>
         <message>
             <location line="-1" />
@@ -5519,12 +5541,13 @@
         </message>
         <message>
             <location line="+2" />
-            <location line="+59" />
+            <location line="+60" />
             <source>Off</source>
+            <extracomment>Typing echo: read back nothing / each word as it is typed / each sentence as it is finished</extracomment>
             <translation>Désactivé</translation>
         </message>
         <message>
-            <location line="-59" />
+            <location line="-60" />
             <source>%1 ms</source>
             <comment>milliseconds</comment>
             <translation>%1 ms</translation>
@@ -5610,7 +5633,7 @@
             <translation>Entendez chaque mot ou phrase quand vous le terminez, uniquement sur vos propres haut-parleurs.</translation>
         </message>
         <message>
-            <location line="+4" />
+            <location line="+5" />
             <source>Words</source>
             <translation>Mots</translation>
         </message>
@@ -5926,12 +5949,12 @@
         </message>
         <message>
             <location line="+0" />
-            <location line="+148" />
+            <location line="+149" />
             <source>Off</source>
             <translation>Aucun</translation>
         </message>
         <message>
-            <location line="-143" />
+            <location line="-144" />
             <location line="+2" />
             <source>Fill words with ink as they're spoken</source>
             <translation>Remplir les mots d'encre pendant qu'ils sont prononcés</translation>
@@ -5964,8 +5987,9 @@
             <translation>Police des lignes prononcées</translation>
         </message>
         <message>
-            <location line="+2" />
+            <location line="+3" />
             <source>Display</source>
+            <extracomment>Fonts for the big spoken words: the decorative display font / the plain reading font / a serif font</extracomment>
             <translation>Titrage</translation>
         </message>
         <message>
@@ -6520,8 +6544,8 @@
         </message>
         <message>
             <location line="+7" />
-            <source>A red LIVE badge appears on screen and a tone plays whenever it's on. You can change this in Audio &amp; mic.</source>
-            <translation>Un badge rouge EN DIRECT apparaît à l'écran et une tonalité retentit chaque fois qu'il est actif. Vous pouvez modifier cela dans Audio et micro.</translation>
+            <source>A red MIC LIVE badge appears on screen and a tone plays whenever it's on. You can change this in Audio &amp; mic.</source>
+            <translation>Un badge rouge MICRO EN DIRECT apparaît à l'écran et une tonalité retentit chaque fois qu'il est actif. Vous pouvez modifier cela dans Audio et micro.</translation>
         </message>
         <message>
             <location line="+4" />
@@ -6638,12 +6662,7 @@
             <translation>Mode de dictée</translation>
         </message>
         <message>
-            <location line="+2" />
-            <source>Hold to talk</source>
-            <translation>Touche maintenue</translation>
-        </message>
-        <message>
-            <location line="+0" />
+            <location line="+3" />
             <source>Tap on/off</source>
             <translation>Appui marche/arrêt</translation>
         </message>
@@ -6651,6 +6670,12 @@
             <location line="+0" />
             <source>Hands-free</source>
             <translation>Mains libres</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Hold to dictate</source>
+            <extracomment>Dictation modes: hold a key while speaking / press once to start and again to stop / listens on its own</extracomment>
+            <translation>Maintenir pour dicter</translation>
         </message>
         <message>
             <location line="+6" />
@@ -6818,7 +6843,7 @@
         </message>
         <message>
             <location line="+1" />
-            <source>Type less and sound right: word suggestions, shortcuts that expand, and how emoji and links are read.</source>
+            <source>Type less and sound right: word suggestions, abbreviations that expand, and how emoji and links are read.</source>
             <translation>Tapez moins et soyez bien compris : suggestions de mots, abréviations qui se développent, et lecture des emoji et des liens.</translation>
         </message>
         <message>
@@ -7332,8 +7357,8 @@
         <name>SpeechQueue</name>
         <message>
             <location filename="../src/core/SpeechQueue.cpp" line="+90" />
-            <source>No voice is selected. Pick a voice in the toolbar, or install one in Settings → Voices.</source>
-            <translation>Aucune voix n'est sélectionnée. Choisissez une voix dans la barre d'outils, ou installez-en une dans Voix → Télécharger.</translation>
+            <source>No voice is selected. Pick a voice in the toolbar, or download one in Voices → Download.</source>
+            <translation>Aucune voix n'est sélectionnée. Choisissez une voix dans la barre d'outils, ou téléchargez-en une dans Voix → Télécharger.</translation>
         </message>
         <message>
             <location line="+6" />
@@ -8191,21 +8216,6 @@
             <translation>Échec de pactl %1</translation>
         </message>
         <message>
-            <location line="+13" />
-            <source>&lt;p&gt;Install the free &lt;b&gt;VB-CABLE&lt;/b&gt; virtual audio device from &lt;a href="https://vb-audio.com/Cable/"&gt;vb-audio.com/Cable&lt;/a&gt; and restart Vocal Ink.&lt;/p&gt;&lt;ol&gt;&lt;li&gt;Choose &lt;b&gt;CABLE Input (VB-Audio Virtual Cable)&lt;/b&gt; as Vocal Ink's &lt;i&gt;voice output&lt;/i&gt;.&lt;/li&gt;&lt;li&gt;In Discord, games or OBS choose &lt;b&gt;CABLE Output (VB-Audio Virtual Cable)&lt;/b&gt; as the microphone.&lt;/li&gt;&lt;li&gt;Keep &lt;i&gt;Also play on my speakers&lt;/i&gt; on to hear yourself.&lt;/li&gt;&lt;/ol&gt;</source>
-            <translation>&lt;p&gt;Installez le périphérique audio virtuel gratuit &lt;b&gt;VB-CABLE&lt;/b&gt; depuis &lt;a href="https://vb-audio.com/Cable/"&gt;vb-audio.com/Cable&lt;/a&gt; et redémarrez Vocal Ink.&lt;/p&gt;&lt;ol&gt;&lt;li&gt;Choisissez &lt;b&gt;CABLE Input (VB-Audio Virtual Cable)&lt;/b&gt; comme &lt;i&gt;sortie de la voix&lt;/i&gt; de Vocal Ink.&lt;/li&gt;&lt;li&gt;Dans Discord, vos jeux ou OBS, choisissez &lt;b&gt;CABLE Output (VB-Audio Virtual Cable)&lt;/b&gt; comme microphone.&lt;/li&gt;&lt;li&gt;Laissez &lt;i&gt;Entendre ma voix aussi&lt;/i&gt; activé pour vous entendre.&lt;/li&gt;&lt;/ol&gt;</translation>
-        </message>
-        <message>
-            <location line="+6" />
-            <source>&lt;p&gt;Install the free &lt;b&gt;BlackHole 2ch&lt;/b&gt; virtual audio driver from &lt;a href="https://existential.audio/blackhole/"&gt;existential.audio/blackhole&lt;/a&gt; (or &lt;code&gt;brew install blackhole-2ch&lt;/code&gt;) and restart Vocal Ink.&lt;/p&gt;&lt;ol&gt;&lt;li&gt;Choose &lt;b&gt;BlackHole 2ch&lt;/b&gt; as Vocal Ink's &lt;i&gt;voice output&lt;/i&gt;.&lt;/li&gt;&lt;li&gt;In Discord, games or OBS choose &lt;b&gt;BlackHole 2ch&lt;/b&gt; as the microphone.&lt;/li&gt;&lt;li&gt;Keep &lt;i&gt;Also play on my speakers&lt;/i&gt; on to hear yourself.&lt;/li&gt;&lt;/ol&gt;</source>
-            <translation>&lt;p&gt;Installez le pilote audio virtuel gratuit &lt;b&gt;BlackHole 2ch&lt;/b&gt; depuis &lt;a href="https://existential.audio/blackhole/"&gt;existential.audio/blackhole&lt;/a&gt; (ou &lt;code&gt;brew install blackhole-2ch&lt;/code&gt;) et redémarrez Vocal Ink.&lt;/p&gt;&lt;ol&gt;&lt;li&gt;Choisissez &lt;b&gt;BlackHole 2ch&lt;/b&gt; comme &lt;i&gt;sortie de la voix&lt;/i&gt; de Vocal Ink.&lt;/li&gt;&lt;li&gt;Dans Discord, vos jeux ou OBS, choisissez &lt;b&gt;BlackHole 2ch&lt;/b&gt; comme microphone.&lt;/li&gt;&lt;li&gt;Laissez &lt;i&gt;Entendre ma voix aussi&lt;/i&gt; activé pour vous entendre.&lt;/li&gt;&lt;/ol&gt;</translation>
-        </message>
-        <message>
-            <location line="+7" />
-            <source>&lt;p&gt;Vocal Ink can create a virtual microphone for you (PulseAudio or PipeWire). Click &lt;b&gt;Create virtual microphone&lt;/b&gt;, then:&lt;/p&gt;&lt;ol&gt;&lt;li&gt;Choose &lt;b&gt;Vocal Ink Voice&lt;/b&gt; as Vocal Ink's &lt;i&gt;voice output&lt;/i&gt;.&lt;/li&gt;&lt;li&gt;In Discord, games or OBS choose &lt;b&gt;Vocal Ink Mic&lt;/b&gt; as the microphone (OBS can also capture &lt;i&gt;Monitor of Vocal Ink Voice&lt;/i&gt;).&lt;/li&gt;&lt;li&gt;Keep &lt;i&gt;Also play on my speakers&lt;/i&gt; on to hear yourself.&lt;/li&gt;&lt;/ol&gt;&lt;p&gt;The virtual devices last until you log out; Vocal Ink recreates them on request.&lt;/p&gt;</source>
-            <translation>&lt;p&gt;Vocal Ink peut créer un microphone virtuel pour vous (PulseAudio ou PipeWire). Cliquez sur &lt;b&gt;Installer le micro virtuel&lt;/b&gt;, puis :&lt;/p&gt;&lt;ol&gt;&lt;li&gt;Choisissez &lt;b&gt;Vocal Ink Voice&lt;/b&gt; comme &lt;i&gt;sortie de la voix&lt;/i&gt; de Vocal Ink.&lt;/li&gt;&lt;li&gt;Dans Discord, vos jeux ou OBS, choisissez &lt;b&gt;Vocal Ink Mic&lt;/b&gt; comme microphone (OBS peut aussi capturer &lt;i&gt;Monitor of Vocal Ink Voice&lt;/i&gt;).&lt;/li&gt;&lt;li&gt;Laissez &lt;i&gt;Entendre ma voix aussi&lt;/i&gt; activé pour vous entendre.&lt;/li&gt;&lt;/ol&gt;&lt;p&gt;Les périphériques virtuels restent en place jusqu'à votre déconnexion ; Vocal Ink les recrée sur demande.&lt;/p&gt;</translation>
-        </message>
-        <message>
             <location line="+31" />
             <source>Creating a virtual microphone is only supported on Linux with PulseAudio or PipeWire.</source>
             <translation>La création d'un microphone virtuel n'est prise en charge que sous Linux avec PulseAudio ou PipeWire.</translation>
@@ -8711,7 +8721,7 @@
     <context>
         <name>WhisperEngine</name>
         <message>
-            <location filename="../src/stt/WhisperEngine.cpp" line="+258" />
+            <location filename="../src/stt/WhisperEngine.cpp" line="+267" />
             <source>Local speech recognition is not included in this build.</source>
             <translation>La reconnaissance vocale locale n'est pas incluse dans cette version.</translation>
         </message>
@@ -8721,8 +8731,9 @@
             <translation>Chargement du modèle de reconnaissance vocale…</translation>
         </message>
         <message>
-            <location line="+2" />
+            <location line="+3" />
             <source>%1 Download it again in Settings → Speech input.</source>
+            <extracomment>%1 is a full sentence saying why the speech model could not be loaded</extracomment>
             <translation>%1 Téléchargez-le à nouveau dans Paramètres → Saisie vocale.</translation>
         </message>
         <message>
@@ -8739,12 +8750,12 @@
     <context>
         <name>WhisperWorker</name>
         <message>
-            <location filename="../src/stt/WhisperEngine.cpp" line="-148" />
+            <location filename="../src/stt/WhisperEngine.cpp" line="-163" />
             <source>"%1" is not a valid Whisper model.</source>
             <translation>« %1 » n'est pas un modèle Whisper valide.</translation>
         </message>
         <message>
-            <location line="+2" />
+            <location line="+16" />
             <location line="+60" />
             <source>Local speech recognition is not included in this build.</source>
             <translation>La reconnaissance vocale locale n'est pas incluse dans cette version.</translation>

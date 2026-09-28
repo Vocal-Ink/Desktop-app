@@ -140,26 +140,36 @@
         </message>
         <message>
             <location line="+1" />
-            <source>Next favorite voice</source>
+            <source>Next favourite voice</source>
             <translation>次のお気に入りボイス</translation>
         </message>
         <message>
             <location line="+1" />
-            <source>Cycles forward through your favorite voices.</source>
+            <source>Cycles forward through your favourite voices.</source>
             <translation>お気に入りのボイスを順番に切り替えます。</translation>
         </message>
         <message>
             <location line="+1" />
-            <source>Previous favorite voice</source>
+            <source>Previous favourite voice</source>
             <translation>前のお気に入りボイス</translation>
         </message>
         <message>
             <location line="+1" />
-            <source>Cycles back through your favorite voices.</source>
+            <source>Cycles back through your favourite voices.</source>
             <translation>お気に入りのボイスを逆の順番に切り替えます。</translation>
         </message>
         <message>
+            <location line="+23" />
+            <source>Favourite voice %1</source>
+            <translation>お気に入りボイス %1</translation>
+        </message>
+        <message>
             <location line="+1" />
+            <source>Switches to favourite voice number %1.</source>
+            <translation>%1番目のお気に入りボイスに切り替えます。</translation>
+        </message>
+        <message>
+            <location line="-23" />
             <source>Speak faster</source>
             <translation>速く話す</translation>
         </message>
@@ -279,17 +289,7 @@
             <translation>話した内容を配信に送るのを停止（または再開）します。</translation>
         </message>
         <message>
-            <location line="+3" />
-            <source>Favorite voice %1</source>
-            <translation>お気に入りボイス %1</translation>
-        </message>
-        <message>
-            <location line="+1" />
-            <source>Switches to favorite voice number %1.</source>
-            <translation>%1番目のお気に入りボイスに切り替えます。</translation>
-        </message>
-        <message>
-            <location line="+3" />
+            <location line="+7" />
             <source>Voice preset %1</source>
             <translation>ボイスプリセット %1</translation>
         </message>
@@ -350,7 +350,7 @@
     <context>
         <name>AppContext</name>
         <message>
-            <location filename="../src/app/AppContext.cpp" line="+183" />
+            <location filename="../src/app/AppContext.cpp" line="+186" />
             <source>OBS: %1</source>
             <translation>OBS: %1</translation>
         </message>
@@ -391,12 +391,7 @@
             <translation>字幕を再開しました</translation>
         </message>
         <message>
-            <location line="+43" />
-            <source>Real-mic passthrough is off. Turn it on in Audio → Your real microphone.</source>
-            <translation>実マイクのパススルーがオフです。「オーディオとマイク → 実マイク」でオンにしてください。</translation>
-        </message>
-        <message>
-            <location line="+17" />
+            <location line="+60" />
             <location line="+2" />
             <source>Speed %1%</source>
             <translation>速さ %1%</translation>
@@ -418,8 +413,13 @@
             <translation>お気に入りボイスの%1番目はまだありません。「ボイス」でボイスに★を付けてください。</translation>
         </message>
         <message>
-            <location line="+8" />
-            <source>No preset #%1 yet. Save one in Voices → Presets.</source>
+            <location line="-42" />
+            <source>Real-mic passthrough is off. Turn it on in Audio &amp; mic → Your real microphone.</source>
+            <translation>実マイクのパススルーがオフです。「オーディオとマイク → 実マイク」でオンにしてください。</translation>
+        </message>
+        <message>
+            <location line="+50" />
+            <source>No preset #%1 yet. Save one in Voices → Tune &amp; presets.</source>
             <translation>プリセットの%1番目はまだありません。「ボイス → 調整とプリセット」で保存してください。</translation>
         </message>
         <message>
@@ -463,8 +463,9 @@
             <translation>配信者</translation>
         </message>
         <message>
-            <location line="+1" />
+            <location line="+2" />
             <source>Mod</source>
+            <extracomment>Short Twitch chat badges: moderator, VIP, subscriber</extracomment>
             <translation>モデレーター</translation>
         </message>
         <message>
@@ -1223,7 +1224,7 @@
         <name>AzureTtsEngine</name>
         <message>
             <location filename="../src/tts/AzureTtsEngine.cpp" line="+67" />
-            <source>Add your Microsoft Azure Speech key in Settings → Voices.</source>
+            <source>Add your Microsoft Azure Speech key in Settings → Voice providers.</source>
             <translation>Microsoft Azure Speechのキーを「設定 → ボイスプロバイダー」で追加してください。</translation>
         </message>
         <message>
@@ -1357,7 +1358,7 @@
     <context>
         <name>Bridge</name>
         <message>
-            <location filename="../src/ui/Bridge.cpp" line="+337" />
+            <location filename="../src/ui/Bridge.cpp" line="+341" />
             <source>Hey! Sorry, I don't talk out loud, so I type.</source>
             <translation>こんにちは！ごめんなさい、声に出して話さないので、文字で打っています。</translation>
         </message>
@@ -1453,8 +1454,9 @@
             <translation>話している間、あなたの言葉は配信でこのように表示されます。</translation>
         </message>
         <message>
-            <location line="+2" />
+            <location line="+3" />
             <source>Test</source>
+            <extracomment>Shown on stream overlays as the voice name of a test caption</extracomment>
             <translation>テスト</translation>
         </message>
         <message>
@@ -2006,7 +2008,7 @@
             <translation>ダウンロードが完了しました。</translation>
         </message>
         <message numerus="yes">
-            <location line="+67" />
+            <location line="+92" />
             <source>%n speaker(s)</source>
             <translation>
                 <numerusform>話者%n人</numerusform>
@@ -2017,7 +2019,7 @@
         <name>ElevenLabsTtsEngine</name>
         <message>
             <location filename="../src/tts/ElevenLabsTtsEngine.cpp" line="+34" />
-            <source>Add your ElevenLabs API key in Settings → Voices.</source>
+            <source>Add your ElevenLabs API key in Settings → Voice providers.</source>
             <translation>「設定 → ボイスプロバイダー」でElevenLabsのAPIキーを追加してください。</translation>
         </message>
     </context>
@@ -2048,7 +2050,7 @@
         <name>FishAudioTtsEngine</name>
         <message>
             <location filename="../src/tts/FishAudioTtsEngine.cpp" line="+33" />
-            <source>Add your Fish Audio API key in Settings → Voices.</source>
+            <source>Add your Fish Audio API key in Settings → Voice providers.</source>
             <translation>「設定 → ボイスプロバイダー」でFish AudioのAPIキーを追加してください。</translation>
         </message>
         <message>
@@ -2329,7 +2331,7 @@
             <translation>Piperのボイス一覧を読み込めませんでした。</translation>
         </message>
         <message>
-            <location line="+41" />
+            <location line="+40" />
             <source>Tiny (English)</source>
             <translation>Tiny（英語）</translation>
         </message>
@@ -2345,8 +2347,8 @@
         </message>
         <message>
             <location line="+1" />
-            <source>Recommended: fast and accurate for English.</source>
-            <translation>おすすめ: 英語を速く正確に認識します。</translation>
+            <source>Fast and accurate for English.</source>
+            <translation>英語を速く正確に認識します。</translation>
         </message>
         <message>
             <location line="+1" />
@@ -2409,7 +2411,7 @@
             <translation>ボイス「%1」はPiperのボイス一覧にありません。一覧を更新して、もう一度お試しください。</translation>
         </message>
         <message>
-            <location line="+45" />
+            <location line="+104" />
             <source>Download cancelled.</source>
             <translation>ダウンロードをキャンセルしました。</translation>
         </message>
@@ -2686,8 +2688,8 @@
         </message>
         <message>
             <location line="+1" />
-            <source>If you can whisper, mouth or speak softly, Vocal Ink can write it down for you to check and send. It runs on this computer.</source>
-            <translation>ささやいたり、口を動かしたり、小声で話したりできるなら、Vocal Inkが文字にします。確認してから送信できます。処理はこのコンピューター上で行われます。</translation>
+            <source>If you can whisper or speak softly, Vocal Ink can write it down for you to check and send. It runs on this computer.</source>
+            <translation>ささやいたり、小声で話したりできるなら、Vocal Inkが文字にします。確認してから送信できます。処理はこのコンピューター上で行われます。</translation>
         </message>
         <message>
             <location line="+7" />
@@ -3049,7 +3051,7 @@
             <translation>ゲームや他のアプリを操作中でも使えます。変更するには、ショートカットをクリックして新しいキーを押してください。</translation>
         </message>
         <message>
-            <location line="+8" />
+            <location line="+9" />
             <source>Pop up a box to type over any app</source>
             <translation>どのアプリの上にも入力欄を表示</translation>
         </message>
@@ -3078,10 +3080,12 @@
             <source>Show or hide Vocal Ink</source>
             <translation>Vocal Inkを表示／非表示</translation>
         </message>
-        <message>
-            <location line="+16" />
-            <source>Phrases and sounds can have shortcuts too. There are 26 more actions in Settings → Shortcuts.</source>
-            <translation>フレーズやサウンドにもショートカットを設定できます。「設定 → ショートカット」には、ほかにも26個の操作があります。</translation>
+        <message numerus="yes">
+            <location line="+19" />
+            <source>Phrases and sounds can have shortcuts too. There are %n more action(s) in Settings → Shortcuts.</source>
+            <translation>
+                <numerusform>フレーズやサウンドにもショートカットを設定できます。「設定 → ショートカット」には、ほかにも%n個の操作があります。</numerusform>
+            </translation>
         </message>
     </context>
     <context>
@@ -3227,7 +3231,7 @@
         </message>
         <message>
             <location line="+0" />
-            <source>Presentations, classes, desks</source>
+            <source>Presentations, classes, the office</source>
             <translation>プレゼン、授業、職場</translation>
         </message>
         <message>
@@ -3493,13 +3497,14 @@
             <translation>ショートカット</translation>
         </message>
         <message>
-            <location line="+43" />
+            <location line="+44" />
             <source>Step %1 of %2: %3</source>
             <translation>ステップ %1/%2: %3</translation>
         </message>
         <message>
             <location line="-42" />
             <source>Look</source>
+            <extracomment>Setup step about the app's appearance (theme, colours)</extracomment>
             <translation>デザイン</translation>
         </message>
         <message>
@@ -3580,7 +3585,7 @@
         </message>
         <message>
             <location line="+26" />
-            <source>Add your OpenAI API key in Settings → Voices.</source>
+            <source>Add your OpenAI API key in Settings → Voice providers.</source>
             <translation>「設定 → ボイスプロバイダー」でOpenAIのAPIキーを追加してください。</translation>
         </message>
     </context>
@@ -4532,8 +4537,8 @@
         </message>
         <message>
             <location line="+3" />
-            <source>You can use {time}, {date}, {clipboard} and your own {variables}.</source>
-            <translation>{time}、{date}、{clipboard}や、自分で作った{variables}を使えます。</translation>
+            <source>You can use {time}, {date}, {clipboard} and your own variables, like {name}.</source>
+            <translation>{time}、{date}、{clipboard}や、{name}のような自分で作った変数を使えます。</translation>
         </message>
         <message>
             <location line="+8" />
@@ -4605,7 +4610,7 @@
     <context>
         <name>PhraseModel</name>
         <message>
-            <location filename="../src/ui/Models.cpp" line="-410" />
+            <location filename="../src/ui/Models.cpp" line="-435" />
             <source>Basics</source>
             <translation>基本</translation>
         </message>
@@ -4796,24 +4801,24 @@
     <context>
         <name>PiperTtsEngine</name>
         <message>
+            <location filename="../src/tts/PiperTtsEngine.h" line="+16" />
+            <source>Piper (local)</source>
+            <translation>Piper（ローカル）</translation>
+        </message>
+        <message>
             <location filename="../src/tts/PiperTtsEngine.cpp" line="+79" />
-            <source>Download the Piper voice engine in Settings → Voices.</source>
+            <source>Download the Piper voice engine in Voices → Download.</source>
             <translation>「ボイス → ダウンロード」でPiper音声エンジンをダウンロードしてください。</translation>
         </message>
         <message>
             <location line="+2" />
-            <source>Download a Piper voice in Settings → Voices.</source>
+            <source>Download a Piper voice in Voices → Download.</source>
             <translation>「ボイス → ダウンロード」でPiperのボイスをダウンロードしてください。</translation>
         </message>
         <message>
             <location line="+124" />
-            <source>The Piper voice "%1" is not installed. Download it in Settings → Voices.</source>
+            <source>The Piper voice "%1" is not installed. Download it in Voices → Download.</source>
             <translation>Piperのボイス「%1」はインストールされていません。「ボイス → ダウンロード」でダウンロードしてください。</translation>
-        </message>
-        <message>
-            <location filename="../src/tts/PiperTtsEngine.h" line="+16" />
-            <source>Piper (local)</source>
-            <translation>Piper（ローカル）</translation>
         </message>
     </context>
     <context>
@@ -4943,12 +4948,22 @@
             <translation>%1がリクエストを拒否しました</translation>
         </message>
         <message>
-            <location line="+4" />
-            <source>%1 did not accept the API key. Check it in Settings → Voices</source>
+            <location line="+6" />
+            <source>%1 did not accept the API key. Check it in Settings → Voice providers</source>
             <translation>%1でAPIキーが受け付けられませんでした。「設定 → ボイスプロバイダー」で確認してください</translation>
         </message>
         <message>
             <location line="+3" />
+            <source>%1 did not accept the API key. Check it in Settings → Speech input</source>
+            <translation>%1でAPIキーが受け付けられませんでした。「設定 → 音声入力」で確認してください</translation>
+        </message>
+        <message>
+            <location line="+3" />
+            <source>%1 refused the request (HTTP %2)</source>
+            <translation>%1がリクエストを拒否しました（HTTP %2）</translation>
+        </message>
+        <message>
+            <location line="+5" />
             <source>%1 says the account is out of credit or needs a paid plan</source>
             <translation>%1によると、アカウントのクレジットが不足しているか、有料プランが必要です</translation>
         </message>
@@ -5012,8 +5027,8 @@
         <name>QtAudioLane</name>
         <message>
             <location filename="../src/audio/AudioOutputLane.cpp" line="+147" />
-            <source>Audio output "%1" failed (error %2). Check the device in Settings → Audio.</source>
-            <translation>音声出力「%1」でエラーが発生しました（エラー %2）。「オーディオとマイク → ボイスの出力」でデバイスを確認してください。</translation>
+            <source>Audio output "%1" failed (error %2). Check the device in Audio &amp; mic.</source>
+            <translation>音声出力「%1」でエラーが発生しました（エラー %2）。「オーディオとマイク」でデバイスを確認してください。</translation>
         </message>
     </context>
     <context>
@@ -5078,12 +5093,12 @@
         </message>
         <message>
             <location line="+3" />
-            <location line="+78" />
+            <location line="+79" />
             <source>Off</source>
             <translation>オフ</translation>
         </message>
         <message>
-            <location line="-77" />
+            <location line="-78" />
             <source>While I hold a key</source>
             <translation>キーを押している間</translation>
         </message>
@@ -5133,14 +5148,27 @@
             <translation>ゲームの操作中でも、どのアプリでも使えます。</translation>
         </message>
         <message>
+            <location line="+44" />
             <location line="+3" />
-            <source>Hold to talk</source>
-            <translation>押して話す</translation>
+            <source>Lower my mic while Vocal Ink speaks</source>
+            <translation>Vocal Inkが話している間はマイクの音量を下げる</translation>
+        </message>
+        <message>
+            <location line="+7" />
+            <location line="+3" />
+            <source>Show a red MIC LIVE badge on screen</source>
+            <translation>画面に赤い「マイクオン」バッジを表示</translation>
+        </message>
+        <message>
+            <location line="-53" />
+            <source>Toggle real mic</source>
+            <translation>実マイクを切り替え</translation>
         </message>
         <message>
             <location line="+0" />
-            <source>Toggle real mic</source>
-            <translation>実マイクを切り替え</translation>
+            <source>Hold to talk on your real mic</source>
+            <extracomment>Shortcut name: hold the key to open your real microphone</extracomment>
+            <translation>押して実マイクで話す</translation>
         </message>
         <message>
             <location line="+12" />
@@ -5176,24 +5204,12 @@
             <translation>このレベル未満の音を消して、キーボードやファンの雑音が入らないようにします。</translation>
         </message>
         <message>
-            <location line="+11" />
-            <location line="+3" />
-            <source>Lower my mic while the voice speaks</source>
-            <translation>Vocal Inkが話している間はマイクの音量を下げる</translation>
-        </message>
-        <message>
-            <location line="-2" />
+            <location line="+12" />
             <source>Keeps your typed messages clear over background sound.</source>
             <translation>入力したメッセージが周りの音に埋もれず、はっきり聞こえます。</translation>
         </message>
         <message>
-            <location line="+9" />
-            <location line="+3" />
-            <source>Show a red LIVE badge on screen</source>
-            <translation>画面に赤い「オン」バッジを表示</translation>
-        </message>
-        <message>
-            <location line="-2" />
+            <location line="+10" />
             <source>Stays on top of games and other apps while your mic is live.</source>
             <translation>マイクがオンの間、ゲームや他のアプリより前面に表示されます。</translation>
         </message>
@@ -5258,16 +5274,21 @@
         </message>
         <message>
             <location line="+5" />
-            <source> (not connected)</source>
-            <translation> （未接続）</translation>
+            <source>%1 (not connected)</source>
+            <translation>%1（未接続）</translation>
+        </message>
+        <message>
+            <location line="+1" />
+            <source>%1, then %2</source>
+            <translation>%1、次に%2</translation>
         </message>
     </context>
     <context>
         <name>RoutingCheck</name>
         <message>
             <location filename="../src/audio/RoutingCheck.cpp" line="+335" />
-            <source>The voice output device isn't connected. Pick it again in Settings → Audio.</source>
-            <translation>ボイスの出力デバイスが接続されていません。「オーディオとマイク → ボイスの出力」で選び直してください。</translation>
+            <source>The voice output device isn't connected. Pick it again in Audio &amp; mic.</source>
+            <translation>ボイスの出力デバイスが接続されていません。「オーディオとマイク」で選び直してください。</translation>
         </message>
         <message>
             <location line="+7" />
@@ -5493,8 +5514,8 @@
         <message>
             <location line="+4" />
             <location line="+2" />
-            <source>Tap to talk instead of holding</source>
-            <translation>長押しの代わりにタップで話す</translation>
+            <source>Tap to dictate instead of holding</source>
+            <translation>長押しではなくタップで音声入力</translation>
         </message>
         <message>
             <location line="-1" />
@@ -5518,12 +5539,13 @@
         </message>
         <message>
             <location line="+2" />
-            <location line="+59" />
+            <location line="+60" />
             <source>Off</source>
+            <extracomment>Typing echo: read back nothing / each word as it is typed / each sentence as it is finished</extracomment>
             <translation>オフ</translation>
         </message>
         <message>
-            <location line="-59" />
+            <location line="-60" />
             <source>%1 ms</source>
             <comment>milliseconds</comment>
             <translation>%1ミリ秒</translation>
@@ -5609,7 +5631,7 @@
             <translation>単語や文を入力し終えるたびに、あなたのスピーカーだけで読み上げます。</translation>
         </message>
         <message>
-            <location line="+4" />
+            <location line="+5" />
             <source>Words</source>
             <translation>単語</translation>
         </message>
@@ -5925,12 +5947,12 @@
         </message>
         <message>
             <location line="+0" />
-            <location line="+148" />
+            <location line="+149" />
             <source>Off</source>
             <translation>オフ</translation>
         </message>
         <message>
-            <location line="-143" />
+            <location line="-144" />
             <location line="+2" />
             <source>Fill words with ink as they're spoken</source>
             <translation>話すにつれて文字をインクで塗る</translation>
@@ -5963,8 +5985,9 @@
             <translation>話した文のフォント</translation>
         </message>
         <message>
-            <location line="+2" />
+            <location line="+3" />
             <source>Display</source>
+            <extracomment>Fonts for the big spoken words: the decorative display font / the plain reading font / a serif font</extracomment>
             <translation>見出し用</translation>
         </message>
         <message>
@@ -6518,8 +6541,8 @@
         </message>
         <message>
             <location line="+7" />
-            <source>A red LIVE badge appears on screen and a tone plays whenever it's on. You can change this in Audio &amp; mic.</source>
-            <translation>オンになるたびに、赤い「オン」バッジが画面に表示され、音が鳴ります。これは「オーディオとマイク」で変更できます。</translation>
+            <source>A red MIC LIVE badge appears on screen and a tone plays whenever it's on. You can change this in Audio &amp; mic.</source>
+            <translation>オンになるたびに、赤い「マイクオン」バッジが画面に表示され、音が鳴ります。これは「オーディオとマイク」で変更できます。</translation>
         </message>
         <message>
             <location line="+4" />
@@ -6636,12 +6659,7 @@
             <translation>音声入力モード</translation>
         </message>
         <message>
-            <location line="+2" />
-            <source>Hold to talk</source>
-            <translation>押して話す</translation>
-        </message>
-        <message>
-            <location line="+0" />
+            <location line="+3" />
             <source>Tap on/off</source>
             <translation>押してオン／オフ</translation>
         </message>
@@ -6649,6 +6667,12 @@
             <location line="+0" />
             <source>Hands-free</source>
             <translation>ハンズフリー</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Hold to dictate</source>
+            <extracomment>Dictation modes: hold a key while speaking / press once to start and again to stop / listens on its own</extracomment>
+            <translation>長押しで音声入力</translation>
         </message>
         <message>
             <location line="+6" />
@@ -6816,7 +6840,7 @@
         </message>
         <message>
             <location line="+1" />
-            <source>Type less and sound right: word suggestions, shortcuts that expand, and how emoji and links are read.</source>
+            <source>Type less and sound right: word suggestions, abbreviations that expand, and how emoji and links are read.</source>
             <translation>入力を減らして、きちんと伝える。単語の候補、略語の展開、絵文字やリンクの読み方を設定します。</translation>
         </message>
         <message>
@@ -7329,8 +7353,8 @@
         <name>SpeechQueue</name>
         <message>
             <location filename="../src/core/SpeechQueue.cpp" line="+90" />
-            <source>No voice is selected. Pick a voice in the toolbar, or install one in Settings → Voices.</source>
-            <translation>ボイスが選択されていません。ツールバーでボイスを選ぶか、「ボイス → ダウンロード」でインストールしてください。</translation>
+            <source>No voice is selected. Pick a voice in the toolbar, or download one in Voices → Download.</source>
+            <translation>ボイスが選択されていません。ツールバーでボイスを選ぶか、「ボイス → ダウンロード」でダウンロードしてください。</translation>
         </message>
         <message>
             <location line="+6" />
@@ -8186,21 +8210,6 @@
             <translation>pactl %1に失敗しました</translation>
         </message>
         <message>
-            <location line="+13" />
-            <source>&lt;p&gt;Install the free &lt;b&gt;VB-CABLE&lt;/b&gt; virtual audio device from &lt;a href="https://vb-audio.com/Cable/"&gt;vb-audio.com/Cable&lt;/a&gt; and restart Vocal Ink.&lt;/p&gt;&lt;ol&gt;&lt;li&gt;Choose &lt;b&gt;CABLE Input (VB-Audio Virtual Cable)&lt;/b&gt; as Vocal Ink's &lt;i&gt;voice output&lt;/i&gt;.&lt;/li&gt;&lt;li&gt;In Discord, games or OBS choose &lt;b&gt;CABLE Output (VB-Audio Virtual Cable)&lt;/b&gt; as the microphone.&lt;/li&gt;&lt;li&gt;Keep &lt;i&gt;Also play on my speakers&lt;/i&gt; on to hear yourself.&lt;/li&gt;&lt;/ol&gt;</source>
-            <translation>&lt;p&gt;無料の仮想オーディオデバイス&lt;b&gt;VB-CABLE&lt;/b&gt;を&lt;a href="https://vb-audio.com/Cable/"&gt;vb-audio.com/Cable&lt;/a&gt;からインストールし、Vocal Inkを再起動してください。&lt;/p&gt;&lt;ol&gt;&lt;li&gt;Vocal Inkの&lt;i&gt;ボイスの出力&lt;/i&gt;として&lt;b&gt;CABLE Input (VB-Audio Virtual Cable)&lt;/b&gt;を選びます。&lt;/li&gt;&lt;li&gt;Discord、ゲーム、OBSで、マイクとして&lt;b&gt;CABLE Output (VB-Audio Virtual Cable)&lt;/b&gt;を選びます。&lt;/li&gt;&lt;li&gt;自分の声を聞くには、&lt;i&gt;スピーカーでも再生&lt;/i&gt;をオンのままにします。&lt;/li&gt;&lt;/ol&gt;</translation>
-        </message>
-        <message>
-            <location line="+6" />
-            <source>&lt;p&gt;Install the free &lt;b&gt;BlackHole 2ch&lt;/b&gt; virtual audio driver from &lt;a href="https://existential.audio/blackhole/"&gt;existential.audio/blackhole&lt;/a&gt; (or &lt;code&gt;brew install blackhole-2ch&lt;/code&gt;) and restart Vocal Ink.&lt;/p&gt;&lt;ol&gt;&lt;li&gt;Choose &lt;b&gt;BlackHole 2ch&lt;/b&gt; as Vocal Ink's &lt;i&gt;voice output&lt;/i&gt;.&lt;/li&gt;&lt;li&gt;In Discord, games or OBS choose &lt;b&gt;BlackHole 2ch&lt;/b&gt; as the microphone.&lt;/li&gt;&lt;li&gt;Keep &lt;i&gt;Also play on my speakers&lt;/i&gt; on to hear yourself.&lt;/li&gt;&lt;/ol&gt;</source>
-            <translation>&lt;p&gt;無料の仮想オーディオドライバー&lt;b&gt;BlackHole 2ch&lt;/b&gt;を&lt;a href="https://existential.audio/blackhole/"&gt;existential.audio/blackhole&lt;/a&gt;から（または&lt;code&gt;brew install blackhole-2ch&lt;/code&gt;で）インストールし、Vocal Inkを再起動してください。&lt;/p&gt;&lt;ol&gt;&lt;li&gt;Vocal Inkの&lt;i&gt;ボイスの出力&lt;/i&gt;として&lt;b&gt;BlackHole 2ch&lt;/b&gt;を選びます。&lt;/li&gt;&lt;li&gt;Discord、ゲーム、OBSで、マイクとして&lt;b&gt;BlackHole 2ch&lt;/b&gt;を選びます。&lt;/li&gt;&lt;li&gt;自分の声を聞くには、&lt;i&gt;スピーカーでも再生&lt;/i&gt;をオンのままにします。&lt;/li&gt;&lt;/ol&gt;</translation>
-        </message>
-        <message>
-            <location line="+7" />
-            <source>&lt;p&gt;Vocal Ink can create a virtual microphone for you (PulseAudio or PipeWire). Click &lt;b&gt;Create virtual microphone&lt;/b&gt;, then:&lt;/p&gt;&lt;ol&gt;&lt;li&gt;Choose &lt;b&gt;Vocal Ink Voice&lt;/b&gt; as Vocal Ink's &lt;i&gt;voice output&lt;/i&gt;.&lt;/li&gt;&lt;li&gt;In Discord, games or OBS choose &lt;b&gt;Vocal Ink Mic&lt;/b&gt; as the microphone (OBS can also capture &lt;i&gt;Monitor of Vocal Ink Voice&lt;/i&gt;).&lt;/li&gt;&lt;li&gt;Keep &lt;i&gt;Also play on my speakers&lt;/i&gt; on to hear yourself.&lt;/li&gt;&lt;/ol&gt;&lt;p&gt;The virtual devices last until you log out; Vocal Ink recreates them on request.&lt;/p&gt;</source>
-            <translation>&lt;p&gt;Vocal Inkで仮想マイクを作成できます（PulseAudioまたはPipeWire）。&lt;b&gt;仮想マイクを作成&lt;/b&gt;をクリックしてから、次の手順に進みます。&lt;/p&gt;&lt;ol&gt;&lt;li&gt;Vocal Inkの&lt;i&gt;ボイスの出力&lt;/i&gt;として&lt;b&gt;Vocal Ink Voice&lt;/b&gt;を選びます。&lt;/li&gt;&lt;li&gt;Discord、ゲーム、OBSで、マイクとして&lt;b&gt;Vocal Ink Mic&lt;/b&gt;を選びます（OBSでは&lt;i&gt;Monitor of Vocal Ink Voice&lt;/i&gt;もキャプチャできます）。&lt;/li&gt;&lt;li&gt;自分の声を聞くには、&lt;i&gt;スピーカーでも再生&lt;/i&gt;をオンのままにします。&lt;/li&gt;&lt;/ol&gt;&lt;p&gt;仮想デバイスはログアウトするまで有効です。必要に応じて、Vocal Inkが作り直します。&lt;/p&gt;</translation>
-        </message>
-        <message>
             <location line="+31" />
             <source>Creating a virtual microphone is only supported on Linux with PulseAudio or PipeWire.</source>
             <translation>仮想マイクの作成は、PulseAudioまたはPipeWireを使うLinuxでのみ対応しています。</translation>
@@ -8706,7 +8715,7 @@
     <context>
         <name>WhisperEngine</name>
         <message>
-            <location filename="../src/stt/WhisperEngine.cpp" line="+258" />
+            <location filename="../src/stt/WhisperEngine.cpp" line="+267" />
             <source>Local speech recognition is not included in this build.</source>
             <translation>このビルドにはローカル音声認識が含まれていません。</translation>
         </message>
@@ -8716,8 +8725,9 @@
             <translation>音声認識モデルを読み込み中…</translation>
         </message>
         <message>
-            <location line="+2" />
+            <location line="+3" />
             <source>%1 Download it again in Settings → Speech input.</source>
+            <extracomment>%1 is a full sentence saying why the speech model could not be loaded</extracomment>
             <translation>%1「設定 → 音声入力」でもう一度ダウンロードしてください。</translation>
         </message>
         <message>
@@ -8734,12 +8744,12 @@
     <context>
         <name>WhisperWorker</name>
         <message>
-            <location filename="../src/stt/WhisperEngine.cpp" line="-148" />
+            <location filename="../src/stt/WhisperEngine.cpp" line="-163" />
             <source>"%1" is not a valid Whisper model.</source>
             <translation>「%1」は有効なWhisperモデルではありません。</translation>
         </message>
         <message>
-            <location line="+2" />
+            <location line="+16" />
             <location line="+60" />
             <source>Local speech recognition is not included in this build.</source>
             <translation>このビルドにはローカル音声認識が含まれていません。</translation>

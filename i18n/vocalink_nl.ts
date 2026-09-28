@@ -140,26 +140,36 @@
         </message>
         <message>
             <location line="+1" />
-            <source>Next favorite voice</source>
+            <source>Next favourite voice</source>
             <translation>Volgende favoriete stem</translation>
         </message>
         <message>
             <location line="+1" />
-            <source>Cycles forward through your favorite voices.</source>
+            <source>Cycles forward through your favourite voices.</source>
             <translation>Gaat vooruit door je favoriete stemmen.</translation>
         </message>
         <message>
             <location line="+1" />
-            <source>Previous favorite voice</source>
+            <source>Previous favourite voice</source>
             <translation>Vorige favoriete stem</translation>
         </message>
         <message>
             <location line="+1" />
-            <source>Cycles back through your favorite voices.</source>
+            <source>Cycles back through your favourite voices.</source>
             <translation>Gaat terug door je favoriete stemmen.</translation>
         </message>
         <message>
+            <location line="+23" />
+            <source>Favourite voice %1</source>
+            <translation>Favoriete stem %1</translation>
+        </message>
+        <message>
             <location line="+1" />
+            <source>Switches to favourite voice number %1.</source>
+            <translation>Schakelt over naar favoriete stem nummer %1.</translation>
+        </message>
+        <message>
+            <location line="-23" />
             <source>Speak faster</source>
             <translation>Sneller spreken</translation>
         </message>
@@ -279,17 +289,7 @@
             <translation>Stopt (of hervat) het versturen van wat je zegt naar de stream.</translation>
         </message>
         <message>
-            <location line="+3" />
-            <source>Favorite voice %1</source>
-            <translation>Favoriete stem %1</translation>
-        </message>
-        <message>
-            <location line="+1" />
-            <source>Switches to favorite voice number %1.</source>
-            <translation>Schakelt over naar favoriete stem nummer %1.</translation>
-        </message>
-        <message>
-            <location line="+3" />
+            <location line="+7" />
             <source>Voice preset %1</source>
             <translation>Stempreset %1</translation>
         </message>
@@ -350,7 +350,7 @@
     <context>
         <name>AppContext</name>
         <message>
-            <location filename="../src/app/AppContext.cpp" line="+183" />
+            <location filename="../src/app/AppContext.cpp" line="+186" />
             <source>OBS: %1</source>
             <translation>OBS: %1</translation>
         </message>
@@ -391,12 +391,7 @@
             <translation>Ondertitels weer aan</translation>
         </message>
         <message>
-            <location line="+43" />
-            <source>Real-mic passthrough is off. Turn it on in Audio → Your real microphone.</source>
-            <translation>Doorsturen van je echte microfoon staat uit. Zet het aan bij Audio &amp; mic → Je echte microfoon.</translation>
-        </message>
-        <message>
-            <location line="+17" />
+            <location line="+60" />
             <location line="+2" />
             <source>Speed %1%</source>
             <translation>Snelheid %1%</translation>
@@ -418,9 +413,14 @@
             <translation>Nog geen favoriete stem #%1. Geef stemmen een ster bij Stemmen.</translation>
         </message>
         <message>
-            <location line="+8" />
-            <source>No preset #%1 yet. Save one in Voices → Presets.</source>
-            <translation>Nog geen preset #%1. Sla er een op bij Stemmen → Presets.</translation>
+            <location line="-42" />
+            <source>Real-mic passthrough is off. Turn it on in Audio &amp; mic → Your real microphone.</source>
+            <translation>Doorsturen van je echte microfoon staat uit. Zet het aan bij Audio &amp; mic → Je echte microfoon.</translation>
+        </message>
+        <message>
+            <location line="+50" />
+            <source>No preset #%1 yet. Save one in Voices → Tune &amp; presets.</source>
+            <translation>Nog geen preset #%1. Sla er een op bij Stemmen → Aanpassen &amp; presets.</translation>
         </message>
         <message>
             <location line="+129" />
@@ -463,8 +463,9 @@
             <translation>Streamer</translation>
         </message>
         <message>
-            <location line="+1" />
+            <location line="+2" />
             <source>Mod</source>
+            <extracomment>Short Twitch chat badges: moderator, VIP, subscriber</extracomment>
             <translation>Mod</translation>
         </message>
         <message>
@@ -1223,8 +1224,8 @@
         <name>AzureTtsEngine</name>
         <message>
             <location filename="../src/tts/AzureTtsEngine.cpp" line="+67" />
-            <source>Add your Microsoft Azure Speech key in Settings → Voices.</source>
-            <translation>Voeg je sleutel voor Microsoft Azure Speech toe bij Instellingen → Stemmen.</translation>
+            <source>Add your Microsoft Azure Speech key in Settings → Voice providers.</source>
+            <translation>Voeg je sleutel voor Microsoft Azure Speech toe bij Instellingen → Stemaanbieders.</translation>
         </message>
         <message>
             <location line="+80" />
@@ -1357,7 +1358,7 @@
     <context>
         <name>Bridge</name>
         <message>
-            <location filename="../src/ui/Bridge.cpp" line="+337" />
+            <location filename="../src/ui/Bridge.cpp" line="+341" />
             <source>Hey! Sorry, I don't talk out loud, so I type.</source>
             <translation>Hoi! Sorry, ik praat niet hardop, dus ik typ.</translation>
         </message>
@@ -1453,8 +1454,9 @@
             <translation>Zo zien je woorden eruit op stream terwijl ze worden uitgesproken.</translation>
         </message>
         <message>
-            <location line="+2" />
+            <location line="+3" />
             <source>Test</source>
+            <extracomment>Shown on stream overlays as the voice name of a test caption</extracomment>
             <translation>Test</translation>
         </message>
         <message>
@@ -2006,7 +2008,7 @@
             <translation>Download voltooid.</translation>
         </message>
         <message numerus="yes">
-            <location line="+67" />
+            <location line="+92" />
             <source>%n speaker(s)</source>
             <translation>
                 <numerusform>%n spreker</numerusform>
@@ -2018,8 +2020,8 @@
         <name>ElevenLabsTtsEngine</name>
         <message>
             <location filename="../src/tts/ElevenLabsTtsEngine.cpp" line="+34" />
-            <source>Add your ElevenLabs API key in Settings → Voices.</source>
-            <translation>Voeg je ElevenLabs-API-sleutel toe bij Instellingen → Stemmen.</translation>
+            <source>Add your ElevenLabs API key in Settings → Voice providers.</source>
+            <translation>Voeg je ElevenLabs-API-sleutel toe bij Instellingen → Stemaanbieders.</translation>
         </message>
     </context>
     <context>
@@ -2049,8 +2051,8 @@
         <name>FishAudioTtsEngine</name>
         <message>
             <location filename="../src/tts/FishAudioTtsEngine.cpp" line="+33" />
-            <source>Add your Fish Audio API key in Settings → Voices.</source>
-            <translation>Voeg je API-sleutel voor Fish Audio toe bij Instellingen → Stemmen.</translation>
+            <source>Add your Fish Audio API key in Settings → Voice providers.</source>
+            <translation>Voeg je API-sleutel voor Fish Audio toe bij Instellingen → Stemaanbieders.</translation>
         </message>
         <message>
             <location line="+46" />
@@ -2330,7 +2332,7 @@
             <translation>De lijst met Piper-stemmen kon niet worden gelezen.</translation>
         </message>
         <message>
-            <location line="+41" />
+            <location line="+40" />
             <source>Tiny (English)</source>
             <translation>Tiny (Engels)</translation>
         </message>
@@ -2346,8 +2348,8 @@
         </message>
         <message>
             <location line="+1" />
-            <source>Recommended: fast and accurate for English.</source>
-            <translation>Aanbevolen: snel en nauwkeurig voor Engels.</translation>
+            <source>Fast and accurate for English.</source>
+            <translation>Snel en nauwkeurig voor Engels.</translation>
         </message>
         <message>
             <location line="+1" />
@@ -2410,7 +2412,7 @@
             <translation>De stem “%1” staat niet in de lijst met Piper-stemmen. Vernieuw de lijst en probeer het opnieuw.</translation>
         </message>
         <message>
-            <location line="+45" />
+            <location line="+104" />
             <source>Download cancelled.</source>
             <translation>Download geannuleerd.</translation>
         </message>
@@ -2687,8 +2689,8 @@
         </message>
         <message>
             <location line="+1" />
-            <source>If you can whisper, mouth or speak softly, Vocal Ink can write it down for you to check and send. It runs on this computer.</source>
-            <translation>Als je kunt fluisteren, woorden met je lippen kunt vormen of zacht kunt praten, schrijft Vocal Ink het voor je uit, zodat je het kunt nakijken en versturen. Het draait op deze computer.</translation>
+            <source>If you can whisper or speak softly, Vocal Ink can write it down for you to check and send. It runs on this computer.</source>
+            <translation>Als je kunt fluisteren of zacht kunt praten, schrijft Vocal Ink het voor je uit, zodat je het kunt nakijken en versturen. Het draait op deze computer.</translation>
         </message>
         <message>
             <location line="+7" />
@@ -3050,7 +3052,7 @@
             <translation>Ze werken ook als een game of een andere app de focus heeft. Klik op een sneltoets en druk op nieuwe toetsen om hem te wijzigen.</translation>
         </message>
         <message>
-            <location line="+8" />
+            <location line="+9" />
             <source>Pop up a box to type over any app</source>
             <translation>Een typvak boven elke app openen</translation>
         </message>
@@ -3079,10 +3081,13 @@
             <source>Show or hide Vocal Ink</source>
             <translation>Vocal Ink tonen of verbergen</translation>
         </message>
-        <message>
-            <location line="+16" />
-            <source>Phrases and sounds can have shortcuts too. There are 26 more actions in Settings → Shortcuts.</source>
-            <translation>Ook zinnen en geluiden kunnen sneltoetsen hebben. Bij Instellingen → Sneltoetsen vind je nog 26 acties.</translation>
+        <message numerus="yes">
+            <location line="+19" />
+            <source>Phrases and sounds can have shortcuts too. There are %n more action(s) in Settings → Shortcuts.</source>
+            <translation>
+                <numerusform>Ook zinnen en geluiden kunnen sneltoetsen hebben. Bij Instellingen → Sneltoetsen vind je nog %n actie.</numerusform>
+                <numerusform>Ook zinnen en geluiden kunnen sneltoetsen hebben. Bij Instellingen → Sneltoetsen vind je nog %n acties.</numerusform>
+            </translation>
         </message>
     </context>
     <context>
@@ -3228,7 +3233,7 @@
         </message>
         <message>
             <location line="+0" />
-            <source>Presentations, classes, desks</source>
+            <source>Presentations, classes, the office</source>
             <translation>Presentaties, lessen, kantoor</translation>
         </message>
         <message>
@@ -3494,13 +3499,14 @@
             <translation>Sneltoetsen</translation>
         </message>
         <message>
-            <location line="+43" />
+            <location line="+44" />
             <source>Step %1 of %2: %3</source>
             <translation>Stap %1 van %2: %3</translation>
         </message>
         <message>
             <location line="-42" />
             <source>Look</source>
+            <extracomment>Setup step about the app's appearance (theme, colours)</extracomment>
             <translation>Look</translation>
         </message>
         <message>
@@ -3581,8 +3587,8 @@
         </message>
         <message>
             <location line="+26" />
-            <source>Add your OpenAI API key in Settings → Voices.</source>
-            <translation>Voeg je OpenAI-API-sleutel toe bij Instellingen → Stemmen.</translation>
+            <source>Add your OpenAI API key in Settings → Voice providers.</source>
+            <translation>Voeg je OpenAI-API-sleutel toe bij Instellingen → Stemaanbieders.</translation>
         </message>
     </context>
     <context>
@@ -4533,8 +4539,8 @@
         </message>
         <message>
             <location line="+3" />
-            <source>You can use {time}, {date}, {clipboard} and your own {variables}.</source>
-            <translation>Je kunt {time}, {date}, {clipboard} en je eigen {variables} gebruiken.</translation>
+            <source>You can use {time}, {date}, {clipboard} and your own variables, like {name}.</source>
+            <translation>Je kunt {time}, {date}, {clipboard} en je eigen variabelen, zoals {name}, gebruiken.</translation>
         </message>
         <message>
             <location line="+8" />
@@ -4606,7 +4612,7 @@
     <context>
         <name>PhraseModel</name>
         <message>
-            <location filename="../src/ui/Models.cpp" line="-410" />
+            <location filename="../src/ui/Models.cpp" line="-435" />
             <source>Basics</source>
             <translation>Basis</translation>
         </message>
@@ -4797,24 +4803,24 @@
     <context>
         <name>PiperTtsEngine</name>
         <message>
-            <location filename="../src/tts/PiperTtsEngine.cpp" line="+79" />
-            <source>Download the Piper voice engine in Settings → Voices.</source>
-            <translation>Download de Piper-stemengine bij Instellingen → Stemmen.</translation>
-        </message>
-        <message>
-            <location line="+2" />
-            <source>Download a Piper voice in Settings → Voices.</source>
-            <translation>Download een Piper-stem bij Instellingen → Stemmen.</translation>
-        </message>
-        <message>
-            <location line="+124" />
-            <source>The Piper voice "%1" is not installed. Download it in Settings → Voices.</source>
-            <translation>De Piper-stem “%1” is niet geïnstalleerd. Download hem bij Instellingen → Stemmen.</translation>
-        </message>
-        <message>
             <location filename="../src/tts/PiperTtsEngine.h" line="+16" />
             <source>Piper (local)</source>
             <translation>Piper (lokaal)</translation>
+        </message>
+        <message>
+            <location filename="../src/tts/PiperTtsEngine.cpp" line="+79" />
+            <source>Download the Piper voice engine in Voices → Download.</source>
+            <translation>Download de Piper-stemengine bij Stemmen → Downloaden.</translation>
+        </message>
+        <message>
+            <location line="+2" />
+            <source>Download a Piper voice in Voices → Download.</source>
+            <translation>Download een Piper-stem bij Stemmen → Downloaden.</translation>
+        </message>
+        <message>
+            <location line="+124" />
+            <source>The Piper voice "%1" is not installed. Download it in Voices → Download.</source>
+            <translation>De Piper-stem “%1” is niet geïnstalleerd. Download hem bij Stemmen → Downloaden.</translation>
         </message>
     </context>
     <context>
@@ -4944,12 +4950,22 @@
             <translation>%1 heeft het verzoek geweigerd</translation>
         </message>
         <message>
-            <location line="+4" />
-            <source>%1 did not accept the API key. Check it in Settings → Voices</source>
-            <translation>%1 heeft de API-sleutel niet geaccepteerd. Controleer hem bij Instellingen → Stemmen</translation>
+            <location line="+6" />
+            <source>%1 did not accept the API key. Check it in Settings → Voice providers</source>
+            <translation>%1 heeft de API-sleutel niet geaccepteerd. Controleer hem bij Instellingen → Stemaanbieders</translation>
         </message>
         <message>
             <location line="+3" />
+            <source>%1 did not accept the API key. Check it in Settings → Speech input</source>
+            <translation>%1 heeft de API-sleutel niet geaccepteerd. Controleer hem bij Instellingen → Spraakinvoer</translation>
+        </message>
+        <message>
+            <location line="+3" />
+            <source>%1 refused the request (HTTP %2)</source>
+            <translation>%1 heeft het verzoek geweigerd (HTTP %2)</translation>
+        </message>
+        <message>
+            <location line="+5" />
             <source>%1 says the account is out of credit or needs a paid plan</source>
             <translation>%1 meldt dat het account geen tegoed meer heeft of een betaald abonnement nodig heeft</translation>
         </message>
@@ -5013,8 +5029,8 @@
         <name>QtAudioLane</name>
         <message>
             <location filename="../src/audio/AudioOutputLane.cpp" line="+147" />
-            <source>Audio output "%1" failed (error %2). Check the device in Settings → Audio.</source>
-            <translation>Audio-uitvoer “%1” is mislukt (fout %2). Controleer het apparaat bij Instellingen → Audio.</translation>
+            <source>Audio output "%1" failed (error %2). Check the device in Audio &amp; mic.</source>
+            <translation>Audio-uitvoer “%1” is mislukt (fout %2). Controleer het apparaat bij Audio &amp; mic.</translation>
         </message>
     </context>
     <context>
@@ -5079,12 +5095,12 @@
         </message>
         <message>
             <location line="+3" />
-            <location line="+78" />
+            <location line="+79" />
             <source>Off</source>
             <translation>Uit</translation>
         </message>
         <message>
-            <location line="-77" />
+            <location line="-78" />
             <source>While I hold a key</source>
             <translation>Toets ingedrukt houden</translation>
         </message>
@@ -5134,14 +5150,27 @@
             <translation>Werkt in elke app, ook als een game de focus heeft.</translation>
         </message>
         <message>
+            <location line="+44" />
             <location line="+3" />
-            <source>Hold to talk</source>
-            <translation>Houd vast &amp; praat</translation>
+            <source>Lower my mic while Vocal Ink speaks</source>
+            <translation>Mijn mic zachter zetten terwijl Vocal Ink spreekt</translation>
+        </message>
+        <message>
+            <location line="+7" />
+            <location line="+3" />
+            <source>Show a red MIC LIVE badge on screen</source>
+            <translation>Rode MIC LIVE-badge op het scherm tonen</translation>
+        </message>
+        <message>
+            <location line="-53" />
+            <source>Toggle real mic</source>
+            <translation>Echte mic aan/uit</translation>
         </message>
         <message>
             <location line="+0" />
-            <source>Toggle real mic</source>
-            <translation>Echte mic aan/uit</translation>
+            <source>Hold to talk on your real mic</source>
+            <extracomment>Shortcut name: hold the key to open your real microphone</extracomment>
+            <translation>Houd vast &amp; praat via je echte mic</translation>
         </message>
         <message>
             <location line="+12" />
@@ -5177,24 +5206,12 @@
             <translation>Dempt de mic onder dit niveau, zodat geluid van toetsenbord en ventilator buiten blijft.</translation>
         </message>
         <message>
-            <location line="+11" />
-            <location line="+3" />
-            <source>Lower my mic while the voice speaks</source>
-            <translation>Mijn mic zachter zetten terwijl de stem spreekt</translation>
-        </message>
-        <message>
-            <location line="-2" />
+            <location line="+12" />
             <source>Keeps your typed messages clear over background sound.</source>
             <translation>Houdt je getypte berichten goed verstaanbaar boven achtergrondgeluid.</translation>
         </message>
         <message>
-            <location line="+9" />
-            <location line="+3" />
-            <source>Show a red LIVE badge on screen</source>
-            <translation>Rode LIVE-badge op het scherm tonen</translation>
-        </message>
-        <message>
-            <location line="-2" />
+            <location line="+10" />
             <source>Stays on top of games and other apps while your mic is live.</source>
             <translation>Blijft boven games en andere apps zolang je mic live is.</translation>
         </message>
@@ -5259,16 +5276,21 @@
         </message>
         <message>
             <location line="+5" />
-            <source> (not connected)</source>
-            <translation> (niet verbonden)</translation>
+            <source>%1 (not connected)</source>
+            <translation>%1 (niet verbonden)</translation>
+        </message>
+        <message>
+            <location line="+1" />
+            <source>%1, then %2</source>
+            <translation>%1, dan %2</translation>
         </message>
     </context>
     <context>
         <name>RoutingCheck</name>
         <message>
             <location filename="../src/audio/RoutingCheck.cpp" line="+335" />
-            <source>The voice output device isn't connected. Pick it again in Settings → Audio.</source>
-            <translation>Het apparaat voor stemuitvoer is niet verbonden. Kies het opnieuw bij Instellingen → Audio.</translation>
+            <source>The voice output device isn't connected. Pick it again in Audio &amp; mic.</source>
+            <translation>Het apparaat voor stemuitvoer is niet verbonden. Kies het opnieuw bij Audio &amp; mic.</translation>
         </message>
         <message>
             <location line="+7" />
@@ -5494,8 +5516,8 @@
         <message>
             <location line="+4" />
             <location line="+2" />
-            <source>Tap to talk instead of holding</source>
-            <translation>Druk om te praten in plaats van vast te houden</translation>
+            <source>Tap to dictate instead of holding</source>
+            <translation>Druk om te dicteren in plaats van vast te houden</translation>
         </message>
         <message>
             <location line="-1" />
@@ -5519,12 +5541,13 @@
         </message>
         <message>
             <location line="+2" />
-            <location line="+59" />
+            <location line="+60" />
             <source>Off</source>
+            <extracomment>Typing echo: read back nothing / each word as it is typed / each sentence as it is finished</extracomment>
             <translation>Uit</translation>
         </message>
         <message>
-            <location line="-59" />
+            <location line="-60" />
             <source>%1 ms</source>
             <comment>milliseconds</comment>
             <translation>%1 ms</translation>
@@ -5610,7 +5633,7 @@
             <translation>Hoor elk woord of elke zin zodra je hem af hebt, alleen op je eigen speakers.</translation>
         </message>
         <message>
-            <location line="+4" />
+            <location line="+5" />
             <source>Words</source>
             <translation>Woorden</translation>
         </message>
@@ -5926,12 +5949,12 @@
         </message>
         <message>
             <location line="+0" />
-            <location line="+148" />
+            <location line="+149" />
             <source>Off</source>
             <translation>Uit</translation>
         </message>
         <message>
-            <location line="-143" />
+            <location line="-144" />
             <location line="+2" />
             <source>Fill words with ink as they're spoken</source>
             <translation>Woorden met inkt vullen terwijl ze worden uitgesproken</translation>
@@ -5964,8 +5987,9 @@
             <translation>Lettertype van de uitgesproken regels</translation>
         </message>
         <message>
-            <location line="+2" />
+            <location line="+3" />
             <source>Display</source>
+            <extracomment>Fonts for the big spoken words: the decorative display font / the plain reading font / a serif font</extracomment>
             <translation>Display</translation>
         </message>
         <message>
@@ -6520,8 +6544,8 @@
         </message>
         <message>
             <location line="+7" />
-            <source>A red LIVE badge appears on screen and a tone plays whenever it's on. You can change this in Audio &amp; mic.</source>
-            <translation>Er verschijnt een rode LIVE-badge op het scherm en er klinkt een toon zodra hij aan staat. Je kunt dit wijzigen bij Audio &amp; mic.</translation>
+            <source>A red MIC LIVE badge appears on screen and a tone plays whenever it's on. You can change this in Audio &amp; mic.</source>
+            <translation>Er verschijnt een rode MIC LIVE-badge op het scherm en er klinkt een toon zodra hij aan staat. Je kunt dit wijzigen bij Audio &amp; mic.</translation>
         </message>
         <message>
             <location line="+4" />
@@ -6638,12 +6662,7 @@
             <translation>Dicteermodus</translation>
         </message>
         <message>
-            <location line="+2" />
-            <source>Hold to talk</source>
-            <translation>Houd vast &amp; praat</translation>
-        </message>
-        <message>
-            <location line="+0" />
+            <location line="+3" />
             <source>Tap on/off</source>
             <translation>Druk aan/uit</translation>
         </message>
@@ -6651,6 +6670,12 @@
             <location line="+0" />
             <source>Hands-free</source>
             <translation>Handsfree</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Hold to dictate</source>
+            <extracomment>Dictation modes: hold a key while speaking / press once to start and again to stop / listens on its own</extracomment>
+            <translation>Vasthouden om te dicteren</translation>
         </message>
         <message>
             <location line="+6" />
@@ -6818,7 +6843,7 @@
         </message>
         <message>
             <location line="+1" />
-            <source>Type less and sound right: word suggestions, shortcuts that expand, and how emoji and links are read.</source>
+            <source>Type less and sound right: word suggestions, abbreviations that expand, and how emoji and links are read.</source>
             <translation>Minder typen en goed klinken: woordsuggesties, afkortingen die worden uitgeschreven, en hoe emoji en links worden voorgelezen.</translation>
         </message>
         <message>
@@ -7332,8 +7357,8 @@
         <name>SpeechQueue</name>
         <message>
             <location filename="../src/core/SpeechQueue.cpp" line="+90" />
-            <source>No voice is selected. Pick a voice in the toolbar, or install one in Settings → Voices.</source>
-            <translation>Geen stem geselecteerd. Kies een stem in de werkbalk of installeer er een bij Instellingen → Stemmen.</translation>
+            <source>No voice is selected. Pick a voice in the toolbar, or download one in Voices → Download.</source>
+            <translation>Geen stem geselecteerd. Kies een stem in de werkbalk of download er een bij Stemmen → Downloaden.</translation>
         </message>
         <message>
             <location line="+6" />
@@ -8191,21 +8216,6 @@
             <translation>pactl %1 is mislukt</translation>
         </message>
         <message>
-            <location line="+13" />
-            <source>&lt;p&gt;Install the free &lt;b&gt;VB-CABLE&lt;/b&gt; virtual audio device from &lt;a href="https://vb-audio.com/Cable/"&gt;vb-audio.com/Cable&lt;/a&gt; and restart Vocal Ink.&lt;/p&gt;&lt;ol&gt;&lt;li&gt;Choose &lt;b&gt;CABLE Input (VB-Audio Virtual Cable)&lt;/b&gt; as Vocal Ink's &lt;i&gt;voice output&lt;/i&gt;.&lt;/li&gt;&lt;li&gt;In Discord, games or OBS choose &lt;b&gt;CABLE Output (VB-Audio Virtual Cable)&lt;/b&gt; as the microphone.&lt;/li&gt;&lt;li&gt;Keep &lt;i&gt;Also play on my speakers&lt;/i&gt; on to hear yourself.&lt;/li&gt;&lt;/ol&gt;</source>
-            <translation>&lt;p&gt;Installeer het gratis virtuele audioapparaat &lt;b&gt;VB-CABLE&lt;/b&gt; van &lt;a href="https://vb-audio.com/Cable/"&gt;vb-audio.com/Cable&lt;/a&gt; en start Vocal Ink opnieuw.&lt;/p&gt;&lt;ol&gt;&lt;li&gt;Kies &lt;b&gt;CABLE Input (VB-Audio Virtual Cable)&lt;/b&gt; als &lt;i&gt;stemuitvoer&lt;/i&gt; van Vocal Ink.&lt;/li&gt;&lt;li&gt;Kies in Discord, games of OBS &lt;b&gt;CABLE Output (VB-Audio Virtual Cable)&lt;/b&gt; als microfoon.&lt;/li&gt;&lt;li&gt;Laat &lt;i&gt;Ook op mijn speakers afspelen&lt;/i&gt; aan om jezelf te horen.&lt;/li&gt;&lt;/ol&gt;</translation>
-        </message>
-        <message>
-            <location line="+6" />
-            <source>&lt;p&gt;Install the free &lt;b&gt;BlackHole 2ch&lt;/b&gt; virtual audio driver from &lt;a href="https://existential.audio/blackhole/"&gt;existential.audio/blackhole&lt;/a&gt; (or &lt;code&gt;brew install blackhole-2ch&lt;/code&gt;) and restart Vocal Ink.&lt;/p&gt;&lt;ol&gt;&lt;li&gt;Choose &lt;b&gt;BlackHole 2ch&lt;/b&gt; as Vocal Ink's &lt;i&gt;voice output&lt;/i&gt;.&lt;/li&gt;&lt;li&gt;In Discord, games or OBS choose &lt;b&gt;BlackHole 2ch&lt;/b&gt; as the microphone.&lt;/li&gt;&lt;li&gt;Keep &lt;i&gt;Also play on my speakers&lt;/i&gt; on to hear yourself.&lt;/li&gt;&lt;/ol&gt;</source>
-            <translation>&lt;p&gt;Installeer het gratis virtuele audiostuurprogramma &lt;b&gt;BlackHole 2ch&lt;/b&gt; van &lt;a href="https://existential.audio/blackhole/"&gt;existential.audio/blackhole&lt;/a&gt; (of &lt;code&gt;brew install blackhole-2ch&lt;/code&gt;) en start Vocal Ink opnieuw.&lt;/p&gt;&lt;ol&gt;&lt;li&gt;Kies &lt;b&gt;BlackHole 2ch&lt;/b&gt; als &lt;i&gt;stemuitvoer&lt;/i&gt; van Vocal Ink.&lt;/li&gt;&lt;li&gt;Kies in Discord, games of OBS &lt;b&gt;BlackHole 2ch&lt;/b&gt; als microfoon.&lt;/li&gt;&lt;li&gt;Laat &lt;i&gt;Ook op mijn speakers afspelen&lt;/i&gt; aan om jezelf te horen.&lt;/li&gt;&lt;/ol&gt;</translation>
-        </message>
-        <message>
-            <location line="+7" />
-            <source>&lt;p&gt;Vocal Ink can create a virtual microphone for you (PulseAudio or PipeWire). Click &lt;b&gt;Create virtual microphone&lt;/b&gt;, then:&lt;/p&gt;&lt;ol&gt;&lt;li&gt;Choose &lt;b&gt;Vocal Ink Voice&lt;/b&gt; as Vocal Ink's &lt;i&gt;voice output&lt;/i&gt;.&lt;/li&gt;&lt;li&gt;In Discord, games or OBS choose &lt;b&gt;Vocal Ink Mic&lt;/b&gt; as the microphone (OBS can also capture &lt;i&gt;Monitor of Vocal Ink Voice&lt;/i&gt;).&lt;/li&gt;&lt;li&gt;Keep &lt;i&gt;Also play on my speakers&lt;/i&gt; on to hear yourself.&lt;/li&gt;&lt;/ol&gt;&lt;p&gt;The virtual devices last until you log out; Vocal Ink recreates them on request.&lt;/p&gt;</source>
-            <translation>&lt;p&gt;Vocal Ink kan een virtuele microfoon voor je maken (PulseAudio of PipeWire). Klik op &lt;b&gt;Virtuele microfoon maken&lt;/b&gt; en daarna:&lt;/p&gt;&lt;ol&gt;&lt;li&gt;Kies &lt;b&gt;Vocal Ink Voice&lt;/b&gt; als &lt;i&gt;stemuitvoer&lt;/i&gt; van Vocal Ink.&lt;/li&gt;&lt;li&gt;Kies in Discord, games of OBS &lt;b&gt;Vocal Ink Mic&lt;/b&gt; als microfoon (OBS kan ook &lt;i&gt;Monitor of Vocal Ink Voice&lt;/i&gt; opnemen).&lt;/li&gt;&lt;li&gt;Laat &lt;i&gt;Ook op mijn speakers afspelen&lt;/i&gt; aan om jezelf te horen.&lt;/li&gt;&lt;/ol&gt;&lt;p&gt;De virtuele apparaten blijven bestaan tot je uitlogt; Vocal Ink maakt ze op verzoek opnieuw aan.&lt;/p&gt;</translation>
-        </message>
-        <message>
             <location line="+31" />
             <source>Creating a virtual microphone is only supported on Linux with PulseAudio or PipeWire.</source>
             <translation>Een virtuele microfoon maken kan alleen op Linux met PulseAudio of PipeWire.</translation>
@@ -8711,7 +8721,7 @@
     <context>
         <name>WhisperEngine</name>
         <message>
-            <location filename="../src/stt/WhisperEngine.cpp" line="+258" />
+            <location filename="../src/stt/WhisperEngine.cpp" line="+267" />
             <source>Local speech recognition is not included in this build.</source>
             <translation>Lokale spraakherkenning zit niet in deze build.</translation>
         </message>
@@ -8721,8 +8731,9 @@
             <translation>Spraakmodel laden…</translation>
         </message>
         <message>
-            <location line="+2" />
+            <location line="+3" />
             <source>%1 Download it again in Settings → Speech input.</source>
+            <extracomment>%1 is a full sentence saying why the speech model could not be loaded</extracomment>
             <translation>%1 Download het opnieuw bij Instellingen → Spraakinvoer.</translation>
         </message>
         <message>
@@ -8739,12 +8750,12 @@
     <context>
         <name>WhisperWorker</name>
         <message>
-            <location filename="../src/stt/WhisperEngine.cpp" line="-148" />
+            <location filename="../src/stt/WhisperEngine.cpp" line="-163" />
             <source>"%1" is not a valid Whisper model.</source>
             <translation>“%1” is geen geldig Whisper-model.</translation>
         </message>
         <message>
-            <location line="+2" />
+            <location line="+16" />
             <location line="+60" />
             <source>Local speech recognition is not included in this build.</source>
             <translation>Lokale spraakherkenning zit niet in deze build.</translation>

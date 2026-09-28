@@ -140,26 +140,36 @@
         </message>
         <message>
             <location line="+1" />
-            <source>Next favorite voice</source>
+            <source>Next favourite voice</source>
             <translation>다음 즐겨찾는 음성</translation>
         </message>
         <message>
             <location line="+1" />
-            <source>Cycles forward through your favorite voices.</source>
+            <source>Cycles forward through your favourite voices.</source>
             <translation>즐겨찾는 음성을 차례로 바꿔요.</translation>
         </message>
         <message>
             <location line="+1" />
-            <source>Previous favorite voice</source>
+            <source>Previous favourite voice</source>
             <translation>이전 즐겨찾는 음성</translation>
         </message>
         <message>
             <location line="+1" />
-            <source>Cycles back through your favorite voices.</source>
+            <source>Cycles back through your favourite voices.</source>
             <translation>즐겨찾는 음성을 거꾸로 바꿔요.</translation>
         </message>
         <message>
+            <location line="+23" />
+            <source>Favourite voice %1</source>
+            <translation>즐겨찾는 음성 %1</translation>
+        </message>
+        <message>
             <location line="+1" />
+            <source>Switches to favourite voice number %1.</source>
+            <translation>%1번째 즐겨찾는 음성으로 바꿔요.</translation>
+        </message>
+        <message>
+            <location line="-23" />
             <source>Speak faster</source>
             <translation>더 빠르게 말하기</translation>
         </message>
@@ -279,17 +289,7 @@
             <translation>말한 내용을 방송으로 보내는 것을 멈추거나 다시 시작해요.</translation>
         </message>
         <message>
-            <location line="+3" />
-            <source>Favorite voice %1</source>
-            <translation>즐겨찾는 음성 %1</translation>
-        </message>
-        <message>
-            <location line="+1" />
-            <source>Switches to favorite voice number %1.</source>
-            <translation>%1번째 즐겨찾는 음성으로 바꿔요.</translation>
-        </message>
-        <message>
-            <location line="+3" />
+            <location line="+7" />
             <source>Voice preset %1</source>
             <translation>음성 프리셋 %1</translation>
         </message>
@@ -350,7 +350,7 @@
     <context>
         <name>AppContext</name>
         <message>
-            <location filename="../src/app/AppContext.cpp" line="+183" />
+            <location filename="../src/app/AppContext.cpp" line="+186" />
             <source>OBS: %1</source>
             <translation>OBS: %1</translation>
         </message>
@@ -391,12 +391,7 @@
             <translation>자막 다시 켜짐</translation>
         </message>
         <message>
-            <location line="+43" />
-            <source>Real-mic passthrough is off. Turn it on in Audio → Your real microphone.</source>
-            <translation>실제 마이크 전달이 꺼져 있어요. ‘오디오 및 마이크 → 실제 마이크’에서 켜 주세요.</translation>
-        </message>
-        <message>
-            <location line="+17" />
+            <location line="+60" />
             <location line="+2" />
             <source>Speed %1%</source>
             <translation>속도 %1%</translation>
@@ -418,8 +413,13 @@
             <translation>%1번째 즐겨찾는 음성이 아직 없어요. ‘음성’에서 음성에 별표를 표시해 주세요.</translation>
         </message>
         <message>
-            <location line="+8" />
-            <source>No preset #%1 yet. Save one in Voices → Presets.</source>
+            <location line="-42" />
+            <source>Real-mic passthrough is off. Turn it on in Audio &amp; mic → Your real microphone.</source>
+            <translation>실제 마이크 전달이 꺼져 있어요. ‘오디오 및 마이크 → 실제 마이크’에서 켜 주세요.</translation>
+        </message>
+        <message>
+            <location line="+50" />
+            <source>No preset #%1 yet. Save one in Voices → Tune &amp; presets.</source>
             <translation>%1번째 프리셋이 아직 없어요. ‘음성 → 조정 및 프리셋’에서 저장해 주세요.</translation>
         </message>
         <message>
@@ -463,8 +463,9 @@
             <translation>스트리머</translation>
         </message>
         <message>
-            <location line="+1" />
+            <location line="+2" />
             <source>Mod</source>
+            <extracomment>Short Twitch chat badges: moderator, VIP, subscriber</extracomment>
             <translation>모더레이터</translation>
         </message>
         <message>
@@ -1223,7 +1224,7 @@
         <name>AzureTtsEngine</name>
         <message>
             <location filename="../src/tts/AzureTtsEngine.cpp" line="+67" />
-            <source>Add your Microsoft Azure Speech key in Settings → Voices.</source>
+            <source>Add your Microsoft Azure Speech key in Settings → Voice providers.</source>
             <translation>Microsoft Azure Speech 키를 ‘설정 → 음성 제공업체’에서 추가하세요.</translation>
         </message>
         <message>
@@ -1357,7 +1358,7 @@
     <context>
         <name>Bridge</name>
         <message>
-            <location filename="../src/ui/Bridge.cpp" line="+337" />
+            <location filename="../src/ui/Bridge.cpp" line="+341" />
             <source>Hey! Sorry, I don't talk out loud, so I type.</source>
             <translation>안녕하세요! 죄송해요, 저는 소리 내어 말하지 않아서 글로 입력해요.</translation>
         </message>
@@ -1453,8 +1454,9 @@
             <translation>말하는 동안 방송에서 내 말이 이렇게 보여요.</translation>
         </message>
         <message>
-            <location line="+2" />
+            <location line="+3" />
             <source>Test</source>
+            <extracomment>Shown on stream overlays as the voice name of a test caption</extracomment>
             <translation>테스트</translation>
         </message>
         <message>
@@ -2006,7 +2008,7 @@
             <translation>다운로드가 끝났어요.</translation>
         </message>
         <message numerus="yes">
-            <location line="+67" />
+            <location line="+92" />
             <source>%n speaker(s)</source>
             <translation>
                 <numerusform>화자 %n명</numerusform>
@@ -2017,7 +2019,7 @@
         <name>ElevenLabsTtsEngine</name>
         <message>
             <location filename="../src/tts/ElevenLabsTtsEngine.cpp" line="+34" />
-            <source>Add your ElevenLabs API key in Settings → Voices.</source>
+            <source>Add your ElevenLabs API key in Settings → Voice providers.</source>
             <translation>‘설정 → 음성 제공업체’에서 ElevenLabs API 키를 추가하세요.</translation>
         </message>
     </context>
@@ -2048,7 +2050,7 @@
         <name>FishAudioTtsEngine</name>
         <message>
             <location filename="../src/tts/FishAudioTtsEngine.cpp" line="+33" />
-            <source>Add your Fish Audio API key in Settings → Voices.</source>
+            <source>Add your Fish Audio API key in Settings → Voice providers.</source>
             <translation>‘설정 → 음성 제공업체’에서 Fish Audio API 키를 추가하세요.</translation>
         </message>
         <message>
@@ -2329,7 +2331,7 @@
             <translation>Piper 음성 목록을 읽을 수 없어요.</translation>
         </message>
         <message>
-            <location line="+41" />
+            <location line="+40" />
             <source>Tiny (English)</source>
             <translation>Tiny(영어)</translation>
         </message>
@@ -2345,8 +2347,8 @@
         </message>
         <message>
             <location line="+1" />
-            <source>Recommended: fast and accurate for English.</source>
-            <translation>추천: 영어를 빠르고 정확하게 인식해요.</translation>
+            <source>Fast and accurate for English.</source>
+            <translation>영어를 빠르고 정확하게 인식해요.</translation>
         </message>
         <message>
             <location line="+1" />
@@ -2409,7 +2411,7 @@
             <translation>“%1” 음성이 Piper 음성 목록에 없어요. 목록을 새로 고친 뒤 다시 시도하세요.</translation>
         </message>
         <message>
-            <location line="+45" />
+            <location line="+104" />
             <source>Download cancelled.</source>
             <translation>다운로드를 취소했어요.</translation>
         </message>
@@ -2686,8 +2688,8 @@
         </message>
         <message>
             <location line="+1" />
-            <source>If you can whisper, mouth or speak softly, Vocal Ink can write it down for you to check and send. It runs on this computer.</source>
-            <translation>속삭이거나, 입 모양으로 말하거나, 작게 말할 수 있다면 Vocal Ink가 글로 옮겨 줘요. 확인한 뒤 보낼 수 있어요. 이 컴퓨터에서 실행돼요.</translation>
+            <source>If you can whisper or speak softly, Vocal Ink can write it down for you to check and send. It runs on this computer.</source>
+            <translation>속삭이거나 작게 말할 수 있다면 Vocal Ink가 글로 옮겨 줘요. 확인한 뒤 보낼 수 있어요. 이 컴퓨터에서 실행돼요.</translation>
         </message>
         <message>
             <location line="+7" />
@@ -3049,7 +3051,7 @@
             <translation>게임이나 다른 앱을 사용하는 중에도 작동해요. 바꾸려면 단축키를 클릭하고 새 키를 누르세요.</translation>
         </message>
         <message>
-            <location line="+8" />
+            <location line="+9" />
             <source>Pop up a box to type over any app</source>
             <translation>어떤 앱 위에든 입력 상자 띄우기</translation>
         </message>
@@ -3078,10 +3080,12 @@
             <source>Show or hide Vocal Ink</source>
             <translation>Vocal Ink 표시/숨기기</translation>
         </message>
-        <message>
-            <location line="+16" />
-            <source>Phrases and sounds can have shortcuts too. There are 26 more actions in Settings → Shortcuts.</source>
-            <translation>문구와 사운드에도 단축키를 지정할 수 있어요. ‘설정 → 단축키’에 26개의 동작이 더 있어요.</translation>
+        <message numerus="yes">
+            <location line="+19" />
+            <source>Phrases and sounds can have shortcuts too. There are %n more action(s) in Settings → Shortcuts.</source>
+            <translation>
+                <numerusform>문구와 사운드에도 단축키를 지정할 수 있어요. ‘설정 → 단축키’에 %n개의 동작이 더 있어요.</numerusform>
+            </translation>
         </message>
     </context>
     <context>
@@ -3227,7 +3231,7 @@
         </message>
         <message>
             <location line="+0" />
-            <source>Presentations, classes, desks</source>
+            <source>Presentations, classes, the office</source>
             <translation>발표, 수업, 사무실</translation>
         </message>
         <message>
@@ -3493,13 +3497,14 @@
             <translation>단축키</translation>
         </message>
         <message>
-            <location line="+43" />
+            <location line="+44" />
             <source>Step %1 of %2: %3</source>
             <translation>%2단계 중 %1단계: %3</translation>
         </message>
         <message>
             <location line="-42" />
             <source>Look</source>
+            <extracomment>Setup step about the app's appearance (theme, colours)</extracomment>
             <translation>디자인</translation>
         </message>
         <message>
@@ -3580,7 +3585,7 @@
         </message>
         <message>
             <location line="+26" />
-            <source>Add your OpenAI API key in Settings → Voices.</source>
+            <source>Add your OpenAI API key in Settings → Voice providers.</source>
             <translation>‘설정 → 음성 제공업체’에서 OpenAI API 키를 추가하세요.</translation>
         </message>
     </context>
@@ -4532,8 +4537,8 @@
         </message>
         <message>
             <location line="+3" />
-            <source>You can use {time}, {date}, {clipboard} and your own {variables}.</source>
-            <translation>{time}, {date}, {clipboard}와 직접 만든 {variables}를 쓸 수 있어요.</translation>
+            <source>You can use {time}, {date}, {clipboard} and your own variables, like {name}.</source>
+            <translation>{time}, {date}, {clipboard}와 {name}처럼 직접 만든 변수를 쓸 수 있어요.</translation>
         </message>
         <message>
             <location line="+8" />
@@ -4605,7 +4610,7 @@
     <context>
         <name>PhraseModel</name>
         <message>
-            <location filename="../src/ui/Models.cpp" line="-410" />
+            <location filename="../src/ui/Models.cpp" line="-435" />
             <source>Basics</source>
             <translation>기본</translation>
         </message>
@@ -4796,24 +4801,24 @@
     <context>
         <name>PiperTtsEngine</name>
         <message>
+            <location filename="../src/tts/PiperTtsEngine.h" line="+16" />
+            <source>Piper (local)</source>
+            <translation>Piper(로컬)</translation>
+        </message>
+        <message>
             <location filename="../src/tts/PiperTtsEngine.cpp" line="+79" />
-            <source>Download the Piper voice engine in Settings → Voices.</source>
+            <source>Download the Piper voice engine in Voices → Download.</source>
             <translation>‘음성 → 다운로드’에서 Piper 음성 엔진을 다운로드하세요.</translation>
         </message>
         <message>
             <location line="+2" />
-            <source>Download a Piper voice in Settings → Voices.</source>
+            <source>Download a Piper voice in Voices → Download.</source>
             <translation>‘음성 → 다운로드’에서 Piper 음성을 다운로드하세요.</translation>
         </message>
         <message>
             <location line="+124" />
-            <source>The Piper voice "%1" is not installed. Download it in Settings → Voices.</source>
+            <source>The Piper voice "%1" is not installed. Download it in Voices → Download.</source>
             <translation>“%1” Piper 음성이 설치되어 있지 않아요. ‘음성 → 다운로드’에서 다운로드하세요.</translation>
-        </message>
-        <message>
-            <location filename="../src/tts/PiperTtsEngine.h" line="+16" />
-            <source>Piper (local)</source>
-            <translation>Piper(로컬)</translation>
         </message>
     </context>
     <context>
@@ -4943,12 +4948,22 @@
             <translation>%1에서 요청을 거부했어요</translation>
         </message>
         <message>
-            <location line="+4" />
-            <source>%1 did not accept the API key. Check it in Settings → Voices</source>
+            <location line="+6" />
+            <source>%1 did not accept the API key. Check it in Settings → Voice providers</source>
             <translation>%1에서 API 키를 받아들이지 않았어요. ‘설정 → 음성 제공업체’에서 확인하세요</translation>
         </message>
         <message>
             <location line="+3" />
+            <source>%1 did not accept the API key. Check it in Settings → Speech input</source>
+            <translation>%1에서 API 키를 받아들이지 않았어요. ‘설정 → 음성 입력’에서 확인하세요</translation>
+        </message>
+        <message>
+            <location line="+3" />
+            <source>%1 refused the request (HTTP %2)</source>
+            <translation>%1에서 요청을 거부했어요(HTTP %2)</translation>
+        </message>
+        <message>
+            <location line="+5" />
             <source>%1 says the account is out of credit or needs a paid plan</source>
             <translation>%1: 계정의 크레딧이 부족하거나 유료 요금제가 필요해요</translation>
         </message>
@@ -5012,8 +5027,8 @@
         <name>QtAudioLane</name>
         <message>
             <location filename="../src/audio/AudioOutputLane.cpp" line="+147" />
-            <source>Audio output "%1" failed (error %2). Check the device in Settings → Audio.</source>
-            <translation>오디오 출력 “%1”에 오류가 생겼어요(오류 %2). ‘오디오 및 마이크 → 음성 출력’에서 장치를 확인하세요.</translation>
+            <source>Audio output "%1" failed (error %2). Check the device in Audio &amp; mic.</source>
+            <translation>오디오 출력 “%1”에 오류가 생겼어요(오류 %2). ‘오디오 및 마이크’에서 장치를 확인하세요.</translation>
         </message>
     </context>
     <context>
@@ -5078,12 +5093,12 @@
         </message>
         <message>
             <location line="+3" />
-            <location line="+78" />
+            <location line="+79" />
             <source>Off</source>
             <translation>꺼짐</translation>
         </message>
         <message>
-            <location line="-77" />
+            <location line="-78" />
             <source>While I hold a key</source>
             <translation>키를 누르는 동안</translation>
         </message>
@@ -5133,14 +5148,27 @@
             <translation>게임 중에도 어떤 앱에서든 작동해요.</translation>
         </message>
         <message>
+            <location line="+44" />
             <location line="+3" />
-            <source>Hold to talk</source>
-            <translation>눌러서 말하기</translation>
+            <source>Lower my mic while Vocal Ink speaks</source>
+            <translation>Vocal Ink가 말하는 동안 내 마이크 소리 줄이기</translation>
+        </message>
+        <message>
+            <location line="+7" />
+            <location line="+3" />
+            <source>Show a red MIC LIVE badge on screen</source>
+            <translation>화면에 빨간 ‘마이크 켜짐’ 배지 표시</translation>
+        </message>
+        <message>
+            <location line="-53" />
+            <source>Toggle real mic</source>
+            <translation>실제 마이크 켜기/끄기</translation>
         </message>
         <message>
             <location line="+0" />
-            <source>Toggle real mic</source>
-            <translation>실제 마이크 켜기/끄기</translation>
+            <source>Hold to talk on your real mic</source>
+            <extracomment>Shortcut name: hold the key to open your real microphone</extracomment>
+            <translation>눌러서 실제 마이크로 말하기</translation>
         </message>
         <message>
             <location line="+12" />
@@ -5176,24 +5204,12 @@
             <translation>이 레벨보다 작은 소리는 없애서 키보드나 팬 소음이 들어가지 않게 해요.</translation>
         </message>
         <message>
-            <location line="+11" />
-            <location line="+3" />
-            <source>Lower my mic while the voice speaks</source>
-            <translation>Vocal Ink가 말하는 동안 내 마이크 소리 줄이기</translation>
-        </message>
-        <message>
-            <location line="-2" />
+            <location line="+12" />
             <source>Keeps your typed messages clear over background sound.</source>
             <translation>입력한 메시지가 주변 소리에 묻히지 않고 또렷하게 들려요.</translation>
         </message>
         <message>
-            <location line="+9" />
-            <location line="+3" />
-            <source>Show a red LIVE badge on screen</source>
-            <translation>화면에 빨간 ‘켜짐’ 배지 표시</translation>
-        </message>
-        <message>
-            <location line="-2" />
+            <location line="+10" />
             <source>Stays on top of games and other apps while your mic is live.</source>
             <translation>마이크가 켜져 있는 동안 게임과 다른 앱 위에 계속 표시돼요.</translation>
         </message>
@@ -5258,16 +5274,21 @@
         </message>
         <message>
             <location line="+5" />
-            <source> (not connected)</source>
-            <translation> (연결 안 됨)</translation>
+            <source>%1 (not connected)</source>
+            <translation>%1 (연결 안 됨)</translation>
+        </message>
+        <message>
+            <location line="+1" />
+            <source>%1, then %2</source>
+            <translation>%1, 그다음 %2</translation>
         </message>
     </context>
     <context>
         <name>RoutingCheck</name>
         <message>
             <location filename="../src/audio/RoutingCheck.cpp" line="+335" />
-            <source>The voice output device isn't connected. Pick it again in Settings → Audio.</source>
-            <translation>음성 출력 장치가 연결되어 있지 않아요. ‘오디오 및 마이크 → 음성 출력’에서 다시 선택하세요.</translation>
+            <source>The voice output device isn't connected. Pick it again in Audio &amp; mic.</source>
+            <translation>음성 출력 장치가 연결되어 있지 않아요. ‘오디오 및 마이크’에서 다시 선택하세요.</translation>
         </message>
         <message>
             <location line="+7" />
@@ -5493,8 +5514,8 @@
         <message>
             <location line="+4" />
             <location line="+2" />
-            <source>Tap to talk instead of holding</source>
-            <translation>길게 누르는 대신 탭해서 말하기</translation>
+            <source>Tap to dictate instead of holding</source>
+            <translation>길게 누르는 대신 탭해서 음성 입력</translation>
         </message>
         <message>
             <location line="-1" />
@@ -5518,12 +5539,13 @@
         </message>
         <message>
             <location line="+2" />
-            <location line="+59" />
+            <location line="+60" />
             <source>Off</source>
+            <extracomment>Typing echo: read back nothing / each word as it is typed / each sentence as it is finished</extracomment>
             <translation>꺼짐</translation>
         </message>
         <message>
-            <location line="-59" />
+            <location line="-60" />
             <source>%1 ms</source>
             <comment>milliseconds</comment>
             <translation>%1ms</translation>
@@ -5609,7 +5631,7 @@
             <translation>단어나 문장을 다 입력할 때마다 내 스피커로만 읽어 줘요.</translation>
         </message>
         <message>
-            <location line="+4" />
+            <location line="+5" />
             <source>Words</source>
             <translation>단어</translation>
         </message>
@@ -5925,12 +5947,12 @@
         </message>
         <message>
             <location line="+0" />
-            <location line="+148" />
+            <location line="+149" />
             <source>Off</source>
             <translation>끄기</translation>
         </message>
         <message>
-            <location line="-143" />
+            <location line="-144" />
             <location line="+2" />
             <source>Fill words with ink as they're spoken</source>
             <translation>말하는 대로 글자를 잉크로 채우기</translation>
@@ -5963,8 +5985,9 @@
             <translation>말한 문장의 글꼴</translation>
         </message>
         <message>
-            <location line="+2" />
+            <location line="+3" />
             <source>Display</source>
+            <extracomment>Fonts for the big spoken words: the decorative display font / the plain reading font / a serif font</extracomment>
             <translation>제목용</translation>
         </message>
         <message>
@@ -6518,8 +6541,8 @@
         </message>
         <message>
             <location line="+7" />
-            <source>A red LIVE badge appears on screen and a tone plays whenever it's on. You can change this in Audio &amp; mic.</source>
-            <translation>켜질 때마다 화면에 빨간 ‘켜짐’ 배지가 나타나고 알림음이 울려요. ‘오디오 및 마이크’에서 바꿀 수 있어요.</translation>
+            <source>A red MIC LIVE badge appears on screen and a tone plays whenever it's on. You can change this in Audio &amp; mic.</source>
+            <translation>켜질 때마다 화면에 빨간 ‘마이크 켜짐’ 배지가 나타나고 알림음이 울려요. ‘오디오 및 마이크’에서 바꿀 수 있어요.</translation>
         </message>
         <message>
             <location line="+4" />
@@ -6636,12 +6659,7 @@
             <translation>음성 입력 모드</translation>
         </message>
         <message>
-            <location line="+2" />
-            <source>Hold to talk</source>
-            <translation>눌러서 말하기</translation>
-        </message>
-        <message>
-            <location line="+0" />
+            <location line="+3" />
             <source>Tap on/off</source>
             <translation>눌러서 켜기/끄기</translation>
         </message>
@@ -6649,6 +6667,12 @@
             <location line="+0" />
             <source>Hands-free</source>
             <translation>핸즈프리</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Hold to dictate</source>
+            <extracomment>Dictation modes: hold a key while speaking / press once to start and again to stop / listens on its own</extracomment>
+            <translation>길게 눌러 음성 입력</translation>
         </message>
         <message>
             <location line="+6" />
@@ -6816,7 +6840,7 @@
         </message>
         <message>
             <location line="+1" />
-            <source>Type less and sound right: word suggestions, shortcuts that expand, and how emoji and links are read.</source>
+            <source>Type less and sound right: word suggestions, abbreviations that expand, and how emoji and links are read.</source>
             <translation>덜 입력하고 제대로 말하기: 단어 추천, 약어 확장, 이모지와 링크를 읽는 방식을 정해요.</translation>
         </message>
         <message>
@@ -7329,8 +7353,8 @@
         <name>SpeechQueue</name>
         <message>
             <location filename="../src/core/SpeechQueue.cpp" line="+90" />
-            <source>No voice is selected. Pick a voice in the toolbar, or install one in Settings → Voices.</source>
-            <translation>선택된 음성이 없어요. 도구 모음에서 음성을 고르거나 ‘음성 → 다운로드’에서 설치하세요.</translation>
+            <source>No voice is selected. Pick a voice in the toolbar, or download one in Voices → Download.</source>
+            <translation>선택된 음성이 없어요. 도구 모음에서 음성을 고르거나 ‘음성 → 다운로드’에서 다운로드하세요.</translation>
         </message>
         <message>
             <location line="+6" />
@@ -8186,21 +8210,6 @@
             <translation>pactl %1 실패</translation>
         </message>
         <message>
-            <location line="+13" />
-            <source>&lt;p&gt;Install the free &lt;b&gt;VB-CABLE&lt;/b&gt; virtual audio device from &lt;a href="https://vb-audio.com/Cable/"&gt;vb-audio.com/Cable&lt;/a&gt; and restart Vocal Ink.&lt;/p&gt;&lt;ol&gt;&lt;li&gt;Choose &lt;b&gt;CABLE Input (VB-Audio Virtual Cable)&lt;/b&gt; as Vocal Ink's &lt;i&gt;voice output&lt;/i&gt;.&lt;/li&gt;&lt;li&gt;In Discord, games or OBS choose &lt;b&gt;CABLE Output (VB-Audio Virtual Cable)&lt;/b&gt; as the microphone.&lt;/li&gt;&lt;li&gt;Keep &lt;i&gt;Also play on my speakers&lt;/i&gt; on to hear yourself.&lt;/li&gt;&lt;/ol&gt;</source>
-            <translation>&lt;p&gt;무료 가상 오디오 장치 &lt;b&gt;VB-CABLE&lt;/b&gt;을 &lt;a href="https://vb-audio.com/Cable/"&gt;vb-audio.com/Cable&lt;/a&gt;에서 설치하고 Vocal Ink를 다시 시작하세요.&lt;/p&gt;&lt;ol&gt;&lt;li&gt;Vocal Ink의 &lt;i&gt;음성 출력&lt;/i&gt;으로 &lt;b&gt;CABLE Input (VB-Audio Virtual Cable)&lt;/b&gt;을 선택하세요.&lt;/li&gt;&lt;li&gt;Discord, 게임, OBS에서 마이크로 &lt;b&gt;CABLE Output (VB-Audio Virtual Cable)&lt;/b&gt;을 선택하세요.&lt;/li&gt;&lt;li&gt;내 목소리를 들으려면 &lt;i&gt;스피커로도 재생&lt;/i&gt;을 켜 두세요.&lt;/li&gt;&lt;/ol&gt;</translation>
-        </message>
-        <message>
-            <location line="+6" />
-            <source>&lt;p&gt;Install the free &lt;b&gt;BlackHole 2ch&lt;/b&gt; virtual audio driver from &lt;a href="https://existential.audio/blackhole/"&gt;existential.audio/blackhole&lt;/a&gt; (or &lt;code&gt;brew install blackhole-2ch&lt;/code&gt;) and restart Vocal Ink.&lt;/p&gt;&lt;ol&gt;&lt;li&gt;Choose &lt;b&gt;BlackHole 2ch&lt;/b&gt; as Vocal Ink's &lt;i&gt;voice output&lt;/i&gt;.&lt;/li&gt;&lt;li&gt;In Discord, games or OBS choose &lt;b&gt;BlackHole 2ch&lt;/b&gt; as the microphone.&lt;/li&gt;&lt;li&gt;Keep &lt;i&gt;Also play on my speakers&lt;/i&gt; on to hear yourself.&lt;/li&gt;&lt;/ol&gt;</source>
-            <translation>&lt;p&gt;무료 가상 오디오 드라이버 &lt;b&gt;BlackHole 2ch&lt;/b&gt;를 &lt;a href="https://existential.audio/blackhole/"&gt;existential.audio/blackhole&lt;/a&gt;에서(또는 &lt;code&gt;brew install blackhole-2ch&lt;/code&gt;로) 설치하고 Vocal Ink를 다시 시작하세요.&lt;/p&gt;&lt;ol&gt;&lt;li&gt;Vocal Ink의 &lt;i&gt;음성 출력&lt;/i&gt;으로 &lt;b&gt;BlackHole 2ch&lt;/b&gt;를 선택하세요.&lt;/li&gt;&lt;li&gt;Discord, 게임, OBS에서 마이크로 &lt;b&gt;BlackHole 2ch&lt;/b&gt;를 선택하세요.&lt;/li&gt;&lt;li&gt;내 목소리를 들으려면 &lt;i&gt;스피커로도 재생&lt;/i&gt;을 켜 두세요.&lt;/li&gt;&lt;/ol&gt;</translation>
-        </message>
-        <message>
-            <location line="+7" />
-            <source>&lt;p&gt;Vocal Ink can create a virtual microphone for you (PulseAudio or PipeWire). Click &lt;b&gt;Create virtual microphone&lt;/b&gt;, then:&lt;/p&gt;&lt;ol&gt;&lt;li&gt;Choose &lt;b&gt;Vocal Ink Voice&lt;/b&gt; as Vocal Ink's &lt;i&gt;voice output&lt;/i&gt;.&lt;/li&gt;&lt;li&gt;In Discord, games or OBS choose &lt;b&gt;Vocal Ink Mic&lt;/b&gt; as the microphone (OBS can also capture &lt;i&gt;Monitor of Vocal Ink Voice&lt;/i&gt;).&lt;/li&gt;&lt;li&gt;Keep &lt;i&gt;Also play on my speakers&lt;/i&gt; on to hear yourself.&lt;/li&gt;&lt;/ol&gt;&lt;p&gt;The virtual devices last until you log out; Vocal Ink recreates them on request.&lt;/p&gt;</source>
-            <translation>&lt;p&gt;Vocal Ink가 가상 마이크를 만들어 줄 수 있어요(PulseAudio 또는 PipeWire). &lt;b&gt;가상 마이크 만들기&lt;/b&gt;를 클릭한 다음:&lt;/p&gt;&lt;ol&gt;&lt;li&gt;Vocal Ink의 &lt;i&gt;음성 출력&lt;/i&gt;으로 &lt;b&gt;Vocal Ink Voice&lt;/b&gt;를 선택하세요.&lt;/li&gt;&lt;li&gt;Discord, 게임, OBS에서 마이크로 &lt;b&gt;Vocal Ink Mic&lt;/b&gt;를 선택하세요(OBS에서는 &lt;i&gt;Monitor of Vocal Ink Voice&lt;/i&gt;도 캡처할 수 있어요).&lt;/li&gt;&lt;li&gt;내 목소리를 들으려면 &lt;i&gt;스피커로도 재생&lt;/i&gt;을 켜 두세요.&lt;/li&gt;&lt;/ol&gt;&lt;p&gt;가상 장치는 로그아웃할 때까지 유지되며, 요청하면 Vocal Ink가 다시 만들어요.&lt;/p&gt;</translation>
-        </message>
-        <message>
             <location line="+31" />
             <source>Creating a virtual microphone is only supported on Linux with PulseAudio or PipeWire.</source>
             <translation>가상 마이크 만들기는 PulseAudio 또는 PipeWire를 쓰는 Linux에서만 지원돼요.</translation>
@@ -8706,7 +8715,7 @@
     <context>
         <name>WhisperEngine</name>
         <message>
-            <location filename="../src/stt/WhisperEngine.cpp" line="+258" />
+            <location filename="../src/stt/WhisperEngine.cpp" line="+267" />
             <source>Local speech recognition is not included in this build.</source>
             <translation>이 빌드에는 로컬 음성 인식이 포함되어 있지 않아요.</translation>
         </message>
@@ -8716,8 +8725,9 @@
             <translation>음성 인식 모델을 불러오는 중…</translation>
         </message>
         <message>
-            <location line="+2" />
+            <location line="+3" />
             <source>%1 Download it again in Settings → Speech input.</source>
+            <extracomment>%1 is a full sentence saying why the speech model could not be loaded</extracomment>
             <translation>%1 ‘설정 → 음성 입력’에서 다시 다운로드하세요.</translation>
         </message>
         <message>
@@ -8734,12 +8744,12 @@
     <context>
         <name>WhisperWorker</name>
         <message>
-            <location filename="../src/stt/WhisperEngine.cpp" line="-148" />
+            <location filename="../src/stt/WhisperEngine.cpp" line="-163" />
             <source>"%1" is not a valid Whisper model.</source>
             <translation>“%1”은(는) 올바른 Whisper 모델이 아니에요.</translation>
         </message>
         <message>
-            <location line="+2" />
+            <location line="+16" />
             <location line="+60" />
             <source>Local speech recognition is not included in this build.</source>
             <translation>이 빌드에는 로컬 음성 인식이 포함되어 있지 않아요.</translation>
