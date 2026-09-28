@@ -726,7 +726,7 @@
 <context>
     <name>Bridge</name>
     <message>
-        <location filename="../src/ui/Bridge.cpp" line="+306"/>
+        <location filename="../src/ui/Bridge.cpp" line="+327"/>
         <source>Hey! Sorry, I don&apos;t talk out loud, so I type.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1396,6 +1396,19 @@
     </message>
 </context>
 <context>
+    <name>JourneyHeader</name>
+    <message>
+        <location filename="../src/qml/JourneyHeader.qml" line="+38"/>
+        <source>Setup steps</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Step %1 of %2: %3. Use the left and right arrow keys to go back to a step you&apos;ve done.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>LanguagePicker</name>
     <message>
         <location filename="../src/qml/LanguagePicker.qml" line="+11"/>
@@ -1909,75 +1922,70 @@
     </message>
 </context>
 <context>
-    <name>OnbAccess</name>
+    <name>OnbAvatar</name>
     <message>
-        <location filename="../src/qml/OnbAccess.qml" line="+7"/>
-        <source>Make it comfortable</source>
+        <location filename="../src/qml/OnbAvatar.qml" line="+10"/>
+        <source>Make your avatar talk</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+1"/>
-        <source>Everything changes as you touch it, so you can see what suits you.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+5"/>
-        <location line="+2"/>
-        <source>Text size</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+8"/>
-        <source>Reading font</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+2"/>
-        <source>Font</source>
+        <source>Your avatar&apos;s mouth can move with your voice. Pick what you use; the Avatar page has the rest (expressions, hotkeys, a built-in PNGtuber for OBS).</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+7"/>
-        <location line="+1"/>
-        <source>Bigger buttons</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+3"/>
-        <location line="+1"/>
-        <source>Bold focus ring</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+3"/>
-        <location line="+1"/>
-        <source>Less motion</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+3"/>
-        <source>Tap to dictate instead of holding</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Tap to dictate</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+3"/>
-        <location line="+2"/>
-        <source>Switch access scanning</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="-1"/>
-        <source>A highlight steps through your phrases; any key picks one.</source>
+        <source>Works with any avatar app</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+4"/>
-        <source>More in Settings → Accessibility: letter and line spacing, typing echo, repeat-press protection and more.</source>
+        <source>In your avatar app&apos;s lip-sync or microphone settings, choose “Vocal Ink Mic”. The mouth then follows what Vocal Ink says, like it would follow a real voice.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+6"/>
+        <source>Connect directly</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Smoother mouth shapes and reactions while you talk.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+4"/>
+        <source>Turn on “Allow Plugin API access” in VTube Studio&apos;s settings. It will ask you to allow Vocal Ink once.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+9"/>
+        <source>VSeeFace, Warudo, VNyan (VMC)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Turn on the VMC receiver in your app. Vocal Ink sends mouth shapes to it.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>VMC protocol</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+7"/>
+        <source>Which app?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>VMC app</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+12"/>
+        <source>Turn on its WebSocket server. Vocal Ink opens its mouth only while speaking and can switch states.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -2506,6 +2514,16 @@
     </message>
     <message>
         <location line="+1"/>
+        <source>VTubing &amp; PNGtubing</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+0"/>
+        <source>VTube Studio, VSeeFace, veadotube…</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
         <source>In person</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2602,40 +2620,147 @@
 <context>
     <name>OnbWelcome</name>
     <message>
-        <location filename="../src/qml/OnbWelcome.qml" line="+16"/>
+        <location filename="../src/qml/OnbWelcome.qml" line="+34"/>
         <source>Hello. From now on, I&apos;ll say what you write.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+24"/>
+        <location line="+22"/>
         <source>Type or dictate, and Vocal Ink speaks for you: in calls, in games, on stream, or across the table. Setup takes about two minutes, and you can change everything later.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location line="+7"/>
+        <source>Language</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+10"/>
+        <source>Translated with the help of AI; not yet checked by a native speaker.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+29"/>
+        <source>A screen reader is running. Vocal Ink announces each step and everything it says.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Everything works from the keyboard.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location line="+8"/>
-        <source>Works offline and privately</source>
+        <source>next control</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+1"/>
-        <source>Fully usable with a keyboard</source>
+        <source>continue</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+1"/>
-        <source>Screen reader and switch friendly</source>
+        <source>back</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+20"/>
+        <source>Make it comfortable</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Changes apply as you make them.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+4"/>
+        <location line="+3"/>
+        <source>Text size</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+9"/>
+        <location line="+3"/>
+        <source>Reading font</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="-2"/>
+        <source>Made for low vision, or for dyslexia.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+9"/>
+        <location line="+2"/>
+        <source>High contrast</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+14"/>
+        <location line="+2"/>
+        <source>Less motion</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="-1"/>
+        <source>Slides and ink appear without moving.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+4"/>
+        <location line="+1"/>
+        <source>Bigger buttons</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <location line="+2"/>
+        <source>Bold focus ring</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="-1"/>
+        <source>A thick outline shows where the keyboard is.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+4"/>
+        <source>Tap to dictate instead of holding</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Tap to dictate</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <location line="+2"/>
+        <source>Switch access scanning</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="-1"/>
+        <source>A highlight steps through your phrases; any key picks one.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+6"/>
+        <source>More in Settings → Accessibility: letter and line spacing, typing echo, repeat-press protection and more.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>Onboarding</name>
     <message>
-        <location filename="../src/qml/Onboarding.qml" line="+16"/>
+        <location filename="../src/qml/Onboarding.qml" line="+19"/>
         <source>Vocal Ink setup</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+8"/>
+        <location line="+22"/>
         <source>Welcome</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2650,7 +2775,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+4"/>
+        <location line="+1"/>
         <source>Virtual mic</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2665,8 +2790,13 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+2"/>
+        <location line="+1"/>
         <source>Real mic</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Avatar</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -2675,17 +2805,17 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+1"/>
-        <source>Comfort</source>
+        <location line="+43"/>
+        <source>Step %1 of %2: %3</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+1"/>
+        <location line="-42"/>
         <source>Look</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+2"/>
+        <location line="+1"/>
         <source>Stream</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2695,12 +2825,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+51"/>
-        <source>Step %1 of %2 · %3</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+8"/>
+        <location line="+151"/>
         <source>Skip setup</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2710,22 +2835,17 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+13"/>
-        <source>Setup progress</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+87"/>
+        <location line="+96"/>
         <source>Back</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+6"/>
+        <location line="+7"/>
         <source>Waiting for the download…</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+8"/>
+        <location line="+9"/>
         <source>Let&apos;s set it up</source>
         <translation type="unfinished"></translation>
     </message>

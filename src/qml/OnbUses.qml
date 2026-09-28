@@ -27,6 +27,7 @@ OnbStep {
                 { id: "calls", icon: "phone", title: qsTr("Calls & meetings"), text: qsTr("Discord, Zoom, Teams, Meet") },
                 { id: "games", icon: "gamepad-2", title: qsTr("Games"), text: qsTr("Voice chat while you play") },
                 { id: "stream", icon: "radio", title: qsTr("Streaming"), text: qsTr("Captions, OBS, reading chat") },
+                { id: "vtubing", icon: "smile", title: qsTr("VTubing & PNGtubing"), text: qsTr("VTube Studio, VSeeFace, veadotube…") },
                 { id: "inperson", icon: "users-round", title: qsTr("In person"), text: qsTr("Out loud, and text people can read") },
                 { id: "work", icon: "presentation", title: qsTr("Work & school"), text: qsTr("Presentations, classes, desks") },
                 { id: "home", icon: "house", title: qsTr("Everyday"), text: qsTr("Family, friends, around the house") }

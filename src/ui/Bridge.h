@@ -2,6 +2,7 @@
 
 #include <QElapsedTimer>
 #include <QObject>
+#include <memory>
 #include <QPointer>
 #include <QQuickWindow>
 #include <QUrl>
@@ -11,6 +12,7 @@ class AppContext;
 class DeviceModel;
 class DownloadModel;
 class LanguageManager;
+class A11yObserver;
 class HistoryModel;
 class KeybindModel;
 class PhraseModel;
@@ -93,6 +95,9 @@ class Bridge : public QObject
     Q_PROPERTY(QString platform READ platform CONSTANT)
     Q_PROPERTY(QString version READ version CONSTANT)
     Q_PROPERTY(bool hotkeysSupported READ hotkeysSupported CONSTANT)
+    // A screen reader or other assistive technology is using the app's
+    // accessibility interface (also true for some input tools on Windows).
+    Q_PROPERTY(bool assistiveTech READ assistiveTech NOTIFY assistiveTechChanged)
     Q_PROPERTY(QString hotkeysUnsupportedReason READ hotkeysUnsupportedReason NOTIFY translationsChanged)
     Q_PROPERTY(QVariantList effects READ effects NOTIFY translationsChanged)
     Q_PROPERTY(QString updateVersion READ updateVersion NOTIFY updateChanged)
@@ -170,6 +175,7 @@ public:
     QString platform() const;
     QString version() const;
     bool hotkeysSupported() const;
+    bool assistiveTech() const;
     QString hotkeysUnsupportedReason() const;
     QVariantList effects() const;
     QString updateVersion() const { return m_updateVersion; }
@@ -263,6 +269,7 @@ public:
 
 signals:
     void translationsChanged();
+    void assistiveTechChanged();
     void speakingChanged();
     void queuedChanged();
     void currentLineChanged();
@@ -316,6 +323,7 @@ private:
     DownloadModel *m_whisper;
     DownloadModel *m_piper;
     LanguageManager *m_languages = nullptr;
+    std::unique_ptr<A11yObserver> m_a11yObserver;
     PresetModel *m_presetModel;
     VoicePreview *m_preview;
     VoicePreview *m_echo;

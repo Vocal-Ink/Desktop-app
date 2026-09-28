@@ -72,6 +72,24 @@ bool isModifierKey(int key)
 }
 } // namespace
 
+// Tells QML when a screen reader (or other assistive technology) starts or
+// stops using the app.
+class A11yObserver : public QAccessible::ActivationObserver
+{
+public:
+    explicit A11yObserver(Bridge *bridge)
+        : m_bridge(bridge)
+    {
+    }
+    void accessibilityActiveChanged(bool) override
+    {
+        QMetaObject::invokeMethod(m_bridge, &Bridge::assistiveTechChanged, Qt::QueuedConnection);
+    }
+
+private:
+    Bridge *m_bridge;
+};
+
 Bridge::Bridge(AppContext *context, QObject *parent)
     : QObject(parent)
     , m_ctx(context)
@@ -211,6 +229,8 @@ Bridge::Bridge(AppContext *context, QObject *parent)
     });
 
     // --- App ---
+    m_a11yObserver = std::make_unique<A11yObserver>(this);
+    QAccessible::installActivationObserver(m_a11yObserver.get());
     connect(m_ctx, &AppContext::notify, this, &Bridge::notify);
     connect(m_ctx, &AppContext::transcriptReady, this, &Bridge::transcriptReady);
     connect(m_ctx, &AppContext::uiActionRequested, this, &Bridge::uiAction);
@@ -238,6 +258,7 @@ Bridge::Bridge(AppContext *context, QObject *parent)
 
 Bridge::~Bridge()
 {
+    QAccessible::removeActivationObserver(m_a11yObserver.get());
     m_preview->stop();
     m_echo->stop();
 }
@@ -969,6 +990,11 @@ QString Bridge::platform() const
 QString Bridge::version() const
 {
     return QStringLiteral(VOCALINK_VERSION);
+}
+
+bool Bridge::assistiveTech() const
+{
+    return QAccessible::isActive();
 }
 
 bool Bridge::hotkeysSupported() const

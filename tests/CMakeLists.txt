@@ -24,8 +24,9 @@ if(TARGET VocalInk)
         "talk" "board" "voices" "audio" "stream"
         "settings:appearance" "settings:access" "settings:shortcuts" "settings:speech"
         "settings:typing" "settings:providers" "settings:backup" "settings:about"
-        "onboarding:0" "onboarding:1" "onboarding:2" "onboarding:3" "onboarding:4" "onboarding:5"
-        "onboarding:6" "onboarding:7" "onboarding:8" "onboarding:9" "onboarding:10" "onboarding:11"
+        "onboarding:welcome" "onboarding:uses" "onboarding:voice" "onboarding:routing" "onboarding:hear"
+        "onboarding:dictation" "onboarding:realmic" "onboarding:avatar" "onboarding:shortcuts"
+        "onboarding:look" "onboarding:stream" "onboarding:practice"
         "palette" "quicktype" "compact" "showtext" "miclive")
     foreach(screen IN LISTS VOCALINK_UI_SCREENS)
         string(REPLACE ":" "_" screen_id "${screen}")
@@ -41,4 +42,32 @@ if(TARGET VocalInk)
                      --screenshot ${CMAKE_CURRENT_BINARY_DIR}/ui-${screen_id}.png)
         set_tests_properties(ui_${screen_id} PROPERTIES TIMEOUT 60 LABELS ui)
     endforeach()
+
+    # A few screens in other languages (long words, CJK) and a small window.
+    foreach(variant IN ITEMS "de:onboarding:welcome" "ja:onboarding:welcome" "de:settings:appearance"
+                             "ja:talk" "pl:stream")
+        string(REPLACE ":" ";" parts "${variant}")
+        list(GET parts 0 lang)
+        list(REMOVE_AT parts 0)
+        string(REPLACE ";" ":" screen "${parts}")
+        string(REPLACE ";" "_" screen_id "${parts}")
+        set(skip_setup --no-onboarding)
+        if(screen MATCHES "^onboarding")
+            set(skip_setup)
+        endif()
+        add_test(NAME ui_${lang}_${screen_id}
+                 COMMAND ${CMAKE_COMMAND} -E env
+                     QT_QPA_PLATFORM=offscreen QT_QUICK_BACKEND=software
+                     $<TARGET_FILE:VocalInk> --profile ${CMAKE_CURRENT_BINARY_DIR}/ui-profiles/${lang}_${screen_id}
+                     ${skip_setup} --lang ${lang} --show ${screen} --demo
+                     --screenshot ${CMAKE_CURRENT_BINARY_DIR}/ui-${lang}-${screen_id}.png)
+        set_tests_properties(ui_${lang}_${screen_id} PROPERTIES TIMEOUT 60 LABELS ui)
+    endforeach()
+    add_test(NAME ui_narrow_onboarding_welcome
+             COMMAND ${CMAKE_COMMAND} -E env
+                 QT_QPA_PLATFORM=offscreen QT_QUICK_BACKEND=software
+                 $<TARGET_FILE:VocalInk> --profile ${CMAKE_CURRENT_BINARY_DIR}/ui-profiles/narrow_onboarding
+                 --size 760x640 --show onboarding:welcome --demo
+                 --screenshot ${CMAKE_CURRENT_BINARY_DIR}/ui-narrow-onboarding-welcome.png)
+    set_tests_properties(ui_narrow_onboarding_welcome PROPERTIES TIMEOUT 60 LABELS ui)
 endif()

@@ -49,7 +49,7 @@ ApplicationWindow {
     function openLaunchPage() {
         if (typeof launchPage !== "undefined" && launchPage !== "") {
             if (launchPage.startsWith("onboarding")) {
-                onboardingLoader.startStep = parseInt(launchPage.split(":")[1] || "0")
+                onboardingLoader.startAt = launchPage.split(":")[1] || ""
                 onboardingLoader.forced = true
             } else if (launchPage === "palette") {
                 palette.open()
@@ -156,7 +156,7 @@ ApplicationWindow {
                 sourceComponent: SettingsPage {
                     section: win.settingsSection
                     onSectionChanged: win.settingsSection = section
-                    onRunOnboarding: { onboardingLoader.startStep = 0; onboardingLoader.forced = true }
+                    onRunOnboarding: { onboardingLoader.startAt = ""; onboardingLoader.forced = true }
                 }
             }
 
@@ -204,19 +204,19 @@ ApplicationWindow {
     CommandPalette {
         id: palette
         onNavigate: (p) => win.go(p)
-        onRunOnboarding: { onboardingLoader.startStep = 0; onboardingLoader.forced = true }
+        onRunOnboarding: { onboardingLoader.startAt = ""; onboardingLoader.forced = true }
     }
 
     // --- Onboarding: covers everything until it's done -----------------------------------
     Loader {
         id: onboardingLoader
-        property int startStep: 0
+        property string startAt: ""
         property bool forced: false
         anchors.fill: parent
         z: 100
         active: (win.onboarding && !skipOnboarding) || forced
         sourceComponent: Onboarding {
-            step: onboardingLoader.startStep
+            startAt: onboardingLoader.startAt
             onFinished: {
                 App.prefs["ui/onboardingDone"] = true
                 onboardingLoader.forced = false
