@@ -1,15 +1,22 @@
 #pragma once
 
+#include <QByteArray>
+#include <QElapsedTimer>
+#include <QHash>
+#include <QJsonObject>
 #include <QObject>
+#include <QPointer>
 #include <array>
 #include <QString>
 #include <QStringList>
 #include <QUrl>
 #include <QVariantList>
+#include <vector>
 
 class SecretStore;
 class QWebSocket;
 class QTimer;
+class QUdpSocket;
 
 // VTube Studio plugin API client (ws://localhost:8001 by default; the protocol
 // is documented at github.com/DenchiSoft/VTubeStudio).
@@ -21,6 +28,10 @@ class QTimer;
 // Listens for VTS's UDP broadcast (port 47779) to learn when VTS is running,
 // its API port, and whether "Allow Plugin API access" is off. Reconnects with
 // backoff while enabled.
+//
+// Port: the one from the settings is always tried first. When nothing answers
+// there but VTS's broadcast names another port, that one is used (and shown
+// by port()) until the settings port changes.
 class VtsClient : public QObject
 {
     Q_OBJECT
@@ -88,11 +99,70 @@ public:
     // ask "Allow?" again on every launch); the token is stored as
     // Secrets::VTubeStudio.
 
+    // --- Additions -----------------------------------------------------------
+    // Shown in VTS's "Allow?" popup: a PNG of exactly 128x128 (anything else is
+    // ignored, VTS would reject the request).
+    void setPluginIcon(const QByteArray &png128);
+    // Drives "VocalInkSpeaking" (with custom parameters on).
+    void setTalking(bool talking);
+    bool isEnabled() const { return m_enabled; }
+    bool isInControl() const { return m_inControl; } // injecting (between setMouth() and release())
+    // VTS "form" (-1..1) as the value injected into its MouthSmile-style
+    // parameter (0..1, 0.5 = neutral).
+    static float formToParameter(float form) { return (form + 1.0f) * 0.5f; }
+
+    // For tests: reconnect delays (default 1 s doubling to 30 s) and the UDP
+    // port VTS broadcasts on (47779; 0 = don't listen). setUrlForTesting()
+    // turns the broadcast listener off.
+    void setReconnectDelays(int firstMs, int maxMs);
+    void setDiscoveryPortForTesting(quint16 port);
+    static constexpr quint16 kDiscoveryPort = 47779;
+    static constexpr int kKeepAliveMs = 800;
+
 signals:
     void statusChanged();
     void modelChanged();
+    // VTube Studio refused access (Deny clicked, or the saved token was revoked).
+    void accessDenied();
 
 private:
+    struct Param
+    {
+        QByteArray prefix; // {"id":"MouthOpen","value":
+        int source;        // what drives it (see VtsClient.cpp)
+    };
+
+    void start();
+    void openSocket();
+    void discardSocket();
+    void onSocketOpened(QWebSocket *socket);
+    void onSocketClosed(QWebSocket *socket);
+    void onTextMessage(const QString &message);
+    void onApiError(const QString &requestType, const QJsonObject &data);
+    void onAuthenticated();
+    void authenticate();
+    void requestToken();
+    void deny(const QString &detail, bool fromVts);
+    void scheduleReconnect();
+    void setStatus(Status status, const QString &detail = QString());
+    void setDetail(const QString &detail);
+    QString sendRequest(const QString &messageType, const QJsonObject &data = QJsonObject());
+    void createCustomParameters();
+    void readModel(const QString &messageType, const QJsonObject &data);
+
+    void startDiscovery();
+    void stopDiscovery();
+    void onDiscoveryReadyRead();
+    bool broadcastFresh() const;
+
+    void rebuildInjectTemplate();
+    void currentValues(std::vector<float> &out) const;
+    void sendInject(bool force);
+    QString token() const;
+    void storeToken(const QString &token);
+    bool secretsReady() const;
+    quint16 effectivePort() const;
+
     SecretStore *m_secrets;
     Status m_status = Status::Off;
     QString m_detail;
@@ -101,4 +171,52 @@ private:
     QVariantList m_hotkeys;
     QVariantList m_expressions;
     QStringList m_parameters;
+
+    // Connection
+    bool m_enabled = false;
+    quint16 m_settingsPort = 8001;
+    bool m_useBroadcastPort = false;
+    QUrl m_testUrl;
+    QPointer<QWebSocket> m_socket;
+    quint64 m_connection = 0;
+    bool m_socketOpened = false;
+    QString m_socketError;
+    bool m_authenticated = false;
+    bool m_denied = false;            // don't ask for a token until requestAccess()
+    bool m_tokenRequested = false;    // waiting for the "Allow?" answer on this connection
+    QTimer *m_reconnectTimer = nullptr;
+    QTimer *m_connectTimer = nullptr; // gives up on a connection that never opens
+    QTimer *m_tokenRetryTimer = nullptr;
+    int m_reconnectMinMs = 1000;
+    int m_reconnectMaxMs = 30000;
+    int m_reconnectDelayMs = 1000;
+    quint64 m_nextRequest = 0;
+    QHash<QString, QString> m_pending; // requestID -> request messageType
+    QString m_memoryToken;             // without a SecretStore
+    QString m_iconBase64;
+
+    // Discovery
+    quint16 m_discoveryPort = kDiscoveryPort;
+    QUdpSocket *m_udp = nullptr;
+    QElapsedTimer m_lastBroadcast;
+    bool m_broadcastActive = false;
+    quint16 m_broadcastPort = 0;
+
+    // Mouth injection
+    QString m_openParam = QStringLiteral("MouthOpen");
+    QString m_formParam = QStringLiteral("MouthSmile");
+    bool m_faceFound = false;
+    bool m_customParams = false;
+    int m_customCreated = 0; // which custom parameters VTS confirmed (bits)
+    bool m_talking = false;
+    bool m_inControl = false;
+    float m_open = 0.0f;
+    float m_form = 0.0f;
+    std::array<float, 5> m_vowels{};
+    std::vector<Param> m_params;
+    QByteArray m_injectHead;
+    std::vector<float> m_values;
+    std::vector<float> m_lastSent;
+    QTimer *m_keepAliveTimer = nullptr;
+    bool m_injectError = false; // detail currently shows an injection error
 };

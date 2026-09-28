@@ -78,6 +78,7 @@ public:
     QTimer *poll = nullptr;
     bool reportedError = false;
     qint64 peakFrom = 0;
+    qint64 speechPeakFrom = 0;
 
     qint64 toUs(qint64 frames) const { return frames * 1000000 / std::max(1, mixer.outputRate()); }
 };
@@ -300,6 +301,16 @@ float QtAudioLane::takeOutputPeak()
         return -1.0f;
     const float peak = d->mixer.peakBetween(d->peakFrom, heard);
     d->peakFrom = std::max(d->peakFrom, heard);
+    return peak;
+}
+
+float QtAudioLane::takeSpeechPeak()
+{
+    const qint64 heard = heardFrame();
+    if (heard <= d->speechPeakFrom)
+        return -1.0f;
+    const float peak = d->mixer.speechPeakBetween(d->speechPeakFrom, heard);
+    d->speechPeakFrom = std::max(d->speechPeakFrom, heard);
     return peak;
 }
 

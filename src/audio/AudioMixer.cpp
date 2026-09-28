@@ -291,6 +291,27 @@ void AudioMixer::render(float *out, qsizetype frames)
     std::fill(out + speech, out + frames, 0.0f);
     m_speechPos += speech;
 
+    // Speech-only peaks per history bucket, before anything else is mixed in.
+    // This pass also starts new buckets (the full history pass below relies on it).
+    {
+        qint64 pos = m_rendered;
+        for (qsizetype i = 0; i < frames;) {
+            const qint64 bucket = pos / kBucketFrames;
+            const qsizetype inBucket = qsizetype(pos % kBucketFrames);
+            const qsizetype n = std::min<qsizetype>(frames - i, kBucketFrames - inBucket);
+            Bucket &b = m_history[size_t(bucket % kBuckets)];
+            if (inBucket == 0) {
+                b.peak = 0.0f;
+                b.speechPeak = 0.0f;
+                b.speechBefore = m_speechRendered + std::min(i, speech);
+            }
+            for (qsizetype k = i, end = std::min(i + n, speech); k < end; ++k)
+                b.speechPeak = std::max(b.speechPeak, std::fabs(out[k]));
+            i += n;
+            pos += n;
+        }
+    }
+
     for (auto it = m_voices.begin(); it != m_voices.end();) {
         if (mixVoice(*it, out, frames)) {
             ++it;
@@ -350,10 +371,6 @@ void AudioMixer::render(float *out, qsizetype frames)
         const qsizetype inBucket = qsizetype(pos % kBucketFrames);
         const qsizetype n = std::min<qsizetype>(frames - i, kBucketFrames - inBucket);
         Bucket &b = m_history[size_t(bucket % kBuckets)];
-        if (inBucket == 0) {
-            b.peak = 0.0f;
-            b.speechBefore = m_speechRendered + std::min(i, speech);
-        }
         for (qsizetype k = 0; k < n; ++k)
             b.peak = std::max(b.peak, std::fabs(out[i + k]));
         i += n;
@@ -387,9 +404,8 @@ qint64 AudioMixer::speechFramesBefore(qint64 frame) const
     return m_history[size_t(bucket % kBuckets)].speechBefore;
 }
 
-float AudioMixer::peakBetween(qint64 from, qint64 to) const
+float AudioMixer::historyPeak(qint64 from, qint64 to, float Bucket::*field) const
 {
-    QMutexLocker lock(&m_mutex);
     to = std::min(to, m_rendered);
     if (to <= from || to <= 0)
         return 0.0f;
@@ -397,8 +413,20 @@ float AudioMixer::peakBetween(qint64 from, qint64 to) const
     const qint64 first = std::max(std::max<qint64>(from, 0) / kBucketFrames, last - kBuckets + 1);
     float p = 0.0f;
     for (qint64 b = first; b <= last; ++b)
-        p = std::max(p, m_history[size_t(b % kBuckets)].peak);
+        p = std::max(p, m_history[size_t(b % kBuckets)].*field);
     return p;
+}
+
+float AudioMixer::peakBetween(qint64 from, qint64 to) const
+{
+    QMutexLocker lock(&m_mutex);
+    return historyPeak(from, to, &Bucket::peak);
+}
+
+float AudioMixer::speechPeakBetween(qint64 from, qint64 to) const
+{
+    QMutexLocker lock(&m_mutex);
+    return historyPeak(from, to, &Bucket::speechPeak);
 }
 
 bool AudioMixer::isIdle() const

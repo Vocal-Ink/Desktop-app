@@ -1,9 +1,13 @@
 #pragma once
 
 #include <QByteArray>
+#include <QElapsedTimer>
+#include <QHash>
 #include <QObject>
 #include <QString>
+#include <array>
 
+class QTimer;
 class Settings;
 class SecretStore;
 class VtsClient;
@@ -26,6 +30,13 @@ class StreamerbotSender;
 //
 // Status is exposed as enums, never as sentences: QML picks the (translated)
 // words.
+//
+// Mouth value: the level of the chosen source (speech only / speech and
+// sounds / everything including the real mic) times 1.5 times the
+// sensitivity, clamped to 0..1, then smoothed (fast attack, slower release).
+// "Voice and sounds" can't separate the live mic from the main output, so
+// while the real mic is live it follows the voice only. Nothing runs (no
+// timer, no socket) until something moves or a target is switched on.
 class AvatarController : public QObject
 {
     Q_OBJECT
@@ -80,12 +91,36 @@ public:
     static Viseme visemeAt(const QString &text, int index);
     static QString visemeName(Viseme viseme); // "", "A", "I", "U", "E", "O"
 
+    // --- Additions -----------------------------------------------------------
+    Source source() const { return m_source; }
+    bool isRunning() const; // the frame timer is active
+    bool isTesting() const;
+    static Source sourceFromString(const QString &source);
+    // Mouth "form" sent to VTube Studio for a shape (-1 frown .. 1 smile),
+    // faded in with the opening. Pure; for tests.
+    static float formFor(Viseme viseme, float open);
+    // The live mic meter (MicPassthrough::levelChanged, -60..0 dBFS as 0..1)
+    // as an approximate peak (0..1), comparable with the output levels.
+    static float micMeterToPeak(float level);
+    static constexpr int kFrameMs = 34; // <= 30 Hz
+
 signals:
     void frame(); // <= 30 Hz while the mouth moves, then one final closed frame
     void talkingChanged(bool talking);
     void notify(const QString &message, int level); // 0 info, 1 warning, 2 error
 
 private:
+    void kick();          // start the frame timer if anything needs it
+    void tick();          // one frame
+    void finish();        // final closed frame, release the targets, stop
+    float target() const; // 0..1 before smoothing
+    float testLevel(Viseme *viseme) const;
+    Viseme currentViseme();
+    void setTalking(bool talking);
+    void speechStartReactions(const QString &text);
+    void speechStopReactions();
+    QString veadoRestingState() const;
+
     Settings *m_settings;
     SecretStore *m_secrets;
     VtsClient *m_vts = nullptr;
@@ -95,4 +130,37 @@ private:
     double m_mouth = 0.0;
     Viseme m_viseme = Viseme::Rest;
     bool m_talking = false;
+
+    QTimer *m_frameTimer = nullptr;
+    // Settings
+    Source m_source = Source::Voice;
+    float m_sensitivity = 1.0f;
+    float m_attack = 0.7f;
+    float m_release = 0.65f;
+    bool m_visemes = true;
+    QString m_vtsHotkeyStart, m_vtsHotkeyStop, m_vtsHotkeyMicLive, m_vtsHotkeyMicMuted;
+    QString m_vtsExpression;
+    QHash<QString, QString> m_soundHotkeys;
+    QString m_veadoTalking, m_veadoIdle, m_veadoMicLive;
+    QString m_sbotStart, m_sbotStop, m_sbotMicLive, m_sbotMicMuted;
+    // Inputs (level, frames since it was last updated)
+    float m_speechLevel = 0.0f;
+    float m_outputLevel = 0.0f;
+    float m_micLevel = 0.0f;
+    int m_speechAge = 0;
+    int m_outputAge = 0;
+    int m_micAge = 0;
+    bool m_speechLevelSeen = false; // AudioPlayer::speechLevelChanged is connected
+    bool m_micLive = false;
+    quint64 m_utterance = 0; // speaking, 0 = not
+    QString m_text;
+    double m_progress = 0.0;
+    Viseme m_lastVowel = Viseme::A;
+    QString m_vtsExpressionOn; // expression turned on for this utterance
+    // Frames
+    int m_quietMs = 0;
+    double m_emittedMouth = -1.0;
+    Viseme m_emittedViseme = Viseme::Rest;
+    QElapsedTimer m_testClock;
+    int m_testMs = 0;
 };

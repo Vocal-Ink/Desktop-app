@@ -67,6 +67,9 @@ signals:
     // Peak (0..1) of what is being heard on the main output (speech, sounds and
     // live input mixed): ~30 Hz while anything is audible, then once 0.0.
     void levelChanged(float peak);
+    // Same cadence, but only the synthesized speech (no sounds, no live input):
+    // ~30 Hz while the voice is audible, then once 0.0. Drives avatar lip-sync.
+    void speechLevelChanged(float peak);
 
 private:
     void rebuildLanes();
@@ -86,6 +89,7 @@ private:
     qint64 m_utteranceStartUs = 0; // main lane speech timeline at the utterance's first write()
     QTimer *m_levelTimer = nullptr;
     bool m_levelAudible = false;
+    bool m_speechAudible = false;
     int m_quietTicks = 0;
     int m_staleTicks = 0;
 };
