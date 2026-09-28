@@ -1,0 +1,191 @@
+name: Drivers
+
+# Vocal Ink's own virtual mic drivers (docs/VIRTUAL_AUDIO.md):
+#   Windows  driver/windows  VocalInkAudio.sys, built with the WDK NuGet packages,
+#                            checked with InfVerif and test-signed for developers.
+#   macOS    driver/macos    VocalInkVirtualMic.driver, a HAL plug-in (libASPL).
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "driver/**"
+      - ".github/workflows/drivers.yml"
+  pull_request:
+    paths:
+      - "driver/**"
+      - ".github/workflows/drivers.yml"
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  windows:
+    name: Windows driver (x64, test-signed)
+    runs-on: windows-2022
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: microsoft/setup-msbuild@v2
+
+      # The supported way to get the WDK without its installer. Versions are pinned in
+      # driver/windows/packages.config; Directory.Build.props imports them. Without the
+      # packages MSBuild falls back to a WDK installed on the image, if there is one.
+      - name: Get the WDK
+        run: |
+          nuget restore driver\windows\packages.config -PackagesDirectory driver\windows\packages -NonInteractive
+          if ($LASTEXITCODE -ne 0) {
+            $km = @(Get-Item "${env:ProgramFiles(x86)}\Windows Kits\10\Include\*\km" -ErrorAction SilentlyContinue)
+            if ($km.Count -eq 0) { throw "NuGet restore failed and no installed WDK was found." }
+            Write-Warning "NuGet restore failed; using the installed WDK ($($km[-1].Parent.Name))."
+            $global:LASTEXITCODE = 0
+          }
+
+      - name: Build
+        run: |
+          msbuild driver\windows\VocalInkAudio.sln /m /nologo /p:Configuration=Release /p:Platform=x64 /p:SignMode=Off
+          if ($LASTEXITCODE -ne 0) { throw "msbuild failed" }
+
+      - name: Collect the package
+        run: |
+          # Prefer the package project's output (x64\Release\package); the INF there is stamped.
+          $inf = Get-ChildItem driver\windows -Recurse -Filter VocalInkAudio.inf |
+                 Sort-Object { $_.DirectoryName -match '\\package$' } -Descending | Select-Object -First 1
+          $sys = Get-ChildItem driver\windows -Recurse -Filter VocalInkAudio.sys |
+                 Sort-Object { $_.DirectoryName -match '\\package$' } -Descending | Select-Object -First 1
+          $pdb = Get-ChildItem driver\windows -Recurse -Filter VocalInkAudio.pdb | Select-Object -First 1
+          if (-not $inf -or -not $sys) { throw "VocalInkAudio.inf/.sys not found in the build output" }
+          Write-Host "INF: $($inf.FullName)"; Write-Host "SYS: $($sys.FullName)"
+          Select-String -Path $inf.FullName -Pattern '^DriverVer|NTamd64|^\[VOCALINKAUDIO\.NT' | ForEach-Object { $_.Line }
+
+          # Unsigned files: the input for Microsoft's attestation signing (make-attestation-cab.ps1).
+          $unsigned = "dist\VocalInkAudio-x64-unsigned"
+          New-Item -ItemType Directory -Force $unsigned | Out-Null
+          Copy-Item $inf.FullName, $sys.FullName $unsigned
+          if ($pdb) { Copy-Item $pdb.FullName $unsigned }
+
+          $pkg = "dist\VocalInkAudio-x64"
+          New-Item -ItemType Directory -Force $pkg | Out-Null
+          Copy-Item $inf.FullName, $sys.FullName $pkg
+
+      - name: Find the kit tools
+        run: |
+          function Find-KitTool([string]$name, [string]$arch) {
+            $roots = @(Get-ChildItem driver\windows\packages -Directory -ErrorAction SilentlyContinue | ForEach-Object FullName)
+            $roots += "${env:ProgramFiles(x86)}\Windows Kits\10"
+            foreach ($root in $roots) {
+              $hit = Get-ChildItem $root -Recurse -Filter $name -ErrorAction SilentlyContinue |
+                     Where-Object { $_.DirectoryName -match "\\$arch$" } |
+                     Sort-Object FullName -Descending | Select-Object -First 1
+              if ($hit) { return $hit.FullName }
+            }
+            throw "$name ($arch) not found"
+          }
+          "INFVERIF=$(Find-KitTool infverif.exe x64)" >> $env:GITHUB_ENV
+          "INF2CAT=$(Find-KitTool Inf2Cat.exe x86)"   >> $env:GITHUB_ENV
+          "SIGNTOOL=$(Find-KitTool signtool.exe x64)" >> $env:GITHUB_ENV
+
+      - name: InfVerif /w
+        run: |
+          & $env:INFVERIF /w /v dist\VocalInkAudio-x64\VocalInkAudio.inf
+          if ($LASTEXITCODE -ne 0) { throw "InfVerif reported errors" }
+
+      # For developers only: machines in test-signing mode trust this certificate once
+      # it is imported. Release builds use the Microsoft-signed package instead.
+      - name: Test-sign
+        run: |
+          $pkg = Resolve-Path dist\VocalInkAudio-x64
+          $cert = New-SelfSignedCertificate -Type CodeSigningCert -Subject "CN=Vocal Ink Test Driver (not for release)" `
+                    -CertStoreLocation Cert:\CurrentUser\My -KeyUsage DigitalSignature -NotAfter (Get-Date).AddYears(2)
+          Export-Certificate -Cert $cert -FilePath dist\VocalInkAudioTest.cer | Out-Null
+
+          & $env:SIGNTOOL sign /v /fd sha256 /sha1 $cert.Thumbprint /s My "$pkg\VocalInkAudio.sys"
+          if ($LASTEXITCODE -ne 0) { throw "signing the .sys failed" }
+          & $env:INF2CAT /driver:$pkg /os:10_VB_X64,10_CO_X64,10_NI_X64,10_GE_X64 /uselocaltime
+          if ($LASTEXITCODE -ne 0) { throw "Inf2Cat failed" }
+          & $env:SIGNTOOL sign /v /fd sha256 /sha1 $cert.Thumbprint /s My "$pkg\VocalInkAudio.cat"
+          if ($LASTEXITCODE -ne 0) { throw "signing the .cat failed" }
+
+          # Check the signatures chain to the test certificate.
+          Import-Certificate -FilePath dist\VocalInkAudioTest.cer -CertStoreLocation Cert:\LocalMachine\Root | Out-Null
+          & $env:SIGNTOOL verify /pa /v "$pkg\VocalInkAudio.cat"
+          if ($LASTEXITCODE -ne 0) { throw "signature check failed" }
+          & $env:SIGNTOOL verify /pa /v /c "$pkg\VocalInkAudio.cat" "$pkg\VocalInkAudio.sys"
+          if ($LASTEXITCODE -ne 0) { throw "catalog check failed" }
+
+          Copy-Item dist\VocalInkAudioTest.cer $pkg
+          Set-Content "$pkg\TEST-SIGNED.txt" @"
+          Test-signed build of the Vocal Ink virtual audio driver, for developers only.
+          Windows loads it only in test-signing mode (bcdedit /set testsigning on, then reboot)
+          after VocalInkAudioTest.cer is imported into "Trusted Root Certification Authorities"
+          and "Trusted Publishers" of the local machine. See driver/windows/README.md.
+          "@
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: VocalInkAudio-x64
+          path: dist/VocalInkAudio-x64/
+          if-no-files-found: error
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: VocalInkAudio-x64-unsigned
+          path: dist/VocalInkAudio-x64-unsigned/
+          if-no-files-found: error
+
+  macos:
+    name: macOS driver (${{ matrix.arch }})
+    # Not verified on real hardware yet; keep it from failing the workflow meanwhile.
+    continue-on-error: true
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner: macos-15
+            arch: arm64
+          - runner: macos-15-intel
+            arch: x86_64
+    runs-on: ${{ matrix.runner }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install build tools
+        run: brew install ninja
+
+      # Driver only: no Qt needed.
+      - name: Configure
+        run: >
+          cmake -S . -B build-driver -G Ninja -DCMAKE_BUILD_TYPE=Release
+          -DVOCALINK_DRIVER_ONLY=ON -DVOCALINK_WITH_MAC_DRIVER=ON
+          -DCMAKE_OSX_DEPLOYMENT_TARGET=12.0 -DCMAKE_OSX_ARCHITECTURES=${{ matrix.arch }}
+
+      - name: Build
+        run: cmake --build build-driver --target VocalInkVirtualMic
+
+      - name: Check the bundle
+        run: |
+          DRIVER=$(find build-driver -maxdepth 4 -name VocalInkVirtualMic.driver -type d | head -n 1)
+          [ -n "$DRIVER" ] || { echo "VocalInkVirtualMic.driver not found"; exit 1; }
+          echo "DRIVER=$DRIVER" >> "$GITHUB_ENV"
+          plutil -lint "$DRIVER/Contents/Info.plist"
+          plutil -p "$DRIVER/Contents/Info.plist"
+          codesign --verify --strict --verbose=2 "$DRIVER"
+          file "$DRIVER/Contents/MacOS/VocalInkVirtualMic"
+          # coreaudiod needs exactly this one symbol.
+          nm -gU "$DRIVER/Contents/MacOS/VocalInkVirtualMic"
+          nm -gU "$DRIVER/Contents/MacOS/VocalInkVirtualMic" | grep -q " _VocalInkVirtualMicEntryPoint$"
+
+      - name: Package
+        run: |
+          mkdir -p dist
+          ditto -c -k --sequesterRsrc --keepParent "$DRIVER" "dist/VocalInkVirtualMic-macos-${{ matrix.arch }}.zip"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: VocalInkVirtualMic-macos-${{ matrix.arch }}
+          path: dist/*.zip
+          if-no-files-found: error
