@@ -2,6 +2,7 @@
 #include "app/AppContext.h"
 #include "audio/MicPassthrough.h"
 #include "core/HistoryModel.h"
+#include "core/Paths.h"
 #include "core/Settings.h"
 #include "platform/VirtualDriver.h"
 #include "ui/Bridge.h"
@@ -18,6 +19,7 @@
 #include <QMenu>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
+#include <QQmlError>
 #include <QQuickStyle>
 #include <QQuickWindow>
 #include <QSurfaceFormat>
@@ -111,6 +113,9 @@ int main(int argc, char *argv[])
     const QCommandLineOption demo(QStringLiteral("demo"), QStringLiteral("Fill the screen with sample content (screenshots)."));
     const QCommandLineOption windowSize(QStringLiteral("size"), QStringLiteral("Main window size, e.g. 1200x1600."),
                                         QStringLiteral("WxH"));
+    const QCommandLineOption profile(QStringLiteral("profile"),
+                                     QStringLiteral("Keep settings and data in <dir> instead of the usual places."),
+                                     QStringLiteral("dir"));
     const QCommandLineOption noOnboarding(QStringLiteral("no-onboarding"), QStringLiteral("Don't show the first-run setup."));
     parser.addOption(screenshot);
     parser.addOption(showWhat);
@@ -118,7 +123,11 @@ int main(int argc, char *argv[])
     parser.addOption(demo);
     parser.addOption(noOnboarding);
     parser.addOption(windowSize);
+    parser.addOption(profile);
     parser.process(app);
+
+    if (parser.isSet(profile))
+        Paths::setProfileDir(QDir(parser.value(profile)).absolutePath());
 
     const bool smokeTest = parser.isSet(screenshot);
     if (!smokeTest && signalRunningInstance())
@@ -150,6 +159,11 @@ int main(int argc, char *argv[])
     engine.rootContext()->setContextProperty(QStringLiteral("skipOnboarding"), parser.isSet(noOnboarding));
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreationFailed, &app, [] { QCoreApplication::exit(1); },
                      Qt::QueuedConnection);
+    // In smoke tests any QML warning (a binding loop, a missing property...) is a failure.
+    int qmlWarnings = 0;
+    QObject::connect(&engine, &QQmlEngine::warnings, &app, [&qmlWarnings](const QList<QQmlError> &list) {
+        qmlWarnings += int(list.size());
+    });
 #if QT_VERSION >= QT_VERSION_CHECK(6, 5, 0)
     engine.loadFromModule("Ink", "Main");
 #else
@@ -184,7 +198,7 @@ int main(int argc, char *argv[])
 
     if (smokeTest && window) {
         const QString path = parser.value(screenshot);
-        QTimer::singleShot(3000, window, [window, path] {
+        QTimer::singleShot(3000, window, [window, path, &qmlWarnings] {
             // Capture a secondary window opened with --show (quick type,
             // compact bar...) when there is one, otherwise the main window.
             QQuickWindow *target = window;
@@ -195,7 +209,9 @@ int main(int argc, char *argv[])
                     target = qw;
             }
             const bool ok = target->grabWindow().save(path);
-            QCoreApplication::exit(ok ? 0 : 1);
+            if (qmlWarnings > 0)
+                qWarning("%d QML warning(s) while loading", qmlWarnings);
+            QCoreApplication::exit(!ok ? 1 : qmlWarnings > 0 ? 3 : 0);
         });
     }
     return app.exec();

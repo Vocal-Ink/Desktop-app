@@ -17,6 +17,10 @@ bool isPortable();
 
 // Test hook: redirect dataDir() to a temporary location.
 void setDataDirOverride(const QString &dir);
+// A separate profile (--profile <dir>): data and an INI settings file live in
+// that folder, leaving the user's normal settings untouched.
+void setProfileDir(const QString &dir);
+bool usesIniSettings();
 
 QString ensureDir(const QString &path);
 

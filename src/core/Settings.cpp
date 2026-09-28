@@ -140,7 +140,7 @@ const QHash<QString, QVariant> &defaults()
 
 Settings::Settings(QObject *parent)
     : QObject(parent)
-    , m_settings(Paths::isPortable()
+    , m_settings(Paths::usesIniSettings()
                      ? std::make_unique<QSettings>(Paths::settingsFile(), QSettings::IniFormat)
                      : std::make_unique<QSettings>())
 {

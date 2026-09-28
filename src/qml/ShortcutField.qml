@@ -29,6 +29,8 @@ AbstractButton {
 
     function stopRecording() { armed = false; pending = "" }
 
+    // While recording, keys belong to the recorder, not to the app's shortcuts.
+    Keys.onShortcutOverride: (event) => event.accepted = armed
     Keys.onPressed: (event) => {
         if (!armed) {
             if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter || event.key === Qt.Key_Space) {

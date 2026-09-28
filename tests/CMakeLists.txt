@@ -16,3 +16,29 @@ foreach(test_source IN LISTS VOCALINK_TESTS)
         TIMEOUT 120
         ENVIRONMENT "QT_QPA_PLATFORM=offscreen;VOCALINK_TEST_DATA=${CMAKE_CURRENT_SOURCE_DIR}/data")
 endforeach()
+
+# Interface smoke tests: start the real app on each screen and fail on any QML
+# warning. Each run gets a throwaway profile so your own settings are untouched.
+if(TARGET VocalInk)
+    set(VOCALINK_UI_SCREENS
+        "talk" "board" "voices" "audio" "stream"
+        "settings:appearance" "settings:access" "settings:shortcuts" "settings:speech"
+        "settings:typing" "settings:providers" "settings:backup" "settings:about"
+        "onboarding:0" "onboarding:1" "onboarding:2" "onboarding:3" "onboarding:4" "onboarding:5"
+        "onboarding:6" "onboarding:7" "onboarding:8" "onboarding:9" "onboarding:10" "onboarding:11"
+        "palette" "quicktype" "compact" "showtext" "miclive")
+    foreach(screen IN LISTS VOCALINK_UI_SCREENS)
+        string(REPLACE ":" "_" screen_id "${screen}")
+        set(profile_dir "${CMAKE_CURRENT_BINARY_DIR}/ui-profiles/${screen_id}")
+        set(skip_setup --no-onboarding)
+        if(screen MATCHES "^onboarding")
+            set(skip_setup)
+        endif()
+        add_test(NAME ui_${screen_id}
+                 COMMAND ${CMAKE_COMMAND} -E env
+                     QT_QPA_PLATFORM=offscreen QT_QUICK_BACKEND=software
+                     $<TARGET_FILE:VocalInk> --profile ${profile_dir} ${skip_setup} --show ${screen} --demo
+                     --screenshot ${CMAKE_CURRENT_BINARY_DIR}/ui-${screen_id}.png)
+        set_tests_properties(ui_${screen_id} PROPERTIES TIMEOUT 60 LABELS ui)
+    endforeach()
+endif()

@@ -11,6 +11,12 @@ QString &overrideDir()
     static QString dir;
     return dir;
 }
+
+bool &profileMode()
+{
+    static bool on = false;
+    return on;
+}
 } // namespace
 
 namespace Paths {
@@ -30,6 +36,17 @@ QString ensureDir(const QString &path)
 void setDataDirOverride(const QString &dir)
 {
     overrideDir() = dir;
+}
+
+void setProfileDir(const QString &dir)
+{
+    overrideDir() = dir;
+    profileMode() = !dir.isEmpty();
+}
+
+bool usesIniSettings()
+{
+    return profileMode() || isPortable();
 }
 
 QString dataDir()
