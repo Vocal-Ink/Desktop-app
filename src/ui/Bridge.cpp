@@ -38,11 +38,13 @@
 #include <QDesktopServices>
 #include <QElapsedTimer>
 #include <QGuiApplication>
+#include <QFile>
 #include <QJsonObject>
 #include <QKeySequence>
 #include <QMediaDevices>
 #include <QQuickWindow>
 #include <QRegularExpression>
+#include <QSaveFile>
 #include <QTimer>
 #include <QtMath>
 #include <cmath>
@@ -858,6 +860,23 @@ void Bridge::obsCreateTextSource(const QString &name)
 QString Bridge::overlayUrlFor(const QString &query) const
 {
     return m_ctx->overlay()->overlayUrl(query).toString();
+}
+
+QString Bridge::readTextFile(const QUrl &file) const
+{
+    QFile f(file.toLocalFile());
+    if (f.size() > 1024 * 1024 || !f.open(QIODevice::ReadOnly))
+        return {};
+    return QString::fromUtf8(f.readAll());
+}
+
+bool Bridge::writeTextFile(const QUrl &file, const QString &text)
+{
+    QSaveFile f(file.toLocalFile());
+    if (!f.open(QIODevice::WriteOnly))
+        return false;
+    f.write(text.toUtf8());
+    return f.commit();
 }
 
 // --- Overlay profiles --------------------------------------------------------------

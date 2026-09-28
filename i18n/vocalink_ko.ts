@@ -1357,7 +1357,7 @@
 <context>
     <name>Bridge</name>
     <message>
-        <location filename="../src/ui/Bridge.cpp" line="+335"/>
+        <location filename="../src/ui/Bridge.cpp" line="+337"/>
         <source>Hey! Sorry, I don&apos;t talk out loud, so I type.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1427,7 +1427,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+97"/>
+        <location line="+114"/>
         <source>New overlay</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2140,7 +2140,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+92"/>
+        <location line="+93"/>
         <source>Another app already uses these shortcuts, so they won&apos;t work here: %1</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5633,7 +5633,7 @@
 <context>
     <name>SettingsAppearance</name>
     <message>
-        <location filename="../src/qml/SettingsAppearance.qml" line="+7"/>
+        <location filename="../src/qml/SettingsAppearance.qml" line="+9"/>
         <source>Appearance</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5643,7 +5643,12 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+4"/>
+        <location line="+32"/>
+        <source>Saved the look “%1”.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+19"/>
         <source>Language</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5709,7 +5714,45 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+20"/>
+        <location line="+18"/>
+        <location line="+5"/>
+        <source>Your own ink colour</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="-3"/>
+        <source>This colour is hard to see on this theme. Buttons may be hard to find.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Any colour, as a hex code or from the palette.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+9"/>
+        <location line="+3"/>
+        <source>Background tint</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="-2"/>
+        <source>Washes a little of your ink colour through the background.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+10"/>
+        <location line="+3"/>
+        <source>Paper texture</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="-2"/>
+        <source>A faint grain, like ink on paper.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+12"/>
         <source>Text</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5805,6 +5848,50 @@
     </message>
     <message>
         <location line="+5"/>
+        <location line="+2"/>
+        <source>Cards</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Filled</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+0"/>
+        <source>Outlined</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+0"/>
+        <source>Flat</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+6"/>
+        <location line="+2"/>
+        <source>Shadows</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+7"/>
+        <location line="+2"/>
+        <source>Sidebar side</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <location line="+38"/>
+        <source>Left</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="-38"/>
+        <source>Right</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+5"/>
         <location line="+1"/>
         <source>Sidebar labels</source>
         <translation type="unfinished"></translation>
@@ -5838,12 +5925,12 @@
     </message>
     <message>
         <location line="+0"/>
-        <location line="+21"/>
+        <location line="+148"/>
         <source>Off</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="-16"/>
+        <location line="-143"/>
         <location line="+2"/>
         <source>Fill words with ink as they&apos;re spoken</source>
         <translation type="unfinished"></translation>
@@ -5851,6 +5938,161 @@
     <message>
         <location line="-1"/>
         <source>Helps you and the people around you follow along.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+7"/>
+        <source>Talk page</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <location line="+2"/>
+        <source>Spoken lines</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Centred</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+5"/>
+        <location line="+2"/>
+        <source>Font of the spoken lines</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Display</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+0"/>
+        <source>Reading font</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+0"/>
+        <source>Serif</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+5"/>
+        <location line="+2"/>
+        <source>Message box</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>At the bottom</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+0"/>
+        <source>At the top</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+5"/>
+        <location line="+2"/>
+        <source>Status in the header</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="-1"/>
+        <source>Where your voice goes and whether the real mic is on. A live mic always shows.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+7"/>
+        <source>Saved looks</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Keep a look you like, switch in one click, or share it as a file.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+6"/>
+        <source>No saved looks yet. Set things up the way you like, then save them here.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+18"/>
+        <source>Use</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>Export to a file</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+5"/>
+        <source>Delete this look</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+11"/>
+        <source>Name for this look</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Name for this look, e.g. Stream night</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>Save current look</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Import…</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+5"/>
+        <source>Export look</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <location line="+9"/>
+        <source>Vocal Ink looks (*.vilook)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="-6"/>
+        <source>Look exported.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+0"/>
+        <source>Couldn&apos;t write that file.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+5"/>
+        <source>Import a look</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>All files (*)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+5"/>
+        <source>That file isn&apos;t a Vocal Ink look.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+11"/>
+        <source>Imported “%1”. Choose Use to apply it.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -7560,7 +7802,7 @@
 <context>
     <name>TalkPage</name>
     <message>
-        <location filename="../src/qml/TalkPage.qml" line="+44"/>
+        <location filename="../src/qml/TalkPage.qml" line="+48"/>
         <source>Voice: %1. Change voice</source>
         <translation type="unfinished"></translation>
     </message>
@@ -7590,7 +7832,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+8"/>
+        <location line="+9"/>
         <source>Real mic LIVE</source>
         <translation type="unfinished"></translation>
     </message>
@@ -7610,7 +7852,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+6"/>
+        <location line="+7"/>
         <source>Into %1</source>
         <translation type="unfinished"></translation>
     </message>
@@ -7650,12 +7892,12 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+25"/>
+        <location line="+27"/>
         <source>What you&apos;ve said</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+42"/>
+        <location line="+43"/>
         <source>waiting</source>
         <translation type="unfinished"></translation>
     </message>
@@ -7695,7 +7937,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+56"/>
+        <location line="+58"/>
         <source>Say it your way.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -7728,7 +7970,7 @@
 <context>
     <name>Theme</name>
     <message>
-        <location filename="../src/qml/Theme.qml" line="+165"/>
+        <location filename="../src/qml/Theme.qml" line="+184"/>
         <source>Vocal violet</source>
         <translation type="unfinished"></translation>
     </message>

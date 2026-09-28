@@ -27,7 +27,7 @@ Rectangle {
     Accessible.name: qsTr("Sections")
 
     Rectangle {
-        anchors.right: parent.right
+        x: Theme.sidebarRight ? 0 : parent.width - width
         width: Theme.hairline
         height: parent.height
         color: Theme.line

@@ -254,6 +254,10 @@ public:
     Q_INVOKABLE QString overlayUrlFor(const QString &query) const;
 
     // --- Overlay profiles (docs/overlay-style.md) -------------------------------
+    // Small text files the user picked (saved looks). "" / false on failure.
+    Q_INVOKABLE QString readTextFile(const QUrl &file) const;
+    Q_INVOKABLE bool writeTextFile(const QUrl &file, const QString &text);
+
     Q_INVOKABLE QString addOverlayProfile(const QString &kind, const QString &name);
     Q_INVOKABLE QString duplicateOverlayProfile(const QString &id);
     Q_INVOKABLE void renameOverlayProfile(const QString &id, const QString &name);

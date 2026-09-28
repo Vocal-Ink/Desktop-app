@@ -27,8 +27,9 @@ Item {
     }
     readonly property real totalChars: starts.length ? starts[starts.length - 1] : 1
 
-    implicitHeight: flow.implicitHeight
-    implicitWidth: flow.implicitWidth
+    readonly property bool leftAligned: horizontalAlignment === Qt.AlignLeft
+    implicitHeight: leftAligned ? flow.implicitHeight : rows.implicitHeight
+    implicitWidth: leftAligned ? flow.implicitWidth : rows.implicitWidth
     Accessible.role: Accessible.StaticText
     Accessible.name: text
 
@@ -42,45 +43,102 @@ Item {
         return Theme.reducedMotion ? 1 : (pos - a) / Math.max(1, b - a)
     }
 
+    component Word: Item {
+        id: word
+        property string wordText
+        property int wordIndex
+        readonly property real fill: root.fillOf(wordIndex)
+        width: base.implicitWidth
+        height: base.implicitHeight
+
+        Text {
+            id: base
+            text: word.wordText
+            font.family: root.fontFamily
+            font.pixelSize: root.fontSize
+            font.weight: root.fontWeight
+            font.letterSpacing: Theme.tracking(root.fontSize)
+            color: word.fill >= 1 ? Theme.inkDry : Theme.inkUnwritten
+            Behavior on color { ColorAnimation { duration: Theme.normal } }
+        }
+        // Wet ink, clipped to how much of the word has been said.
+        Item {
+            visible: word.fill > 0 && word.fill < 1
+            clip: true
+            width: base.width * word.fill
+            height: base.height
+            Text {
+                text: word.wordText
+                font: base.font
+                color: Theme.inkWet
+            }
+        }
+    }
+
+    TextMetrics { id: space; text: " "; font.family: root.fontFamily; font.pixelSize: root.fontSize; font.weight: root.fontWeight }
+
+    // Left-aligned: a plain Flow.
     Flow {
         id: flow
+        visible: root.leftAligned
         width: root.width
         spacing: space.advanceWidth
         layoutDirection: Qt.LeftToRight
         flow: Flow.LeftToRight
 
-        TextMetrics { id: space; text: " "; font.family: root.fontFamily; font.pixelSize: root.fontSize; font.weight: root.fontWeight }
-
         Repeater {
-            model: root.words
-            Item {
-                id: word
+            model: root.leftAligned ? root.words : []
+            Word {
                 required property string modelData
                 required property int index
-                readonly property real fill: root.fillOf(index)
-                width: base.implicitWidth
-                height: base.implicitHeight
+                wordText: modelData
+                wordIndex: index
+            }
+        }
+    }
 
-                Text {
-                    id: base
-                    text: word.modelData
-                    font.family: root.fontFamily
-                    font.pixelSize: root.fontSize
-                    font.weight: root.fontWeight
-                    font.letterSpacing: Theme.tracking(root.fontSize)
-                    color: word.fill >= 1 ? Theme.inkDry : Theme.inkUnwritten
-                    Behavior on color { ColorAnimation { duration: Theme.normal } }
-                }
-                // Wet ink, clipped to how much of the word has been said.
-                Item {
-                    visible: word.fill > 0 && word.fill < 1
-                    clip: true
-                    width: base.width * word.fill
-                    height: base.height
-                    Text {
-                        text: word.modelData
-                        font: base.font
-                        color: Theme.inkWet
+    // Centred or right-aligned: break the words into lines here, then place
+    // each line (Flow can only fill from the left).
+    FontMetrics { id: metrics; font.family: root.fontFamily; font.pixelSize: root.fontSize; font.weight: root.fontWeight }
+    readonly property var lines: {
+        if (leftAligned || width <= 0)
+            return []
+        const out = []
+        let line = [], used = 0
+        const gap = space.advanceWidth
+        const track = Theme.tracking(fontSize)
+        for (let i = 0; i < words.length; ++i) {
+            const w = metrics.advanceWidth(words[i]) + track * words[i].length
+            if (line.length > 0 && used + gap + w > width) {
+                out.push(line)
+                line = []
+                used = 0
+            }
+            used += (line.length > 0 ? gap : 0) + w
+            line.push(i)
+        }
+        if (line.length > 0)
+            out.push(line)
+        return out
+    }
+    Column {
+        id: rows
+        visible: !root.leftAligned
+        width: root.width
+        spacing: space.advanceWidth // same line gap as the Flow
+        Repeater {
+            model: root.lines
+            Row {
+                required property var modelData
+                spacing: space.advanceWidth
+                x: root.horizontalAlignment === Qt.AlignRight ? rows.width - implicitWidth
+                   : Math.max(0, (rows.width - implicitWidth) / 2)
+                Repeater {
+                    model: parent.modelData
+                    Word {
+                        required property int modelData
+                        wordIndex: modelData
+                        wordText: root.words[modelData] || ""
                     }
                 }
             }

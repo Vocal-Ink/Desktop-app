@@ -14,9 +14,24 @@ Rectangle {
     implicitWidth: 520
     implicitHeight: col.implicitHeight + pad * 2
     radius: Theme.radiusLg
-    color: Theme.surface
-    border.color: Theme.line
+    color: Theme.cardColor
+    border.color: Theme.cardBorder
     border.width: Theme.hairline
+
+    // A soft shadow from stacked translucent layers (no shader effects needed).
+    Repeater {
+        model: Theme.shadowDepth > 0 ? 3 : 0
+        Rectangle {
+            required property int index
+            z: -1
+            x: -index
+            y: 2 + index * 2
+            width: card.width + index * 2
+            height: card.height + index
+            radius: card.radius + index
+            color: Qt.rgba(0, 0, 0, (Theme.dark ? 0.16 : 0.05) * Theme.shadowDepth / (index + 1))
+        }
+    }
     Accessible.role: Accessible.Grouping
     Accessible.name: title
 

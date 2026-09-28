@@ -16,12 +16,16 @@ Item {
         function onTranscriptReady(text) { composer.insert(text) }
     }
 
-    ColumnLayout {
+    // A one-column grid so the message box can sit above or below the stage
+    // (Appearance → Message box).
+    GridLayout {
         anchors.fill: parent
-        spacing: 0
+        columns: 1
+        rowSpacing: 0
 
         // --- Header: voice, routing, real mic -----------------------------------------
         Item {
+            Layout.row: 0
             Layout.fillWidth: true
             implicitHeight: header.implicitHeight + Theme.s4 * 2
 
@@ -100,7 +104,8 @@ Item {
                 }
                 StatusChip {
                     readonly property string mode: App.prefs["mic/mode"] || "off"
-                    visible: mode !== "off"
+                    // A live mic is always shown, whatever the header setting.
+                    visible: mode !== "off" && (Theme.headerChips || App.micLive)
                     tone: App.micLive ? "live" : "idle"
                     pulse: App.micLive
                     iconName: App.micLive ? "mic" : "mic-off"
@@ -110,6 +115,7 @@ Item {
                     onClicked: App.setMicLive(!App.micLive)
                 }
                 StatusChip {
+                    visible: Theme.headerChips || App.routeState === "missing"
                     tone: App.routeState === "virtual" ? "ok" : App.routeState === "missing" ? "live" : "warn"
                     iconName: App.routeState === "virtual" ? "cable" : App.routeState === "missing" ? "circle-alert" : "volume-2"
                     text: App.routeState === "virtual" ? qsTr("Into %1").arg(App.routeName)
@@ -139,6 +145,7 @@ Item {
 
         // --- Stage: the current line, and the ink drying above it ---------------------
         Item {
+            Layout.row: Theme.composerTop ? 2 : 1
             Layout.fillWidth: true
             Layout.fillHeight: true
 
@@ -148,7 +155,8 @@ Item {
                 anchors.leftMargin: Theme.s6
                 anchors.rightMargin: Theme.s6
                 model: App.history
-                verticalLayoutDirection: ListView.BottomToTop
+                // The newest line sits next to the message box.
+                verticalLayoutDirection: Theme.composerTop ? ListView.TopToBottom : ListView.BottomToTop
                 spacing: Theme.s4
                 clip: true
                 interactive: contentHeight > height
@@ -190,6 +198,7 @@ Item {
                         RowLayout {
                             spacing: Theme.s2
                             Layout.fillWidth: true
+                            Item { Layout.fillWidth: Theme.stageCentered; visible: Theme.stageCentered }
                             Txt {
                                 text: line.timeText + (line.voiceName ? " · " + line.voiceName : "")
                                 role: "caption"
@@ -233,6 +242,7 @@ Item {
                             id: inkLine
                             InkLine {
                                 width: line.width
+                                horizontalAlignment: Theme.stageCentered ? Qt.AlignHCenter : Qt.AlignLeft
                                 text: line.text
                                 progress: line.isCurrent ? App.lineProgress : (line.status === HistoryModel.Queued ? 0 : 1)
                                 animate: line.isCurrent || line.status === HistoryModel.Queued
@@ -242,6 +252,7 @@ Item {
                             id: dryLine
                             Txt {
                                 width: line.width
+                                horizontalAlignment: Theme.stageCentered ? Text.AlignHCenter : Text.AlignLeft
                                 text: line.text
                                 font.pixelSize: Math.round(Theme.fsXl * Math.max(0.8, (App.prefs["ui/stageScale"] || 100) / 100))
                                 font.family: Theme.stageFont
@@ -315,6 +326,7 @@ Item {
 
         // --- Composer dock ------------------------------------------------------------------
         ColumnLayout {
+            Layout.row: Theme.composerTop ? 1 : 2
             Layout.fillWidth: true
             Layout.leftMargin: Theme.s6
             Layout.rightMargin: Theme.s6

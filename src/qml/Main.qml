@@ -116,6 +116,7 @@ ApplicationWindow {
         anchors.fill: parent
         spacing: 0
         enabled: !onboardingLoader.active
+        layoutDirection: Theme.sidebarRight ? Qt.RightToLeft : Qt.LeftToRight
 
         Sidebar {
             Layout.fillHeight: true
@@ -225,6 +226,17 @@ ApplicationWindow {
                 win.go("talk")
             }
         }
+    }
+
+    // Paper grain over everything (Appearance → Paper texture). Never takes input.
+    Image {
+        anchors.fill: parent
+        z: 90
+        visible: Theme.grain > 0
+        opacity: Theme.grain * (Theme.dark ? 0.1 : 0.14)
+        source: visible ? "qrc:/images/grain.png" : ""
+        fillMode: Image.Tile
+        smooth: false
     }
 
     // --- Other windows ------------------------------------------------------------------

@@ -44,10 +44,12 @@ QtObject {
     readonly property bool dark: pal.dark
     readonly property bool highContrast: themeId === "contrast"
 
-    readonly property color bg: pal.bg
-    readonly property color surface: pal.surface
-    readonly property color raised: pal.raised
-    readonly property color sunken: pal.sunken
+    // Background tint: a wash of the ink colour through the page (not in high contrast).
+    readonly property real tint: highContrast ? 0 : Math.max(0, Math.min(100, prefs["ui/backgroundTint"] || 0)) / 100 * (dark ? 0.16 : 0.1)
+    readonly property color bg: tint > 0 ? mix(pal.bg, accent, tint) : pal.bg
+    readonly property color surface: tint > 0 ? mix(pal.surface, accent, tint * 0.7) : pal.surface
+    readonly property color raised: tint > 0 ? mix(pal.raised, accent, tint * 0.55) : pal.raised
+    readonly property color sunken: tint > 0 ? mix(pal.sunken, accent, tint * 0.8) : pal.sunken
     readonly property color line: pal.line
     readonly property color text: pal.text
     readonly property color muted: pal.muted
@@ -89,7 +91,11 @@ QtObject {
                                      : fontChoice === "system" ? Qt.application.font.family
                                      : "Atkinson Hyperlegible Next"
     readonly property string displayFont: fontChoice === "atkinson" ? "Vocal Ink Display" : uiFont
-    readonly property string stageFont: fontChoice === "atkinson" ? "Bricolage Grotesque" : uiFont
+    // The words being spoken: the display face, the reading font, or a serif.
+    readonly property string stageFontChoice: prefs["ui/stageFont"] || "display"
+    readonly property string stageFont: stageFontChoice === "reading" ? uiFont
+                                      : stageFontChoice === "serif" ? (Qt.platform.os === "windows" || Qt.platform.os === "osx" ? "Georgia" : "serif")
+                                      : fontChoice === "atkinson" ? "Bricolage Grotesque" : uiFont
     readonly property string monoFont: "Atkinson Hyperlegible Mono"
 
     readonly property real fsXs: Math.round(12 * scale)
@@ -142,6 +148,19 @@ QtObject {
     readonly property int slow: dur(380)
     // Movement distance: reduced motion keeps fades but drops travel.
     function travel(px) { return reducedMotion ? 0 : px }
+
+    // --- Surfaces and layout ------------------------------------------------------
+    readonly property string surfaceStyle: highContrast ? "outlined" : (prefs["ui/surfaceStyle"] || "filled")
+    readonly property color cardColor: surfaceStyle === "outlined" ? "transparent" : surface
+    readonly property color cardBorder: surfaceStyle === "flat" ? "transparent"
+                                      : surfaceStyle === "outlined" ? mix(line, text, 0.18) : line
+    readonly property real shadowDepth: highContrast || surfaceStyle === "outlined" ? 0
+                                      : Math.max(0, Math.min(100, prefs["ui/shadowDepth"] !== undefined ? prefs["ui/shadowDepth"] : 40)) / 100
+    readonly property real grain: highContrast ? 0 : Math.max(0, Math.min(100, prefs["ui/paperTexture"] || 0)) / 100
+    readonly property bool stageCentered: prefs["ui/stageAlign"] === "center"
+    readonly property bool sidebarRight: prefs["ui/sidebarSide"] === "right"
+    readonly property bool composerTop: prefs["ui/composerPosition"] === "top"
+    readonly property bool headerChips: prefs["ui/headerChips"] !== false
 
     // --- Helpers --------------------------------------------------------------
     function alpha(c, a) {
