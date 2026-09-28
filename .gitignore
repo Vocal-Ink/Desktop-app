@@ -55,3 +55,5 @@ CMakeLists.txt.user*
 
 # Local agent/editor state
 /.claude/
+__pycache__/
+*.pyc
