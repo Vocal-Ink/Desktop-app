@@ -22,6 +22,8 @@ public:
     QIODevice *io = nullptr;
     Resampler resampler;
     QByteArray leftover;
+    int outputRate = MicCapture::SampleRate;
+    int bufferMs = 100;
 };
 
 MicCapture::MicCapture(QObject *parent)
@@ -45,6 +47,22 @@ void MicCapture::setDevice(const QByteArray &deviceId)
         stop();
         start();
     }
+}
+
+void MicCapture::setOutputRate(int rate)
+{
+    if (rate > 0)
+        d->outputRate = rate;
+}
+
+int MicCapture::outputRate() const
+{
+    return d->outputRate;
+}
+
+void MicCapture::setBufferDuration(int ms)
+{
+    d->bufferMs = qBound(5, ms, 1000);
 }
 
 bool MicCapture::isRunning() const
@@ -97,19 +115,19 @@ bool MicCapture::start()
         return false;
     }
 
-    // Ask for 16 kHz mono directly when the device can do it; otherwise take its
-    // preferred format and convert.
+    // Ask for the output rate in mono directly when the device can do it;
+    // otherwise take its preferred format and convert.
     QAudioFormat want;
-    want.setSampleRate(SampleRate);
+    want.setSampleRate(d->outputRate);
     want.setChannelCount(1);
     want.setSampleFormat(QAudioFormat::Int16);
     d->format = d->device.isFormatSupported(want) ? want : d->device.preferredFormat();
-    d->resampler.reset(d->format.sampleRate(), SampleRate);
+    d->resampler.reset(d->format.sampleRate(), d->outputRate);
     d->leftover.clear();
 
     delete d->source;
     d->source = new QAudioSource(d->device, d->format, this);
-    d->source->setBufferSize(d->format.bytesForDuration(100000));
+    d->source->setBufferSize(d->format.bytesForDuration(qint64(d->bufferMs) * 1000));
     d->io = d->source->start();
     if (!d->io || d->source->error() != QAudio::NoError) {
         emit errorOccurred(tr("Could not open the microphone \"%1\".").arg(d->device.description()));

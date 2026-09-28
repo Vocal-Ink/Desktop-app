@@ -2,6 +2,7 @@
 
 #include <QByteArray>
 #include <QObject>
+#include <QVector>
 
 // Short, soft sound cues played only to the user's own speakers/headphones
 // (never into the virtual cable): helpful when you can't watch the screen.
@@ -21,6 +22,9 @@ public:
     void setVolume(float volume);               // 0..1
 
     void play(Cue cue);
+
+    // The cue's waveform: mono, soft (peak <= ~0.4), 60-250 ms with smooth edges.
+    static QVector<float> synthesize(Cue cue, int sampleRate);
 
 private:
     class Private;
