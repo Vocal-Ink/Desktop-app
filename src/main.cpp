@@ -1,12 +1,26 @@
 #include "Version.h"
 #include "app/AppContext.h"
-#include "ui/MainWindow.h"
+#include "audio/MicPassthrough.h"
+#include "core/HistoryModel.h"
+#include "core/Settings.h"
+#include "platform/VirtualDriver.h"
+#include "ui/Bridge.h"
+#include "ui/InkWave.h"
 
+#include <QAction>
 #include <QApplication>
 #include <QCommandLineParser>
 #include <QDir>
+#include <QFontDatabase>
 #include <QLocalServer>
 #include <QLocalSocket>
+#include <QMenu>
+#include <QQmlApplicationEngine>
+#include <QQmlContext>
+#include <QQuickStyle>
+#include <QQuickWindow>
+#include <QSurfaceFormat>
+#include <QSystemTrayIcon>
 #include <QTimer>
 
 namespace {
@@ -29,6 +43,40 @@ bool signalRunningInstance()
     return true;
 }
 
+void loadFonts()
+{
+    const QDir dir(QStringLiteral(":/fonts"));
+    const QStringList files = dir.entryList({QStringLiteral("*.ttf"), QStringLiteral("*.otf")}, QDir::Files);
+    for (const QString &file : files)
+        QFontDatabase::addApplicationFont(dir.filePath(file));
+}
+
+QSystemTrayIcon *createTray(Bridge *bridge, AppContext *context, QObject *parent)
+{
+    if (!QSystemTrayIcon::isSystemTrayAvailable())
+        return nullptr;
+    auto *tray = new QSystemTrayIcon(QIcon(QStringLiteral(":/icons/tray.png")), parent);
+    tray->setToolTip(QStringLiteral(VOCALINK_DISPLAY_NAME));
+    auto *menu = new QMenu;
+    QObject::connect(tray, &QObject::destroyed, menu, &QObject::deleteLater);
+    menu->addAction(QObject::tr("Open Vocal Ink"), bridge, [bridge] { emit bridge->uiAction(QStringLiteral("window.show")); });
+    menu->addAction(QObject::tr("Quick type…"), bridge, [bridge] { emit bridge->uiAction(QStringLiteral("window.quickType")); });
+    menu->addSeparator();
+    menu->addAction(QObject::tr("Stop speaking"), context, &AppContext::stopSpeaking);
+    QAction *mute = menu->addAction(QObject::tr("Mute my real mic"), context, [context] { context->mic()->setLive(false); });
+    mute->setEnabled(false);
+    QObject::connect(context->mic(), &MicPassthrough::liveChanged, mute, &QAction::setEnabled);
+    menu->addSeparator();
+    menu->addAction(QObject::tr("Quit"), qApp, &QCoreApplication::quit);
+    tray->setContextMenu(menu);
+    QObject::connect(tray, &QSystemTrayIcon::activated, bridge, [bridge](QSystemTrayIcon::ActivationReason reason) {
+        if (reason == QSystemTrayIcon::Trigger || reason == QSystemTrayIcon::DoubleClick)
+            emit bridge->uiAction(QStringLiteral("window.toggle"));
+    });
+    tray->show();
+    return tray;
+}
+
 } // namespace
 
 int main(int argc, char *argv[])
@@ -37,9 +85,16 @@ int main(int argc, char *argv[])
     QApplication::setApplicationName(QStringLiteral(VOCALINK_DISPLAY_NAME));
     QApplication::setApplicationVersion(QStringLiteral(VOCALINK_VERSION));
     QApplication::setDesktopFileName(QStringLiteral("org.vocalink.desktop"));
+
+    // Smooth edges on the ink strokes without paying for MSAA everywhere.
+    QSurfaceFormat format = QSurfaceFormat::defaultFormat();
+    format.setSamples(4);
+    QSurfaceFormat::setDefaultFormat(format);
+
     QApplication app(argc, argv);
     app.setWindowIcon(QIcon(QStringLiteral(":/icons/app-256.png")));
     app.setQuitOnLastWindowClosed(false); // the tray keeps shortcuts alive
+    QQuickStyle::setStyle(QStringLiteral("Basic"));
 
     QCommandLineParser parser;
     parser.setApplicationDescription(QStringLiteral("Speak-for-me text-to-speech"));
@@ -48,15 +103,15 @@ int main(int argc, char *argv[])
     const QCommandLineOption screenshot(QStringLiteral("screenshot"),
                                         QStringLiteral("Save a screenshot of the main window to <file> and quit."),
                                         QStringLiteral("file"));
-    const QCommandLineOption noWizard(QStringLiteral("no-wizard"), QStringLiteral("Don't open the setup assistant."));
     const QCommandLineOption minimized(QStringLiteral("minimized"), QStringLiteral("Start in the system tray."));
     const QCommandLineOption showWhat(QStringLiteral("show"),
-                                      QStringLiteral("Open a window at start: wizard, voices or settings[:page]."),
+                                      QStringLiteral("Open a page at start, e.g. voices, settings:shortcuts, onboarding:3."),
                                       QStringLiteral("what"));
+    const QCommandLineOption demo(QStringLiteral("demo"), QStringLiteral("Fill the screen with sample content (screenshots)."));
     parser.addOption(screenshot);
     parser.addOption(showWhat);
-    parser.addOption(noWizard);
     parser.addOption(minimized);
+    parser.addOption(demo);
     parser.process(app);
 
     const bool smokeTest = parser.isSet(screenshot);
@@ -69,52 +124,56 @@ int main(int argc, char *argv[])
         instanceServer.listen(instanceKey());
     }
 
+    loadFonts();
+
     AppContext context;
     context.initialize();
+    Bridge bridge(&context);
 
-    MainWindow window(&context);
-    window.setFirstRunWizardEnabled(!smokeTest && !parser.isSet(noWizard));
-    QObject::connect(&instanceServer, &QLocalServer::newConnection, &window, [&] {
+    qmlRegisterSingletonInstance("Ink.Core", 1, 0, "App", &bridge);
+    qmlRegisterType<InkWave>("Ink.Core", 1, 0, "InkWave");
+    qmlRegisterUncreatableType<VirtualDriver>("Ink.Core", 1, 0, "VirtualDriver", QStringLiteral("Use App.virtualMic"));
+    qmlRegisterUncreatableType<HistoryModel>("Ink.Core", 1, 0, "HistoryModel", QStringLiteral("Use App.history"));
+
+    QQmlApplicationEngine engine;
+    engine.rootContext()->setContextProperty(QStringLiteral("launchPage"), parser.value(showWhat));
+    engine.rootContext()->setContextProperty(QStringLiteral("launchMinimized"), parser.isSet(minimized));
+    engine.rootContext()->setContextProperty(QStringLiteral("demoMode"), parser.isSet(demo));
+    engine.rootContext()->setContextProperty(QStringLiteral("smokeTest"), smokeTest);
+    QObject::connect(&engine, &QQmlApplicationEngine::objectCreationFailed, &app, [] { QCoreApplication::exit(1); },
+                     Qt::QueuedConnection);
+#if QT_VERSION >= QT_VERSION_CHECK(6, 5, 0)
+    engine.loadFromModule("Ink", "Main");
+#else
+    engine.addImportPath(QStringLiteral("qrc:/qt/qml"));
+    engine.load(QUrl(QStringLiteral("qrc:/qt/qml/Ink/Main.qml")));
+#endif
+    if (engine.rootObjects().isEmpty())
+        return 1;
+
+    auto *window = qobject_cast<QQuickWindow *>(engine.rootObjects().constFirst());
+    bridge.setMainWindow(window);
+    if (parser.isSet(demo))
+        QTimer::singleShot(200, &bridge, &Bridge::startDemo);
+
+    QSystemTrayIcon *tray = smokeTest ? nullptr : createTray(&bridge, &context, &app);
+    Q_UNUSED(tray)
+
+    QObject::connect(&instanceServer, &QLocalServer::newConnection, &bridge, [&] {
         while (QLocalSocket *s = instanceServer.nextPendingConnection()) {
-            QObject::connect(s, &QLocalSocket::readyRead, s, [s, &context] {
+            QObject::connect(s, &QLocalSocket::readyRead, s, [s, &bridge] {
                 if (s->readAll().startsWith("show"))
-                    emit context.showWindowRequested();
+                    emit bridge.uiAction(QStringLiteral("window.show"));
                 s->deleteLater();
             });
         }
     });
 
-    if (!parser.isSet(minimized))
-        window.show();
-
-    if (parser.isSet(showWhat)) {
-        const QString what = parser.value(showWhat);
-        QTimer::singleShot(300, &window, [&window, what] {
-            if (what == QLatin1String("wizard"))
-                window.runSetupWizard();
-            else if (what == QLatin1String("voices"))
-                window.openVoicePicker();
-            else if (what.startsWith(QLatin1String("settings")))
-                window.showSettings(what.section(QLatin1Char(':'), 1));
-        });
-    }
-
-    if (smokeTest) {
+    if (smokeTest && window) {
         const QString path = parser.value(screenshot);
-        QTimer::singleShot(2500, &window, [&window, path] {
-            // Capture the front-most window (a dialog opened with --show, or the main window).
-            QWidget *target = QApplication::activeModalWidget();
-            if (!target) {
-                const auto tops = QApplication::topLevelWidgets();
-                for (QWidget *w : tops) {
-                    if (w->isVisible() && w != &window && w->inherits("QDialog"))
-                        target = w;
-                }
-            }
-            if (!target)
-                target = &window;
-            const bool ok = target->grab().save(path);
-            QApplication::exit(ok ? 0 : 1);
+        QTimer::singleShot(3000, window, [window, path] {
+            const bool ok = window->grabWindow().save(path);
+            QCoreApplication::exit(ok ? 0 : 1);
         });
     }
     return app.exec();

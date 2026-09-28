@@ -50,6 +50,8 @@ signals:
     void failed(quint64 id, const QString &text, const QString &error);
     void speakingChanged(bool speaking);
     void queueChanged(int queued);
+    // While a message plays: how much has been heard of what has been synthesized.
+    void progress(quint64 id, qint64 playedMs, qint64 totalMs, bool totalKnown);
 
 private:
     struct Job

@@ -25,7 +25,8 @@ option(VOCALINK_WITH_HOTKEYS  "System-wide hotkeys with QHotkey" ON)
 option(VOCALINK_WITH_KEYCHAIN "Store API keys in the OS keychain with QtKeychain" ON)
 option(VOCALINK_BUILD_TESTS   "Build the unit tests" ON)
 
-set(VOCALINK_QT_COMPONENTS Core Gui Widgets Network Multimedia TextToSpeech WebSockets Concurrent)
+set(VOCALINK_QT_COMPONENTS Core Gui Widgets Network Multimedia TextToSpeech WebSockets Concurrent
+    Qml Quick QuickControls2)
 if(VOCALINK_BUILD_TESTS)
     list(APPEND VOCALINK_QT_COMPONENTS Test)
 endif()
@@ -33,6 +34,9 @@ find_package(Qt6 6.4 REQUIRED COMPONENTS ${VOCALINK_QT_COMPONENTS})
 message(STATUS "Vocal Ink: building against Qt ${Qt6_VERSION}")
 
 set(CMAKE_AUTOMOC ON)
+if(QT_KNOWN_POLICY_QTP0001)
+    qt_policy(SET QTP0001 NEW)
+endif()
 set(CMAKE_AUTORCC ON)
 
 include(cmake/Dependencies.cmake)

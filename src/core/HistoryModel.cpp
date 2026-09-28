@@ -47,6 +47,12 @@ QVariant HistoryModel::data(const QModelIndex &index, int role) const
         return e.voiceName;
     case StatusRole:
         return int(e.status);
+    case IdRole:
+        return e.id;
+    case ErrorRole:
+        return e.error;
+    case TimeTextRole:
+        return QLocale().toString(e.time.time(), QLocale::ShortFormat);
     default:
         return {};
     }
@@ -54,7 +60,8 @@ QVariant HistoryModel::data(const QModelIndex &index, int role) const
 
 QHash<int, QByteArray> HistoryModel::roleNames() const
 {
-    return {{TextRole, "text"}, {TimeRole, "time"}, {VoiceNameRole, "voiceName"}, {StatusRole, "status"}};
+    return {{TextRole, "text"},   {TimeRole, "time"},   {VoiceNameRole, "voiceName"}, {StatusRole, "status"},
+            {IdRole, "messageId"}, {ErrorRole, "error"}, {TimeTextRole, "timeText"}};
 }
 
 void HistoryModel::add(quint64 id, const QString &text, const QString &voiceName)

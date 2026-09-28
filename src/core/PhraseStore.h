@@ -9,10 +9,13 @@ struct Phrase
     QString text;
     QString hotkey;   // optional global shortcut (QKeySequence portable text)
     QString voiceKey; // optional per-phrase voice; empty = current voice
+    QString category; // board tab, e.g. "Basics"
+    QString color;    // optional tile tint "#rrggbb"
 
     bool operator==(const Phrase &o) const
     {
-        return text == o.text && hotkey == o.hotkey && voiceKey == o.voiceKey;
+        return text == o.text && hotkey == o.hotkey && voiceKey == o.voiceKey && category == o.category
+            && color == o.color;
     }
 };
 
@@ -34,6 +37,7 @@ public:
     bool save() const;
 
     static QList<Phrase> defaultPhrases();
+    QStringList categories() const; // in first-use order
     static QByteArray toJson(const QList<Phrase> &phrases);
     static QList<Phrase> fromJson(const QByteArray &json, bool *ok = nullptr);
 

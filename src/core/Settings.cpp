@@ -71,12 +71,67 @@ const QHash<QString, QVariant> &defaults()
         {QString::fromLatin1(Keys::HotkeyQuickType), QStringLiteral("Ctrl+Alt+T")},
         {QString::fromLatin1(Keys::HotkeyRepeat), QStringLiteral("Ctrl+Alt+R")},
         {QString::fromLatin1(Keys::Replacements), defaultReplacements()},
-        {QString::fromLatin1(Keys::Theme), QStringLiteral("dark")},
+        {QString::fromLatin1(Keys::AutoCapitalize), true},
+        {QString::fromLatin1(Keys::EmojiMode), QStringLiteral("speak")},
+        {QString::fromLatin1(Keys::UrlMode), QStringLiteral("say")},
+        {QString::fromLatin1(Keys::Variables), QVariantMap{{QStringLiteral("name"), QString()}}},
+        {QString::fromLatin1(Keys::Predictions), 5},
+        {QString::fromLatin1(Keys::Interrupt), false},
+        {QString::fromLatin1(Keys::Effect), QStringLiteral("none")},
+        {QString::fromLatin1(Keys::EffectIntensity), 60},
+        {QString::fromLatin1(Keys::MicMode), QStringLiteral("off")},
+        {QString::fromLatin1(Keys::MicDevice), QByteArray()},
+        {QString::fromLatin1(Keys::MicGainDb), 0},
+        {QString::fromLatin1(Keys::MicGateDb), -55},
+        {QString::fromLatin1(Keys::MicDuck), true},
+        {QString::fromLatin1(Keys::MicDuckDb), -18},
+        {QString::fromLatin1(Keys::MicWarnOverlay), true},
+        {QString::fromLatin1(Keys::MicWarnSound), true},
+        {QString::fromLatin1(Keys::TwitchEnabled), false},
+        {QString::fromLatin1(Keys::TwitchChannel), QString()},
+        {QString::fromLatin1(Keys::TwitchVoice), QString()},
+        {QString::fromLatin1(Keys::TwitchReadNames), true},
+        {QString::fromLatin1(Keys::TwitchSkipCommands), true},
+        {QString::fromLatin1(Keys::TwitchSkipLinks), true},
+        {QString::fromLatin1(Keys::TwitchSubsOnly), false},
+        {QString::fromLatin1(Keys::TwitchIgnored), QStringLiteral("nightbot, streamelements, streamlabs, moobot")},
+        {QString::fromLatin1(Keys::TwitchBlocked), QString()},
+        {QString::fromLatin1(Keys::Theme), QStringLiteral("midnight")},
+        {QString::fromLatin1(Keys::Accent), QStringLiteral("#8c52ff")},
         {QString::fromLatin1(Keys::FontScale), 100},
+        {QString::fromLatin1(Keys::FontFamily), QStringLiteral("atkinson")},
+        {QString::fromLatin1(Keys::Density), QStringLiteral("comfortable")},
+        {QString::fromLatin1(Keys::Corners), QStringLiteral("soft")},
+        {QString::fromLatin1(Keys::SidebarLabels), true},
+        {QString::fromLatin1(Keys::StageScale), 100},
+        {QString::fromLatin1(Keys::ComposerSize), 17},
+        {QString::fromLatin1(Keys::ShowThread), true},
+        {QString::fromLatin1(Keys::ShowPhraseTray), true},
+        {QString::fromLatin1(Keys::WaveStyle), QStringLiteral("ink")},
+        {QString::fromLatin1(Keys::InkEffect), true},
+        {QString::fromLatin1(Keys::Motion), QStringLiteral("full")},
+        {QString::fromLatin1(Keys::CompactOpacity), 94},
+        {QString::fromLatin1(Keys::OnboardingDone), false},
+        {QString::fromLatin1(Keys::Uses), QStringList()},
         {QString::fromLatin1(Keys::FirstRunDone), false},
         {QString::fromLatin1(Keys::MinimizeToTray), true},
         {QString::fromLatin1(Keys::AlwaysOnTop), false},
         {QString::fromLatin1(Keys::ClearAfterSpeak), true},
+        {QString::fromLatin1(Keys::CheckUpdates), true},
+        {QString::fromLatin1(Keys::FocusRing), QStringLiteral("normal")},
+        {QString::fromLatin1(Keys::LargeTargets), false},
+        {QString::fromLatin1(Keys::LetterSpacing), 0},
+        {QString::fromLatin1(Keys::LineSpacing), 100},
+        {QString::fromLatin1(Keys::SoundCues), true},
+        {QString::fromLatin1(Keys::SoundCueVolume), 45},
+        {QString::fromLatin1(Keys::Announce), true},
+        {QString::fromLatin1(Keys::Scanning), false},
+        {QString::fromLatin1(Keys::ScanIntervalMs), 1200},
+        {QString::fromLatin1(Keys::ConfirmSpeak), false},
+        {QString::fromLatin1(Keys::LatchPtt), false},
+        {QString::fromLatin1(Keys::EchoTyping), QStringLiteral("off")},
+        {QString::fromLatin1(Keys::DebounceMs), 0},
+        {QString::fromLatin1(Keys::HighlightSpoken), true},
     };
     return d;
 }
@@ -100,6 +155,16 @@ Settings::Settings(const QString &iniPath, QObject *parent)
 QVariant Settings::defaultValue(const char *key)
 {
     return defaults().value(QString::fromLatin1(key));
+}
+
+QVariant Settings::defaultValue(const QString &key)
+{
+    return defaults().value(key);
+}
+
+QStringList Settings::knownKeys()
+{
+    return defaults().keys();
 }
 
 QVariant Settings::value(const char *key) const

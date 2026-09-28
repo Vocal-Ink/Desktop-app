@@ -66,15 +66,79 @@ inline constexpr auto HotkeyRepeat = "hotkeys/repeat";
 // Text
 inline constexpr auto Replacements = "text/replacements"; // QVariantMap abbreviation -> expansion
 
-// UI
-inline constexpr auto Theme = "ui/theme";           // "dark" | "light" | "contrast"
-inline constexpr auto FontScale = "ui/fontScale";   // 80..200 (%)
+inline constexpr auto AutoCapitalize = "text/autoCapitalize";
+inline constexpr auto EmojiMode = "text/emoji";         // "speak" | "remove" | "keep"
+inline constexpr auto UrlMode = "text/urls";            // "say" | "remove" | "keep"
+inline constexpr auto Variables = "text/variables";     // QVariantMap {name} -> value
+inline constexpr auto Predictions = "text/predictions"; // number of word suggestions (0 = off)
+inline constexpr auto Interrupt = "text/interrupt";     // a new message cuts off the current one
+
+// Voice effect
+inline constexpr auto Effect = "fx/effect";             // VoiceEffects::id()
+inline constexpr auto EffectIntensity = "fx/intensity"; // 0..100
+
+// Real microphone passthrough
+inline constexpr auto MicMode = "mic/mode";             // "off" | "hold" | "toggle" | "always"
+inline constexpr auto MicDevice = "mic/device";
+inline constexpr auto MicGainDb = "mic/gainDb";         // -24..24
+inline constexpr auto MicGateDb = "mic/gateDb";         // -90 (off) .. -20
+inline constexpr auto MicDuck = "mic/duck";             // lower the mic while the voice speaks
+inline constexpr auto MicDuckDb = "mic/duckDb";         // -60..0
+inline constexpr auto MicWarnOverlay = "mic/warnOverlay"; // on-screen "mic is live" badge
+inline constexpr auto MicWarnSound = "mic/warnSound";
+
+// Twitch chat reader
+inline constexpr auto TwitchEnabled = "twitch/enabled";
+inline constexpr auto TwitchChannel = "twitch/channel";
+inline constexpr auto TwitchVoice = "twitch/voice";     // voice key; empty = a different favorite
+inline constexpr auto TwitchReadNames = "twitch/readNames";
+inline constexpr auto TwitchSkipCommands = "twitch/skipCommands";
+inline constexpr auto TwitchSkipLinks = "twitch/skipLinks";
+inline constexpr auto TwitchSubsOnly = "twitch/subsOnly";
+inline constexpr auto TwitchIgnored = "twitch/ignoredUsers"; // comma separated
+inline constexpr auto TwitchBlocked = "twitch/blockedWords";
+
+// Appearance
+inline constexpr auto Theme = "ui/theme";           // "midnight" | "vellum" | "amethyst" | "contrast" | "system"
+inline constexpr auto Accent = "ui/accent";         // "#rrggbb"
+inline constexpr auto FontScale = "ui/fontScale";   // 80..250 (%)
+inline constexpr auto FontFamily = "ui/font";       // "atkinson" | "opendyslexic" | "lexend" | "system"
+inline constexpr auto Density = "ui/density";       // "compact" | "comfortable" | "spacious"
+inline constexpr auto Corners = "ui/corners";       // "sharp" | "soft" | "round"
+inline constexpr auto SidebarLabels = "ui/sidebarLabels";
+inline constexpr auto StageScale = "ui/stageScale"; // 60..200 (%) size of the "now speaking" line
+inline constexpr auto ComposerSize = "ui/composerSize"; // pt
+inline constexpr auto ShowThread = "ui/showThread";
+inline constexpr auto ShowPhraseTray = "ui/showPhraseTray";
+inline constexpr auto WaveStyle = "ui/waveStyle";   // "ink" | "bars" | "off"
+inline constexpr auto InkEffect = "ui/inkEffect";   // words fill with ink as they're spoken
+inline constexpr auto Motion = "ui/motion";         // "full" | "reduced" | "off"
+inline constexpr auto CompactOpacity = "ui/compactOpacity"; // 40..100 (%)
+inline constexpr auto OnboardingDone = "ui/onboardingDone";
+inline constexpr auto Uses = "ui/uses";             // QStringList: "calls" "stream" "inperson" "games"
 inline constexpr auto FirstRunDone = "ui/firstRunDone";
 inline constexpr auto MinimizeToTray = "ui/minimizeToTray";
 inline constexpr auto AlwaysOnTop = "ui/alwaysOnTop";
 inline constexpr auto ClearAfterSpeak = "ui/clearAfterSpeak";
 inline constexpr auto WindowGeometry = "ui/geometry";
 inline constexpr auto WindowState = "ui/windowState";
+inline constexpr auto CheckUpdates = "app/checkUpdates";
+
+// Accessibility
+inline constexpr auto FocusRing = "a11y/focusRing";         // "normal" | "bold"
+inline constexpr auto LargeTargets = "a11y/largeTargets";
+inline constexpr auto LetterSpacing = "a11y/letterSpacing"; // 0..20 (% of font size)
+inline constexpr auto LineSpacing = "a11y/lineSpacing";     // 100..200 (%)
+inline constexpr auto SoundCues = "a11y/soundCues";
+inline constexpr auto SoundCueVolume = "a11y/soundCueVolume"; // 0..100
+inline constexpr auto Announce = "a11y/announce";           // screen reader announcements
+inline constexpr auto Scanning = "a11y/scanning";           // switch-access scanning
+inline constexpr auto ScanIntervalMs = "a11y/scanIntervalMs";
+inline constexpr auto ConfirmSpeak = "a11y/confirmSpeak";   // ask before speaking a message
+inline constexpr auto LatchPtt = "a11y/latchPtt";           // tap to start/stop instead of holding
+inline constexpr auto EchoTyping = "a11y/echoTyping";       // "off" | "words" | "sentences"
+inline constexpr auto DebounceMs = "a11y/debounceMs";       // ignore repeated presses (tremor)
+inline constexpr auto HighlightSpoken = "a11y/highlightSpoken"; // follow along word by word
 } // namespace Keys
 
 // Thin QSettings wrapper with central defaults and a change signal so services
@@ -104,6 +168,8 @@ public:
     bool flag(const char *key) const { return value(key).toBool(); }
 
     static QVariant defaultValue(const char *key);
+    static QVariant defaultValue(const QString &key);
+    static QStringList knownKeys(); // every key that has a central default
 
     void sync();
 

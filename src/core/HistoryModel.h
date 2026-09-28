@@ -9,8 +9,9 @@ class HistoryModel : public QAbstractListModel
 {
     Q_OBJECT
 public:
-    enum Roles { TextRole = Qt::UserRole + 1, TimeRole, VoiceNameRole, StatusRole };
+    enum Roles { TextRole = Qt::UserRole + 1, TimeRole, VoiceNameRole, StatusRole, IdRole, ErrorRole, TimeTextRole };
     enum class Status { Queued, Speaking, Done, Failed, Stopped };
+    Q_ENUM(Status)
 
     struct Entry
     {

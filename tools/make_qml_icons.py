@@ -1,0 +1,145 @@
+#!/usr/bin/env python3
+"""Converts a curated set of Lucide icons (ISC license) into src/qml/Icons.js.
+
+Each icon becomes a single SVG path string (circles, rects, lines and
+polylines are converted to path commands) so QML can draw it with one
+ShapePath and recolor it with the theme.
+
+    npm pack lucide-static && tar -xzf lucide-static-*.tgz
+    python3 tools/make_qml_icons.py package/icons
+"""
+import math
+import re
+import sys
+import xml.etree.ElementTree as ET
+from pathlib import Path
+
+ICONS = [
+    "mic", "mic-off", "volume-2", "volume-x", "square", "play", "pause", "skip-forward", "repeat",
+    "send-horizontal", "message-square-text", "layout-grid", "music", "audio-waveform", "audio-lines",
+    "radio", "cable", "settings", "circle-help", "search", "star", "plus", "x", "check", "chevron-down",
+    "chevron-right", "chevron-left", "keyboard", "accessibility", "palette", "eye", "eye-off", "languages",
+    "headphones", "speaker", "zap", "shield-alert", "triangle-alert", "info", "download", "trash-2",
+    "pencil", "grip-vertical", "copy", "external-link", "refresh-cw", "maximize-2", "minimize-2",
+    "picture-in-picture-2", "type", "monitor", "sun", "moon", "contrast", "command", "history", "pin",
+    "sliders-horizontal", "wand-sparkles", "bell", "folder-open", "file-up", "file-down",
+    "rotate-ccw", "hand", "scan-line", "text-cursor-input", "user-round", "users-round", "globe",
+    "sparkles", "circle-check", "circle-x", "loader", "arrow-right", "arrow-left", "gamepad-2",
+    "phone", "presentation", "tv", "keyboard-music", "ear", "list-checks", "book-open", "heart",
+    "hand-heart", "lock", "shield-check", "rocket", "clipboard", "link", "circle", "circle-dot",
+    "timer", "power", "panel-left", "fullscreen", "scaling", "baseline", "whole-word", "wifi",
+    "chevron-up", "arrow-up", "square-pen", "list", "tag", "megaphone", "message-circle", "circle-alert",
+    "clock", "smile", "layers", "undo-2", "lightbulb", "gauge", "waves", "circle-stop", "flag", "feather",
+    "pen-tool", "keyboard-off", "volume-1", "mic-vocal", "mouse-pointer-click", "house", "list-music",
+    "sparkle", "ellipsis", "ellipsis-vertical", "circle-plus", "minus", "bot", "app-window", "captions",
+]
+
+
+NUMBER = re.compile(r"-?(?:\d+\.?\d*|\.\d+)(?:e-?\d+)?")
+
+
+def absolute_first_move(d):
+    """Turns a leading relative "m x y ..." into "M x y l ...".
+
+    Coordinate pairs after a relative moveto are relative linetos, so they
+    must keep that meaning once the moveto is made absolute."""
+    if not d.startswith("m"):
+        return d
+    rest = d[1:]
+    nums = []
+    pos = 0
+    while len(nums) < 2:
+        m = NUMBER.search(rest, pos)
+        nums.append(m.group(0))
+        pos = m.end()
+    tail = rest[pos:].lstrip(" ,")
+    head = f"M{nums[0]} {nums[1]}"
+    if tail and (tail[0].isdigit() or tail[0] in "-."):
+        return f"{head}l{tail}"
+    return f"{head}{tail}"
+
+
+def num(v):
+    return float(v) if v is not None else 0.0
+
+
+def fmt(x):
+    s = f"{x:.3f}".rstrip("0").rstrip(".")
+    return s if s != "-0" else "0"
+
+
+def ellipse_path(cx, cy, rx, ry):
+    return (f"M{fmt(cx - rx)} {fmt(cy)}"
+            f"a{fmt(rx)} {fmt(ry)} 0 1 0 {fmt(2 * rx)} 0"
+            f"a{fmt(rx)} {fmt(ry)} 0 1 0 {fmt(-2 * rx)} 0Z")
+
+
+def rect_path(x, y, w, h, rx, ry):
+    if rx <= 0 and ry <= 0:
+        return f"M{fmt(x)} {fmt(y)}h{fmt(w)}v{fmt(h)}h{fmt(-w)}Z"
+    rx = min(rx or ry, w / 2)
+    ry = min(ry or rx, h / 2)
+    return (f"M{fmt(x + rx)} {fmt(y)}h{fmt(w - 2 * rx)}"
+            f"a{fmt(rx)} {fmt(ry)} 0 0 1 {fmt(rx)} {fmt(ry)}v{fmt(h - 2 * ry)}"
+            f"a{fmt(rx)} {fmt(ry)} 0 0 1 {fmt(-rx)} {fmt(ry)}h{fmt(-(w - 2 * rx))}"
+            f"a{fmt(rx)} {fmt(ry)} 0 0 1 {fmt(-rx)} {fmt(-ry)}v{fmt(-(h - 2 * ry))}"
+            f"a{fmt(rx)} {fmt(ry)} 0 0 1 {fmt(rx)} {fmt(-ry)}Z")
+
+
+def element_to_path(el):
+    tag = el.tag.split("}")[-1]
+    a = el.attrib
+    if tag == "path":
+        return a["d"]
+    if tag == "circle":
+        r = num(a.get("r"))
+        return ellipse_path(num(a.get("cx")), num(a.get("cy")), r, r)
+    if tag == "ellipse":
+        return ellipse_path(num(a.get("cx")), num(a.get("cy")), num(a.get("rx")), num(a.get("ry")))
+    if tag == "rect":
+        return rect_path(num(a.get("x")), num(a.get("y")), num(a.get("width")), num(a.get("height")),
+                         num(a.get("rx")), num(a.get("ry")))
+    if tag == "line":
+        return f"M{a['x1']} {a['y1']}L{a['x2']} {a['y2']}"
+    if tag in ("polyline", "polygon"):
+        pts = re.split(r"[\s,]+", a["points"].strip())
+        pairs = [f"{pts[i]} {pts[i + 1]}" for i in range(0, len(pts) - 1, 2)]
+        d = "M" + "L".join(pairs)
+        return d + ("Z" if tag == "polygon" else "")
+    raise ValueError(f"unsupported element {tag}")
+
+
+def main():
+    src = Path(sys.argv[1])
+    out = Path(__file__).resolve().parent.parent / "src" / "qml" / "Icons.js"
+    lines = [
+        "// Generated by tools/make_qml_icons.py from Lucide icons (ISC license,",
+        "// https://lucide.dev). 24x24 viewBox, drawn as 2px round strokes.",
+        ".pragma library",
+        "",
+        "var paths = {",
+    ]
+    missing = []
+    for name in ICONS:
+        f = src / f"{name}.svg"
+        if not f.exists():
+            missing.append(name)
+            continue
+        root = ET.parse(f).getroot()
+        parts = [element_to_path(el).strip() for el in root if el.tag.split("}")[-1] != "title"]
+        # A path's first moveto is absolute even when written "m"; once the
+        # elements are joined it would become relative, so make it explicit.
+        parts = [absolute_first_move(p) for p in parts]
+        d = " ".join(parts)
+        lines.append(f'    "{name}": "{d}",')
+    lines.append("};")
+    lines.append("")
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text("\n".join(lines))
+    print(f"wrote {out} ({len(ICONS) - len(missing)} icons)")
+    if missing:
+        print("missing:", ", ".join(missing))
+
+
+if __name__ == "__main__":
+    main()

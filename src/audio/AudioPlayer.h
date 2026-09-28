@@ -56,6 +56,8 @@ signals:
     void drained();
     void errorOccurred(const QString &message);
     void soundFinished(quint64 id);
+    // Peak (0..1) of what is audible on the main output, ~30 Hz while playing.
+    void levelChanged(float peak);
 
 private:
     void rebuildLanes();

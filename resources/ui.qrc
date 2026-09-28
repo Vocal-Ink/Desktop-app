@@ -2,5 +2,18 @@
 <RCC version="1.0">
     <qresource prefix="/">
         <file>icons/app-256.png</file>
+        <file>icons/tray.png</file>
+        <file>icons/tray-live.png</file>
+        <file>fonts/BricolageGrotesque-Display.ttf</file>
+        <file>fonts/BricolageGrotesque-Bold.ttf</file>
+        <file>fonts/BricolageGrotesque-SemiBold.ttf</file>
+        <file>fonts/AtkinsonHyperlegibleNext-Regular.ttf</file>
+        <file>fonts/AtkinsonHyperlegibleNext-SemiBold.ttf</file>
+        <file>fonts/AtkinsonHyperlegibleNext-ExtraBold.ttf</file>
+        <file>fonts/AtkinsonHyperlegibleMono-Medium.ttf</file>
+        <file>fonts/Lexend-Regular.ttf</file>
+        <file>fonts/Lexend-SemiBold.ttf</file>
+        <file>fonts/OpenDyslexic-Regular.otf</file>
+        <file>fonts/OpenDyslexic-Bold.otf</file>
     </qresource>
 </RCC>

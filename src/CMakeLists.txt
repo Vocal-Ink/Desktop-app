@@ -67,7 +67,25 @@ add_executable(VocalInk WIN32 MACOSX_BUNDLE
     ${PROJECT_SOURCE_DIR}/resources/ui.qrc
     ${VOCALINK_APP_EXTRA})
 
-target_link_libraries(VocalInk PRIVATE vocalink_core Qt6::Widgets)
+target_link_libraries(VocalInk PRIVATE vocalink_core Qt6::Widgets Qt6::Qml Qt6::Quick Qt6::QuickControls2)
+
+# The interface is Qt Quick: every .qml file in qml/ is compiled into the
+# "Ink" module. Keep the directory flat (one module, no sub-imports).
+file(GLOB VOCALINK_QML_FILES CONFIGURE_DEPENDS
+    RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
+    "${CMAKE_CURRENT_SOURCE_DIR}/qml/*.qml"
+    "${CMAKE_CURRENT_SOURCE_DIR}/qml/*.js")
+set_source_files_properties(qml/Theme.qml PROPERTIES QT_QML_SINGLETON_TYPE TRUE)
+foreach(f IN LISTS VOCALINK_QML_FILES)
+    get_filename_component(_name ${f} NAME)
+    set_source_files_properties(${f} PROPERTIES QT_RESOURCE_ALIAS ${_name})
+endforeach()
+
+qt_add_qml_module(VocalInk
+    URI Ink
+    VERSION 1.0
+    RESOURCE_PREFIX /qt/qml
+    QML_FILES ${VOCALINK_QML_FILES})
 
 if(NOT MSVC)
     target_compile_options(VocalInk PRIVATE -Wall -Wextra)
