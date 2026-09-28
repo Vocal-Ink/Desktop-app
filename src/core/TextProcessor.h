@@ -36,19 +36,22 @@ struct VariableContext
     QString voiceName;
     QDateTime now;       // invalid = current time
 };
-// Replaces {time}, {date}, {day}, {clipboard}, {voice} and custom {names}.
-// Unknown {tokens} are left as typed.
+// Replaces {time}, {date}, {day}, {clipboard}, {voice} and custom {names}
+// (case-insensitive; custom names win). Unknown {tokens} are left as typed;
+// "{{" and "}}" are literal braces.
 QString expandVariables(const QString &text, const VariableContext &context);
 
 enum class EmojiMode { Speak, Remove, Keep };
-// Speak: common emoji become words ("😂" -> "laughing"); Remove strips them.
+// Speak: common emoji become words ("😂" -> "laughing", repeats read once, others
+// dropped); Remove strips them, including skin tones and joined sequences.
 QString handleEmoji(const QString &text, EmojiMode mode);
 
 enum class UrlMode { Keep, SayLink, Remove };
 // SayLink: "https://example.com/x" -> "link"; also handles bare www. links.
 QString handleUrls(const QString &text, UrlMode mode);
 
-// Capitalises the first letter of each sentence ("hi. ok" -> "Hi. Ok").
+// Capitalises the first letter of each sentence ("hi. ok" -> "Hi. Ok") and a
+// standalone "i" ("i'm" -> "I'm"); nothing else changes.
 QString autoCapitalize(const QString &text);
 
 } // namespace TextProcessor

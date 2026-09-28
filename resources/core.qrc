@@ -5,4 +5,9 @@
         <file alias="overlay.css">overlay/overlay.css</file>
         <file alias="overlay.js">overlay/overlay.js</file>
     </qresource>
+    <qresource prefix="/predict">
+        <file alias="en-words.tsv">predict/en-words.tsv</file>
+        <file alias="en-bigrams.tsv">predict/en-bigrams.tsv</file>
+        <file alias="en-trigrams.tsv">predict/en-trigrams.tsv</file>
+    </qresource>
 </RCC>
