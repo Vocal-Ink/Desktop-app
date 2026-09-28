@@ -56,7 +56,13 @@ QString PiperTtsEngine::executablePath() const
 #endif
     if (QFileInfo(bundled).isFile())
         return bundled;
+#ifdef Q_OS_LINUX
+    // On Linux "piper" on PATH is often the unrelated gaming-mouse configuration
+    // tool, so only an explicitly configured or downloaded Piper is used.
+    return QString();
+#else
     return QStandardPaths::findExecutable(QStringLiteral("piper"));
+#endif
 }
 
 bool PiperTtsEngine::isAvailable() const

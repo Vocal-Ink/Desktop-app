@@ -32,7 +32,7 @@ newer include it. On older versions, update OBS.
 
 ### Connect from Vocal Ink
 
-1. In Vocal Ink, open **Settings → OBS** and turn on the OBS connection.
+1. In Vocal Ink, open **Settings → OBS & stream** and turn on the OBS connection.
 2. Host: `127.0.0.1` if OBS runs on this computer. If OBS runs on another
    PC, enter that PC's IP address (see [Troubleshooting](#troubleshooting)).
 3. Port: `4455`, or whatever you set in OBS.
@@ -53,15 +53,17 @@ transparent and shows nothing while you're silent.
 
 ### One-click setup
 
-With the OBS connection set up, click **Add caption overlay to OBS** in
-**Settings → OBS**. Vocal Ink adds a 1920×1080 Browser Source called
+With the OBS connection set up, click **Add to current OBS scene** in
+**Settings → OBS & stream** (or use **Stream → Add caption overlay to OBS** in the
+main window). Vocal Ink adds a 1920×1080 Browser Source called
 *Vocal Ink captions* to the scene that's currently live. Click it again after
 you change the style: Vocal Ink updates the existing source instead of adding a
 second one.
 
 ### Manual setup
 
-1. Copy the overlay URL from **Settings → OBS**. By default it's
+1. Copy the overlay URL from **Settings → OBS & stream** (or **Stream → Copy
+   caption overlay URL**). By default it's
    `http://127.0.0.1:7342/?style=subtitles`.
 2. In OBS, click **+** under *Sources* and choose **Browser**.
 3. Paste the URL, set **Width** `1920` and **Height** `1080` (or your canvas
@@ -123,8 +125,10 @@ Add parameters to the overlay URL after `?`, separated by `&`. For example:
   `http://127.0.0.1:7342/?font=Comic%20Sans%20MS&color=ffe066&reveal=instant`
 - Captions plus a speaking/listening badge: `http://127.0.0.1:7342/?indicator=1`
 
-You can also set the query part (everything after `?`) in **Settings → OBS**.
-The copied URL and the one-click button then use it.
+The **Style**, **Text size**, **Reveal** and **Show the voice name** options in
+**Settings → OBS & stream** build the query for you, and the copied URL and the
+one-click button use them. For the other parameters, edit the URL in the Browser
+Source properties in OBS.
 
 ---
 
@@ -134,12 +138,12 @@ Vocal Ink types what you say into an OBS **Text (GDI+)** (Windows) or
 **Text (FreeType 2)** (macOS/Linux) source. You style that source in OBS with
 its font, colour, outline and background.
 
-1. In **Settings → OBS**, turn on subtitles.
-2. Pick an existing text source from the list, or click **Create text source**
+1. In **Settings → OBS & stream**, turn on subtitles.
+2. Pick an existing text source from the list, or click **Create one**
    to add one (48 pt Arial) to the scene that's currently live.
-3. Choose after how many seconds the text is cleared. `0` keeps the last
-   sentence on screen.
-4. Click **Test subtitle**. "Vocal Ink test subtitle" should appear in OBS and
+3. Set **Clear after** to how long the text stays after you finish speaking.
+   **Never** keeps the last sentence on screen.
+4. Click **Test**. "Vocal Ink test subtitle" should appear in OBS and
    disappear after the delay.
 
 ---
@@ -149,7 +153,7 @@ its font, colour, outline and background.
 Vocal Ink can send what you say as real closed captions (CEA-608) inside your
 stream. Viewers turn them on with the **CC** button in the player.
 
-1. In **Settings → OBS**, turn on closed captions.
+1. In **Settings → OBS & stream**, turn on closed captions.
 2. Go live from OBS as usual.
 
 Good to know:
@@ -171,7 +175,7 @@ it stops. PNGtubers use this to make their avatar "talk":
 
 1. Add two image sources to your scene: *Avatar idle* (always visible) and
    *Avatar talking* above it (for example, with the mouth open).
-2. In **Settings → OBS**, turn on the speaking indicator and choose
+2. In **Settings → OBS & stream**, turn on the speaking indicator and choose
    *Avatar talking*.
 3. Hide *Avatar talking* in OBS (click the eye). Vocal Ink shows it only while
    speaking.
@@ -204,7 +208,8 @@ Update to OBS 28 or newer.
 **OBS runs on a second (streaming) PC**
 - For the connection, enter the streaming PC's IP address as the host, and
   allow port 4455 through its firewall.
-- For the overlay, turn on **Allow LAN access** for the overlay in Vocal Ink.
+- For the overlay, turn on **Allow other computers on my network** in
+  **Settings → OBS & stream**.
   In the Browser Source on the streaming PC, replace `127.0.0.1` in the URL
   with the IP address of the PC running Vocal Ink, e.g.
   `http://192.168.1.20:7342/`. Allow port 7342 through that PC's firewall. The
@@ -222,7 +227,7 @@ Update to OBS 28 or newer.
 
 **"The OBS caption overlay could not start on port 7342"**
 Another program uses that port. Pick a different overlay port in
-**Settings → OBS** and update the Browser Source URL (or click the one-click
+**Settings → OBS & stream** and update the Browser Source URL (or click the one-click
 button again).
 
 **Captions look blurry or too small**
@@ -230,7 +235,7 @@ Give the Browser Source the same width and height as your canvas (usually
 1920×1080) and don't scale it. Change the text size with `size=` instead.
 
 **The text source or indicator doesn't change**
-The status line in **Settings → OBS** says what went wrong. Usually a source
+The status line in **Settings → OBS & stream** says what went wrong. Usually a source
 was renamed in OBS, or the indicator source isn't in the scene that's live.
 Pick the source again from the list.
 

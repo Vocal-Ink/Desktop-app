@@ -28,7 +28,6 @@ public:
     qint64 totalBytes() const { return m_total; }
 
 private:
-    Container m_container;
     QAudioFormat m_format;
     QByteArray m_pending; // header bytes or a partial frame
     bool m_headerDone = false;

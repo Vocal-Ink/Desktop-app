@@ -9,7 +9,6 @@
 // --- PcmStreamParser -----------------------------------------------------------
 
 PcmStreamParser::PcmStreamParser(Container container, const QAudioFormat &rawFormat)
-    : m_container(container)
 {
     if (container == Container::Raw) {
         m_format = rawFormat;

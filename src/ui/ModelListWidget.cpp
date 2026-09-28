@@ -198,9 +198,12 @@ void ModelListWidget::addRow(const QString &taskId, const QString &title, const 
     row.progress->setMaximumWidth(120);
     row.progress->hide();
     row.action = new QPushButton(cell);
+    row.action->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+    h->addStretch(1);
     h->addWidget(row.progress);
     if (m_kind == Kind::Whisper) {
         row.use = new QPushButton(tr("Use"), cell);
+        row.use->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
         h->addWidget(row.use);
         connect(row.use, &QPushButton::clicked, this, [this, taskId] {
             m_ctx->settings()->setValue(Keys::WhisperModel, taskId.section(QLatin1Char(':'), 1));

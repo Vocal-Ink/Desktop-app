@@ -58,17 +58,27 @@ bool TtsRegistry::isUsable(const Voice &voice) const
 
 Voice TtsRegistry::fallbackVoice() const
 {
-    for (const auto *id : {"piper", "system", "espeak"}) {
-        if (TtsEngine *e = engine(QLatin1String(id)); e && e->isAvailable() && !e->voices().isEmpty()) {
-            // Prefer a voice in the user's language.
-            const QString lang = QLocale().name().replace(QLatin1Char('_'), QLatin1Char('-'));
-            const QList<Voice> voices = e->voices();
+    // Prefer the user's exact locale, then their language, then English.
+    const QString locale = QLocale().name().replace(QLatin1Char('_'), QLatin1Char('-')).toLower();
+    const QString language = locale.section(QLatin1Char('-'), 0, 0);
+    auto norm = [](const QString &l) { return QString(l).replace(QLatin1Char('_'), QLatin1Char('-')).toLower(); };
+    auto pick = [&](const QList<Voice> &voices) -> Voice {
+        for (const Voice &v : voices) {
+            if (norm(v.language) == locale)
+                return v;
+        }
+        for (const QString &lang : {language, QStringLiteral("en")}) {
             for (const Voice &v : voices) {
-                if (v.language.compare(lang, Qt::CaseInsensitive) == 0)
+                const QString l = norm(v.language);
+                if (l == lang || l.startsWith(lang + QLatin1Char('-')))
                     return v;
             }
-            return voices.first();
         }
+        return voices.first();
+    };
+    for (const auto *id : {"piper", "system", "espeak"}) {
+        if (TtsEngine *e = engine(QLatin1String(id)); e && e->isAvailable() && !e->voices().isEmpty())
+            return pick(e->voices());
     }
     for (TtsEngine *e : m_engines) {
         if (e->isAvailable() && !e->voices().isEmpty())
