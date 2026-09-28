@@ -4,6 +4,8 @@ on:
   push:
     branches: [main, "claude/**"]
     tags: ["v*"]
+    # Docs-only pushes don't rebuild (and don't cancel a build in progress).
+    paths-ignore: ["**.md", "docs/**", ".gitignore", "LICENSE"]
   pull_request:
   workflow_dispatch:
 
