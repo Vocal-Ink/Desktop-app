@@ -120,6 +120,11 @@ jobs:
 
       - name: Package (installer + portable zip)
         shell: pwsh
+        env:
+          # Optional: a zip of the Microsoft-signed virtual mic driver (docs/VIRTUAL_AUDIO.md).
+          # Without it (and without packaging/windows/driver/) the build ships without the driver.
+          VOCALINK_DRIVER_PACKAGE_URL: ${{ vars.VOCALINK_DRIVER_PACKAGE_URL }}
+          VOCALINK_DRIVER_PACKAGE_SHA256: ${{ vars.VOCALINK_DRIVER_PACKAGE_SHA256 }}
         run: |
           $version = (Select-String -Path CMakeLists.txt -Pattern '^\s*VERSION\s+([0-9.]+)').Matches[0].Groups[1].Value
           ./packaging/windows/deploy.ps1 -BuildDir build -Version $version

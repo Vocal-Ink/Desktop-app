@@ -9,6 +9,13 @@
 *.exe
 *.zip
 
+# Windows driver build (driver/windows): WDK NuGet packages and MSBuild output
+/driver/windows/packages/
+/driver/windows/x64/
+/driver/windows/ARM64/
+/driver/windows/Source/*/x64/
+/driver/windows/Source/*/ARM64/
+
 # CMake
 CMakeCache.txt
 CMakeFiles/

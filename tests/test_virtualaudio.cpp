@@ -29,6 +29,8 @@ private slots:
         QVERIFY(VirtualAudio::looksLikeVirtualCable(QStringLiteral("CABLE Input (VB-Audio Virtual Cable)")));
         QVERIFY(VirtualAudio::looksLikeVirtualCable(QStringLiteral("BlackHole 2ch")));
         QVERIFY(VirtualAudio::looksLikeVirtualCable(QStringLiteral("Vocal Ink Voice")));
+        QVERIFY(VirtualAudio::looksLikeVirtualCable(QStringLiteral("Vocal Ink Voice (Vocal Ink Virtual Audio Device)")));
+        QVERIFY(VirtualAudio::looksLikeVirtualCable(QStringLiteral("Vocal Ink Virtual Mic")));
         QVERIFY(!VirtualAudio::looksLikeVirtualCable(QStringLiteral("Speakers (Realtek High Definition Audio)")));
     }
 
@@ -45,7 +47,7 @@ private slots:
         QVERIFY(VirtualAudio::virtualMicExists());
         // Descriptions with spaces must survive PulseAudio's argument parsing.
         QVERIFY(pactl({QStringLiteral("list"), QStringLiteral("sinks")}).contains(QLatin1String("Description: Vocal Ink Voice")));
-        QVERIFY(pactl({QStringLiteral("list"), QStringLiteral("sources")}).contains(QLatin1String("Description: Vocal Ink Microphone")));
+        QVERIFY(pactl({QStringLiteral("list"), QStringLiteral("sources")}).contains(QLatin1String("Description: Vocal Ink Mic")));
         QVERIFY2(VirtualAudio::createVirtualMic(&error), "creating twice is harmless");
 
         QVERIFY2(VirtualAudio::removeVirtualMic(&error), qPrintable(error));

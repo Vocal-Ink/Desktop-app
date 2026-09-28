@@ -5,6 +5,11 @@
 #
 # Set CODESIGN_IDENTITY to a "Developer ID Application" identity to sign for
 # distribution (notarisation is a separate step).
+#
+# The virtual mic driver (VocalInkVirtualMic.driver) goes into
+# Contents/Resources when it was built: either already inside the app (configure
+# with -DVOCALINK_WITH_MAC_DRIVER=ON) or from $VOCALINK_MAC_DRIVER / the build
+# directory. Without it the app offers BlackHole instead.
 set -euo pipefail
 
 BUILD_DIR=$(cd "${1:?usage: build-dmg.sh <build-dir> [version]}" && pwd)
@@ -24,6 +29,33 @@ MACDEPLOYQT=$(command -v macdeployqt || echo "${QT_ROOT_DIR:-}/bin/macdeployqt")
 "$MACDEPLOYQT" "$APP" -always-overwrite
 
 IDENTITY=${CODESIGN_IDENTITY:--}
+
+# Bundle the virtual mic driver if one was built (not in Contents/PlugIns: macdeployqt owns that).
+DRIVER="$APP/Contents/Resources/VocalInkVirtualMic.driver"
+if [ ! -d "$DRIVER" ]; then
+    DRIVER_SRC=${VOCALINK_MAC_DRIVER:-}
+    if [ -z "$DRIVER_SRC" ]; then
+        DRIVER_SRC=$(find "$BUILD_DIR" -maxdepth 4 -name "VocalInkVirtualMic.driver" -type d \
+                     -not -path "*/VocalInk.app/*" | head -n 1)
+    fi
+    if [ -n "$DRIVER_SRC" ] && [ -f "$DRIVER_SRC/Contents/Info.plist" ]; then
+        cp -R "$DRIVER_SRC" "$DRIVER"
+    fi
+fi
+
+# Sign inside-out: the driver first (it is installed and loaded on its own), then the app.
+if [ -d "$DRIVER" ]; then
+    echo "Including the virtual mic driver"
+    if [ "$IDENTITY" = "-" ]; then
+        codesign --force --sign - --timestamp=none "$DRIVER"
+    else
+        codesign --force --options runtime --timestamp --sign "$IDENTITY" "$DRIVER"
+    fi
+    codesign --verify --strict "$DRIVER"
+else
+    echo "No virtual mic driver was built; the app will suggest BlackHole."
+fi
+
 if [ "$IDENTITY" = "-" ]; then
     codesign --force --deep --sign - "$APP"
 else

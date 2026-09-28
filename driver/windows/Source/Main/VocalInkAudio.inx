@@ -1,0 +1,214 @@
+;
+; Vocal Ink virtual audio device: "Vocal Ink Voice" (render) loops back into
+; "Vocal Ink Mic" (capture). Derived from Microsoft's SimpleAudioSample (MS-PL).
+; A universal, declarative INF (InfVerif /w) for a ROOT\VocalInkAudio device,
+; installed with: nefconw install VocalInkAudio.inf ROOT\VocalInkAudio
+;
+[Version]
+Signature   = "$Windows NT$"
+Class       = MEDIA
+Provider    = %ProviderName%
+ClassGUID   = {4d36e96c-e325-11ce-bfc1-08002be10318}
+DriverVer   = 02/22/2016, 1.0.0.1
+CatalogFile = VocalInkAudio.cat
+PnpLockDown = 1
+
+[SourceDisksNames]
+222=%DiskName%,"",222
+
+[SourceDisksFiles]
+vocalinkaudio.sys=222
+
+; No DRM/PETrust signature attributes: protected content must never reach the
+; loopback, and the driver keeps copy-protected streams out of it.
+
+; Windows 10 2004 (19041) and later.
+[Manufacturer]
+%MfgName%=VOCALINKAUDIO,NT$ARCH$.10.0...19041
+
+[VOCALINKAUDIO.NT$ARCH$.10.0...19041]
+%VOCALINKAUDIO_SA.DeviceDesc%=VOCALINKAUDIO_SA, ROOT\VocalInkAudio
+
+[DestinationDirs]
+VOCALINKAUDIO_SA.CopyList=13 ; 13=Package's DriverStore directory
+
+;======================================================
+; VOCALINKAUDIO_SA
+;======================================================
+[VOCALINKAUDIO_SA.CopyList]
+vocalinkaudio.sys
+
+[VOCALINKAUDIO_SA.AddReg]
+HKR,,AssociatedFilters,,"wdmaud,swmidi,redbook"
+HKR,,Driver,,vocalinkaudio.sys
+
+;
+; For demo only, please review these power management settings for your architecture. 
+;
+HKR,PowerSettings,SingleComponentMultiFxStates,3,1,0,0,0  ; Turn on multi Fx support.
+HKR,PowerSettings,ConservationIdleTime,3,3,0,0,0          ; 3 seconds for idle power management when on battery
+HKR,PowerSettings,PerformanceIdleTime,3,3,0,0,0           ; 3 seconds for idle power management when on AC power
+HKR,PowerSettings,IdlePowerState,3,3,0,0,0                ; go to D3 for idle power management
+
+HKR,Drivers,SubClasses,,"wave,midi,mixer"
+
+HKR,Drivers\wave\wdmaud.drv,Driver,,wdmaud.drv
+HKR,Drivers\midi\wdmaud.drv,Driver,,wdmaud.drv
+HKR,Drivers\mixer\wdmaud.drv,Driver,,wdmaud.drv
+
+HKR,Drivers\wave\wdmaud.drv,Description,,%VOCALINKAUDIO_SA.DeviceDesc%
+HKR,Drivers\mixer\wdmaud.drv,Description,,%VOCALINKAUDIO_SA.DeviceDesc%
+
+; Endpoint names: the topology bridge pins are named with these GUIDs
+; (speakertoptable.h, micarray1toptable.h).
+HKR,%MEDIA_CATEGORIES%\%VoiceNameGUID%,Name,,%VoiceName%
+HKR,%MEDIA_CATEGORIES%\%MicNameGUID%,Name,,%MicName%
+
+;======================================================
+; capture interfaces: "Vocal Ink Mic"
+;======================================================
+[VOCALINKAUDIO.I.WaveMicArray1]
+AddReg=VOCALINKAUDIO.I.WaveMicArray1.AddReg
+[VOCALINKAUDIO.I.WaveMicArray1.AddReg]
+HKR,,CLSID,,%Proxy.CLSID%
+HKR,,FriendlyName,,%VOCALINKAUDIO.WaveMicArray1.szPname%
+
+[VOCALINKAUDIO.I.TopologyMicArray1]
+AddReg=VOCALINKAUDIO.I.TopologyMicArray1.AddReg
+
+[VOCALINKAUDIO.I.TopologyMicArray1.AddReg]
+HKR,,CLSID,,%Proxy.CLSID%
+HKR,,FriendlyName,,%VOCALINKAUDIO.TopologyMicArray1.szPname%
+
+HKR,EP\0,%PKEY_AudioEndpoint_Association%,,%KSNODETYPE_ANY%
+
+; The following lines opt-in to pull mode.
+HKR,EP\0,%PKEY_AudioEndpoint_Supports_EventDriven_Mode%,0x00010001,0x1
+
+;======================================================
+; render interfaces: "Vocal Ink Voice"
+;======================================================
+[VOCALINKAUDIO.I.WaveSpeaker]
+AddReg=VOCALINKAUDIO.I.WaveSpeaker.AddReg
+
+[VOCALINKAUDIO.I.WaveSpeaker.AddReg]
+HKR,,CLSID,,%Proxy.CLSID%
+HKR,,FriendlyName,,%VOCALINKAUDIO.WaveSpeaker.szPname%
+
+[VOCALINKAUDIO.I.TopologySpeaker]
+AddReg=VOCALINKAUDIO.I.TopologySpeaker.AddReg
+
+[VOCALINKAUDIO.I.TopologySpeaker.AddReg]
+HKR,,CLSID,,%Proxy.CLSID%
+HKR,,FriendlyName,,%VOCALINKAUDIO.TopologySpeaker.szPname%
+
+HKR,EP\0,%PKEY_AudioEndpoint_Association%,,%KSNODETYPE_ANY%
+
+; The following lines opt-in to pull mode.
+HKR,EP\0,%PKEY_AudioEndpoint_Supports_EventDriven_Mode%,0x00010001,0x1
+
+;======================================================
+; VOCALINKAUDIO_SA
+;======================================================
+[VOCALINKAUDIO_SA.NT]
+Include=ks.inf,wdmaudio.inf
+Needs=KS.Registration, WDMAUDIO.Registration
+CopyFiles=VOCALINKAUDIO_SA.CopyList
+AddReg=VOCALINKAUDIO_SA.AddReg
+
+[VOCALINKAUDIO_SA.NT.Interfaces]
+;
+; Interfaces for the "Vocal Ink Voice" render endpoint.
+;
+AddInterface=%KSCATEGORY_AUDIO%, %KSNAME_WaveSpeaker%, VOCALINKAUDIO.I.WaveSpeaker
+AddInterface=%KSCATEGORY_RENDER%, %KSNAME_WaveSpeaker%, VOCALINKAUDIO.I.WaveSpeaker
+AddInterface=%KSCATEGORY_REALTIME%, %KSNAME_WaveSpeaker%, VOCALINKAUDIO.I.WaveSpeaker
+AddInterface=%KSCATEGORY_AUDIO%, %KSNAME_TopologySpeaker%, VOCALINKAUDIO.I.TopologySpeaker
+AddInterface=%KSCATEGORY_TOPOLOGY%, %KSNAME_TopologySpeaker%, VOCALINKAUDIO.I.TopologySpeaker
+
+;
+; Interfaces for the "Vocal Ink Mic" capture endpoint.
+;
+AddInterface=%KSCATEGORY_AUDIO%,    %KSNAME_WaveMicArray1%, VOCALINKAUDIO.I.WaveMicArray1
+AddInterface=%KSCATEGORY_REALTIME%, %KSNAME_WaveMicArray1%, VOCALINKAUDIO.I.WaveMicArray1
+AddInterface=%KSCATEGORY_CAPTURE%,  %KSNAME_WaveMicArray1%, VOCALINKAUDIO.I.WaveMicArray1
+AddInterface=%KSCATEGORY_AUDIO%,    %KSNAME_TopologyMicArray1%, VOCALINKAUDIO.I.TopologyMicArray1
+AddInterface=%KSCATEGORY_TOPOLOGY%, %KSNAME_TopologyMicArray1%, VOCALINKAUDIO.I.TopologyMicArray1
+
+[VOCALINKAUDIO_SA.NT.Services]
+AddService=VocalInkAudio,0x00000002,VocalInkAudio_Service_Inst
+
+[VocalInkAudio_Service_Inst]
+DisplayName=%VocalInkAudio.SvcDesc%
+ServiceType=1
+StartType=3
+ErrorControl=1
+ServiceBinary=%13%\vocalinkaudio.sys
+
+[VOCALINKAUDIO_SA.NT.HW]
+AddReg = AUDIOHW.AddReg
+
+[AUDIOHW.AddReg]
+; FILE_DEVICE_SOUND
+HKR,,DeviceType,0x10001,0x0000001D
+; SDDL_DEVOBJ_SYS_ALL_ADM_RWX_WORLD_RWX_RES_RWX
+HKR,,Security,,"D:P(A;;GA;;;SY)(A;;GRGWGX;;;BA)(A;;GRGWGX;;;WD)(A;;GRGWGX;;;RC)"
+
+
+;======================================================
+; WDF
+;======================================================
+[VOCALINKAUDIO_SA.NT.Wdf]
+KmdfService = VocalInkAudio, VOCALINKAUDIO_SA_WdfSect
+[VOCALINKAUDIO_SA_WdfSect]
+KmdfLibraryVersion = $KMDFVERSION$
+
+;======================================================
+; COMMON
+;======================================================
+[Strings]
+
+;Non-localizable
+
+KSNAME_WaveSpeaker="WaveSpeaker"
+KSNAME_TopologySpeaker="TopologySpeaker"
+
+KSNAME_WaveMicArray1="WaveMicArray1"
+KSNAME_TopologyMicArray1="TopologyMicArray1"
+
+Proxy.CLSID="{17CCA71B-ECD7-11D0-B908-00A0C9223196}"
+KSCATEGORY_AUDIO="{6994AD04-93EF-11D0-A3CC-00A0C9223196}"
+KSCATEGORY_RENDER="{65E8773E-8F56-11D0-A3B9-00A0C9223196}"
+KSCATEGORY_CAPTURE="{65E8773D-8F56-11D0-A3B9-00A0C9223196}"
+KSCATEGORY_REALTIME ="{EB115FFC-10C8-4964-831D-6DCB02E6F23F}"
+KSCATEGORY_TOPOLOGY = "{DDA54A40-1E4C-11D1-A050-405705C10000}"
+
+KSNODETYPE_ANY   = "{00000000-0000-0000-0000-000000000000}"
+
+PKEY_AudioEndpoint_Association               = "{1DA5D803-D492-4EDD-8C23-E0C0FFEE7F0E},2"
+PKEY_AudioEndpoint_Supports_EventDriven_Mode = "{1DA5D803-D492-4EDD-8C23-E0C0FFEE7F0E},7"
+
+MEDIA_CATEGORIES = "MediaCategories"
+VoiceNameGUID    = "{4042A3FD-4531-4CC0-AF70-6398ADA873E1}"
+MicNameGUID      = "{E0CCEE3F-2025-48C2-8D80-5FAFB2CF8413}"
+
+;Localizable
+
+ProviderName = "Vocal Ink"
+MfgName      = "Vocal Ink"
+DiskName     = "Vocal Ink Virtual Audio Driver Disk"
+
+VOCALINKAUDIO_SA.DeviceDesc="Vocal Ink Virtual Audio Device"
+VocalInkAudio.SvcDesc="Vocal Ink Virtual Audio Device Driver"
+
+;; endpoint names (what Windows, Discord, OBS... show)
+VoiceName = "Vocal Ink Voice"
+MicName   = "Vocal Ink Mic"
+
+;; friendly names
+VOCALINKAUDIO.WaveSpeaker.szPname="Vocal Ink Voice"
+VOCALINKAUDIO.TopologySpeaker.szPname="Vocal Ink Voice"
+
+VOCALINKAUDIO.WaveMicArray1.szPname="Vocal Ink Mic"
+VOCALINKAUDIO.TopologyMicArray1.szPname="Vocal Ink Mic"
+

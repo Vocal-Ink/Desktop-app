@@ -17,8 +17,9 @@ bool virtualMicExists();
 bool createVirtualMic(QString *error);
 bool removeVirtualMic(QString *error);
 
-// Id of an output device that looks like a virtual cable input ("CABLE Input",
-// "BlackHole", our own Linux sink...), or empty if none is installed.
+// Id of an output device that looks like a virtual cable input, or empty if none is
+// installed. Vocal Ink's own devices ("Vocal Ink Voice", macOS "Vocal Ink Virtual Mic")
+// win over third-party cables ("CABLE Input", "BlackHole"...).
 QByteArray detectVirtualCableOutput();
 bool looksLikeVirtualCable(const QString &deviceDescription);
 

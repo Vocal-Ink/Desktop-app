@@ -60,7 +60,7 @@ QString setupInstructions()
     return tr("<p>Vocal Ink can create a virtual microphone for you (PulseAudio or PipeWire). "
               "Click <b>Create virtual microphone</b>, then:</p>"
               "<ol><li>Choose <b>Vocal Ink Voice</b> as Vocal Ink's <i>voice output</i>.</li>"
-              "<li>In Discord, games or OBS choose <b>Vocal Ink Microphone</b> as the microphone "
+              "<li>In Discord, games or OBS choose <b>Vocal Ink Mic</b> as the microphone "
               "(OBS can also capture <i>Monitor of Vocal Ink Voice</i>).</li>"
               "<li>Keep <i>Also play on my speakers</i> on to hear yourself.</li></ol>"
               "<p>The virtual devices last until you log out; Vocal Ink recreates them on request.</p>");
@@ -104,7 +104,7 @@ bool createVirtualMic(QString *error)
     if (!runPactl({QStringLiteral("load-module"), QStringLiteral("module-remap-source"),
                    QStringLiteral("master=") + sink + QStringLiteral(".monitor"),
                    QStringLiteral("source_name=") + QString::fromLatin1(LinuxSourceName),
-                   QStringLiteral("source_properties=\"device.description='Vocal Ink Microphone'\"")},
+                   QStringLiteral("source_properties=\"device.description='Vocal Ink Mic'\"")},
                   nullptr, error))
         return false;
     return true;
@@ -139,9 +139,11 @@ bool removeVirtualMic(QString *error)
 bool looksLikeVirtualCable(const QString &description)
 {
     static const QStringList needles = {
+        // Vocal Ink's own bundled mic: "Vocal Ink Voice" on Windows/Linux, one
+        // "Vocal Ink Virtual Mic" device on macOS.
+        QStringLiteral("Vocal Ink Voice"), QStringLiteral("Vocal Ink Virtual Mic"),
         QStringLiteral("CABLE Input"), QStringLiteral("VB-Audio"), QStringLiteral("BlackHole"),
-        QStringLiteral("Vocal Ink Voice"), QStringLiteral("Loopback"), QStringLiteral("VoiceMeeter Input"),
-        QStringLiteral("Virtual"),
+        QStringLiteral("Loopback"), QStringLiteral("VoiceMeeter Input"), QStringLiteral("Virtual"),
     };
     for (const QString &n : needles) {
         if (description.contains(n, Qt::CaseInsensitive))
@@ -153,8 +155,9 @@ bool looksLikeVirtualCable(const QString &description)
 QByteArray detectVirtualCableOutput()
 {
     const auto outputs = QMediaDevices::audioOutputs();
-    // Prefer exact well-known names over the generic "Virtual" match.
-    for (const auto *preferred : {"CABLE Input", "BlackHole", "Vocal Ink Voice"}) {
+    // Prefer Vocal Ink's own bundled mic, then well-known third-party cables, then the
+    // generic "Virtual" match.
+    for (const auto *preferred : {"Vocal Ink Voice", "Vocal Ink Virtual Mic", "CABLE Input", "BlackHole"}) {
         for (const QAudioDevice &dev : outputs) {
             if (dev.description().contains(QLatin1String(preferred), Qt::CaseInsensitive))
                 return dev.id();

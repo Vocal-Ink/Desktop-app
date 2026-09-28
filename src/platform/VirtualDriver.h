@@ -4,6 +4,12 @@
 #include <QObject>
 #include <QString>
 
+class QMediaDevices;
+class QTimer;
+namespace VirtualDriverPlatform {
+struct Result;
+}
+
 // Vocal Ink's own virtual microphone, shipped with the app so people don't
 // have to find and install a third-party cable.
 //
@@ -17,7 +23,13 @@
 //            admin rights needed.
 //
 // In every case the app plays into outputDeviceName() and other apps pick
-// inputDeviceName() as their microphone.
+// inputDeviceName() as their microphone. On macOS both are the one HAL device
+// "Vocal Ink Virtual Mic"; elsewhere they are "Vocal Ink Voice" and "Vocal Ink Mic".
+//
+// install()/uninstall() run on a worker thread (password prompt, UAC prompt or
+// pactl) and report through finished(); busy() is true meanwhile. When the
+// bundled macOS driver is newer than the installed one, state() is NotInstalled
+// and statusText() offers the update, so the UI shows its Install button.
 class VirtualDriver : public QObject
 {
     Q_OBJECT
@@ -64,8 +76,23 @@ signals:
 
 private:
     void setState(State state, const QString &text);
+    void setBusy(bool busy);
+    void start(bool install);
+    void handleResult(bool install, const VirtualDriverPlatform::Result &result);
+    void pollDevices();
+    void complete(bool ok, const QString &message);
 
     State m_state = State::Unsupported;
     QString m_statusText;
     bool m_busy = false;
+    bool m_restartPending = false;
+
+    // Waiting for the devices to appear/disappear after an install/uninstall.
+    QMediaDevices *m_mediaDevices = nullptr;
+    QTimer *m_pollTimer = nullptr;
+    int m_pollAttemptsLeft = 0;
+    bool m_waitForAppear = true;
+    bool m_restartOnTimeout = false;
+    QString m_pollMessage;
+    QString m_pollTimeoutMessage;
 };
