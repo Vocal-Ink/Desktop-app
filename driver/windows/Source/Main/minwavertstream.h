@@ -15,7 +15,7 @@ Abstract:
 #define _VOCALINKAUDIO_MINWAVERTSTREAM_H_
 
 #include "savedata.h"
-#include "ToneGenerator.h"
+#include "LoopbackBuffer.h"
 
 //
 // Structure to store notifications events in a protected list
@@ -112,22 +112,13 @@ protected:
     PWAVEFORMATEXTENSIBLE       m_pWfExt;
     ULONG                       m_ulContentId;
     CSaveData                   m_SaveData;
-    ToneGenerator               m_ToneGenerator;
+    PLOOPBACKBUFFER             m_pLoopback;            // owned by the adapter
+    LOOPBACK_READER             m_LoopbackReader;       // capture streams: position in the loopback
+    BOOLEAN                     m_bCopyProtected;       // render streams: keep protected content out of the loopback
     GUID                        m_SignalProcessingMode;
     BOOLEAN                     m_bEoSReceived;
     BOOLEAN                     m_bLastBufferRendered;
     KSPIN_LOCK                  m_PositionSpinLock;
-    // Member variable as config params for tone generator
-    ULONG                       m_ulHostCaptureToneFrequency;
-    // If abs(m_dwHostCaptureToneAmplitude) + abs(m_dwHostCaptureToneDCValue) > 100
-    // m_dwHostCaptureToneDCValue will be compensated to make the sum equal to 100
-    DWORD                       m_dwHostCaptureToneAmplitude;   // must be between -100 to 100
-    DWORD                       m_dwLoopbackCaptureToneAmplitude; // must be between -100 to 100
-    DWORD                       m_dwHostCaptureToneDCOffset;   // must be between -100 to 100
-    DWORD                       m_dwLoopbackCaptureToneDCOffset; // must be between -100 to 100
-    DWORD                       m_dwHostCaptureToneInitialPhase;   // must be between -31416 to 31416
-    DWORD                       m_dwLoopbackCaptureToneInitialPhase; // must be between -31416 to 31416
-    // Member variable as config params for tone generator
 
 public:
 
@@ -187,8 +178,6 @@ private:
         _Out_opt_  ULONGLONG *      _pullPresentationPosition, 
         _Out_opt_  LARGE_INTEGER *  _pliQPCTime
     );
-
-    NTSTATUS ReadRegistrySettings();
     
 };
 typedef CMiniportWaveRTStream *PCMiniportWaveRTStream;

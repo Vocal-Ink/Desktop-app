@@ -16,9 +16,11 @@ Abstract:
 #define _VOCALINKAUDIO_MICARRAY1TOPTABLE_H_
 
 //
-// {6ae81ff4-203e-4fe1-88aa-f2d57775cd4a}
-DEFINE_GUID(MICARRAY1_CUSTOM_NAME,
-    0x6ae81ff4, 0x203e, 0x4fe1, 0x88, 0xaa, 0xf2, 0xd5, 0x77, 0x75, 0xcd, 0x4a);
+// Name of the capture endpoint. The INF maps it to "Vocal Ink Mic" under the
+// device's MediaCategories key.
+// {E0CCEE3F-2025-48C2-8D80-5FAFB2CF8413}
+DEFINE_GUID(VOCALINKAUDIO_MIC_NAME,
+    0xe0ccee3f, 0x2025, 0x48c2, 0x8d, 0x80, 0x5f, 0xaf, 0xb2, 0xcf, 0x84, 0x13);
 
 //=============================================================================
 static
@@ -61,8 +63,8 @@ PCPIN_DESCRIPTOR MicArray1TopoMiniportPins[] =
         MicArray1TopoPinDataRangePointersBridge,                   // DataRanges
         KSPIN_DATAFLOW_IN,                            // DataFlow
         KSPIN_COMMUNICATION_NONE,                     // Communication
-        &KSNODETYPE_MICROPHONE_ARRAY,                 // Category
-        &MICARRAY1_CUSTOM_NAME,                       // Name
+        &KSNODETYPE_MICROPHONE,                       // Category: a plain microphone
+        &VOCALINKAUDIO_MIC_NAME,                      // Name
         0                                             // Reserved
       }
     },
@@ -166,25 +168,9 @@ PCPROPERTY_ITEM MicArray1PropertiesTopoFilter[] =
         KSPROPERTY_JACK_DESCRIPTION2,
         KSPROPERTY_TYPE_GET | KSPROPERTY_TYPE_BASICSUPPORT,
         PropertyHandler_MicArrayTopoFilter
-    },
-    {
-        &KSPROPSETID_Audio,
-        KSPROPERTY_AUDIO_MIC_ARRAY_GEOMETRY,
-        KSPROPERTY_TYPE_GET | KSPROPERTY_TYPE_BASICSUPPORT,
-        PropertyHandler_MicArrayTopoFilter
-    },
-    {
-        &KSPROPSETID_Audio,
-        KSPROPERTY_AUDIO_MIC_SNR,
-        KSPROPERTY_TYPE_GET | KSPROPERTY_TYPE_BASICSUPPORT,
-        PropertyHandler_MicArrayTopoFilter
-    },
-    {
-        &KSPROPSETID_Audio,
-        KSPROPERTY_AUDIO_MIC_SENSITIVITY2,
-        KSPROPERTY_TYPE_GET | KSPROPERTY_TYPE_BASICSUPPORT,
-        PropertyHandler_MicArrayTopoFilter
     }
+    // No microphone array geometry, SNR or sensitivity: this is a loopback, and
+    // Windows must not apply microphone-array processing or gain to it.
 };
 
 DEFINE_PCAUTOMATION_TABLE_PROP(AutomationMicArray1TopoFilter, MicArray1PropertiesTopoFilter);

@@ -1,0 +1,14 @@
+<Project>
+  <!-- Uses the WDK/SDK NuGet packages from packages.config when they have been restored
+       into .\packages; otherwise MSBuild falls back to an installed WDK. -->
+  <PropertyGroup>
+    <VocalInkWdkVersion>10.0.26100.6584</VocalInkWdkVersion>
+    <VocalInkPackages>$(MSBuildThisFileDirectory)packages\</VocalInkPackages>
+  </PropertyGroup>
+  <Import Project="$(VocalInkPackages)Microsoft.Windows.WDK.x64.$(VocalInkWdkVersion)\build\native\Microsoft.Windows.WDK.x64.props"
+          Condition="Exists('$(VocalInkPackages)Microsoft.Windows.WDK.x64.$(VocalInkWdkVersion)\build\native\Microsoft.Windows.WDK.x64.props') and '$(Platform)' == 'x64'" />
+  <Import Project="$(VocalInkPackages)Microsoft.Windows.SDK.CPP.x64.$(VocalInkWdkVersion)\build\native\Microsoft.Windows.SDK.cpp.x64.props"
+          Condition="Exists('$(VocalInkPackages)Microsoft.Windows.SDK.CPP.x64.$(VocalInkWdkVersion)\build\native\Microsoft.Windows.SDK.cpp.x64.props') and '$(Platform)' == 'x64'" />
+  <Import Project="$(VocalInkPackages)Microsoft.Windows.SDK.CPP.$(VocalInkWdkVersion)\build\native\Microsoft.Windows.SDK.cpp.props"
+          Condition="Exists('$(VocalInkPackages)Microsoft.Windows.SDK.CPP.$(VocalInkWdkVersion)\build\native\Microsoft.Windows.SDK.cpp.props')" />
+</Project>

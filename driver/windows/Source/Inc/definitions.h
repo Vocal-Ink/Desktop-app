@@ -28,14 +28,14 @@ Abstract:
 //=============================================================================
 
 // Product Id
-// {836BA6D1-3FF7-4411-8BCD-469553452DCE}
+// {DEC86874-19BA-4AF7-A3C5-33A7D6FB6030}
 #define STATIC_PID_VOCALINKAUDIO\
-    0x836ba6d1, 0x3ff7, 0x4411, 0x8b, 0xcd, 0x46, 0x95, 0x53, 0x45, 0x2d, 0xce
-DEFINE_GUIDSTRUCT("836BA6D1-3FF7-4411-8BCD-469553452DCE", PID_VOCALINKAUDIO);
+    0xdec86874, 0x19ba, 0x4af7, 0xa3, 0xc5, 0x33, 0xa7, 0xd6, 0xfb, 0x60, 0x30
+DEFINE_GUIDSTRUCT("DEC86874-19BA-4AF7-A3C5-33A7D6FB6030", PID_VOCALINKAUDIO);
 #define PID_VOCALINKAUDIO DEFINE_GUIDNAMED(PID_VOCALINKAUDIO)
 
 // Pool tag used for VOCALINKAUDIO allocations
-#define VOCALINKAUDIO_POOLTAG               'SASM'  
+#define VOCALINKAUDIO_POOLTAG               'KNIV'  
 
 // Debug module name
 #define STR_MODULENAME              "VOCALINKAUDIO: "

@@ -12,17 +12,39 @@ Abstract:
 
 #include <windows.h>
 
-#include <ntverp.h>
+//
+// Our own version resource instead of the WDK's common.ver, which would label
+// the driver as a Microsoft Windows component. Keep in step with the INF's
+// DriverVer (Main.vcxproj, <TimeStamp>).
+//
+#define VI_FILEVERSION              1,0,0,0
+#define VI_FILEVERSION_STR          "1.0.0.0"
 
-#define VER_FILETYPE                VFT_DRV
-#define VER_FILESUBTYPE             VFT2_DRV_SOUND
-#define VER_FILEDESCRIPTION_STR     "Microsoft Virtual Vocal Ink Audio Driver"
-#define VER_INTERNALNAME_STR        "VocalInkAudio.sys"
-#define VER_ORIGINALFILENAME_STR    "VocalInkAudio.sys"
-
-#define VER_LEGALCOPYRIGHT_YEARS    "2013"
-#define VER_LEGALCOPYRIGHT_STR	    "Copyright (C) Microsoft Corp." VER_LEGALCOPYRIGHT_YEARS
-
-#include "common.ver"
-
-
+VS_VERSION_INFO VERSIONINFO
+FILEVERSION     VI_FILEVERSION
+PRODUCTVERSION  VI_FILEVERSION
+FILEFLAGSMASK   VS_FFI_FILEFLAGSMASK
+FILEFLAGS       0
+FILEOS          VOS_NT_WINDOWS32
+FILETYPE        VFT_DRV
+FILESUBTYPE     VFT2_DRV_SOUND
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904B0"
+        BEGIN
+            VALUE "CompanyName",      "Vocal Ink"
+            VALUE "FileDescription",  "Vocal Ink Virtual Audio Driver"
+            VALUE "FileVersion",      VI_FILEVERSION_STR
+            VALUE "InternalName",     "VocalInkAudio.sys"
+            VALUE "LegalCopyright",   "Copyright (C) Vocal Ink contributors. Based on Microsoft's SimpleAudioSample (MS-PL)."
+            VALUE "OriginalFilename", "VocalInkAudio.sys"
+            VALUE "ProductName",      "Vocal Ink"
+            VALUE "ProductVersion",   VI_FILEVERSION_STR
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x0409, 1200
+    END
+END

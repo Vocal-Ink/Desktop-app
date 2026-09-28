@@ -14,6 +14,13 @@ Abstract:
 #ifndef _VOCALINKAUDIO_SPEAKERTOPTABLE_H_
 #define _VOCALINKAUDIO_SPEAKERTOPTABLE_H_
 
+//
+// Name of the render endpoint. The INF maps it to "Vocal Ink Voice" under the
+// device's MediaCategories key.
+// {4042A3FD-4531-4CC0-AF70-6398ADA873E1}
+DEFINE_GUID(VOCALINKAUDIO_VOICE_NAME,
+    0x4042a3fd, 0x4531, 0x4cc0, 0xaf, 0x70, 0x63, 0x98, 0xad, 0xa8, 0x73, 0xe1);
+
 //=============================================================================
 static
 KSDATARANGE SpeakerTopoPinDataRangesBridge[] =
@@ -76,7 +83,7 @@ PCPIN_DESCRIPTOR SpeakerTopoMiniportPins[] =
       KSPIN_DATAFLOW_OUT,                               // DataFlow
       KSPIN_COMMUNICATION_NONE,                         // Communication
       &KSNODETYPE_SPEAKER,                              // Category
-      NULL,                                             // Name
+      &VOCALINKAUDIO_VOICE_NAME,                        // Name
       0                                                 // Reserved
     }
   }

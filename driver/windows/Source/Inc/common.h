@@ -120,6 +120,10 @@ Abstract:
 #define MINTOPORT_POOLTAG           'RTNM'
 #define MINADAPTER_POOLTAG          'uAyS'
 
+//
+// eSpeakerDevice is the "Vocal Ink Voice" render endpoint, eMicArrayDevice1 the
+// "Vocal Ink Mic" capture endpoint (names kept from the sample).
+//
 typedef enum
 {
     eSpeakerDevice = 0,
@@ -241,6 +245,8 @@ DEFINE_GUID(IID_IAdapterCommon,
 //=============================================================================
 // Interfaces
 //=============================================================================
+
+class CLoopbackBuffer;
 
 ///////////////////////////////////////////////////////////////////////////////
 // IAdapterCommon
@@ -457,6 +463,12 @@ DECLARE_INTERFACE_(IAdapterCommon, IUnknown)
     );
 
     STDMETHOD_(VOID, Cleanup)();
+
+    // The ring the render endpoint writes and the capture endpoint reads.
+    STDMETHOD_(CLoopbackBuffer*, GetLoopbackBuffer)
+    (
+        THIS
+    ) PURE;
 
 };
 

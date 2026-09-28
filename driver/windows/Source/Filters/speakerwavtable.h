@@ -14,13 +14,15 @@ Abstract:
 #ifndef _VOCALINKAUDIO_SPEAKERWAVTABLE_H_
 #define _VOCALINKAUDIO_SPEAKERWAVTABLE_H_
 
-// To keep the code simple assume device supports only 48KHz, 16-bit, stereo (PCM and NON-PCM)
+// "Vocal Ink Voice": 48 kHz stereo, 16-bit PCM or 32-bit float. Whatever is
+// played here goes into the loopback (LoopbackBuffer.h).
 
 #define SPEAKER_DEVICE_MAX_CHANNELS                 2       // Max Channels.
 
 #define SPEAKER_HOST_MAX_CHANNELS                   2       // Max Channels.
-#define SPEAKER_HOST_MIN_BITS_PER_SAMPLE            16      // Min Bits Per Sample
-#define SPEAKER_HOST_MAX_BITS_PER_SAMPLE            16      // Max Bits Per Sample
+#define SPEAKER_HOST_MIN_BITS_PER_SAMPLE            16      // Min Bits Per Sample (PCM)
+#define SPEAKER_HOST_MAX_BITS_PER_SAMPLE            16      // Max Bits Per Sample (PCM)
+#define SPEAKER_HOST_FLOAT_BITS_PER_SAMPLE          32      // Bits Per Sample (IEEE float)
 #define SPEAKER_HOST_MIN_SAMPLE_RATE                48000   // Min Sample Rate
 #define SPEAKER_HOST_MAX_SAMPLE_RATE                48000   // Max Sample Rate
 
@@ -57,6 +59,31 @@ KSDATAFORMAT_WAVEFORMATEXTENSIBLE SpeakerHostPinSupportedDeviceFormats[] =
             16,
             KSAUDIO_SPEAKER_STEREO,
             STATICGUIDOF(KSDATAFORMAT_SUBTYPE_PCM)
+        }
+    },
+    { // 1: 48 KHz 32-bit float stereo
+        {
+            sizeof(KSDATAFORMAT_WAVEFORMATEXTENSIBLE),
+            0,
+            0,
+            0,
+            STATICGUIDOF(KSDATAFORMAT_TYPE_AUDIO),
+            STATICGUIDOF(KSDATAFORMAT_SUBTYPE_IEEE_FLOAT),
+            STATICGUIDOF(KSDATAFORMAT_SPECIFIER_WAVEFORMATEX)
+        },
+        {
+            {
+                WAVE_FORMAT_EXTENSIBLE,
+                2,
+                48000,
+                384000,
+                8,
+                32,
+                sizeof(WAVEFORMATEXTENSIBLE) - sizeof(WAVEFORMATEX)
+            },
+            32,
+            KSAUDIO_SPEAKER_STEREO,
+            STATICGUIDOF(KSDATAFORMAT_SUBTYPE_IEEE_FLOAT)
         }
     }
 };
@@ -115,6 +142,22 @@ KSDATARANGE_AUDIO SpeakerPinDataRangesStream[] =
         SPEAKER_HOST_MAX_BITS_PER_SAMPLE,    
         SPEAKER_HOST_MIN_SAMPLE_RATE,            
         SPEAKER_HOST_MAX_SAMPLE_RATE             
+    },
+    { // 1
+        {
+            sizeof(KSDATARANGE_AUDIO),
+            KSDATARANGE_ATTRIBUTES,         // An attributes list follows this data range
+            0,
+            0,
+            STATICGUIDOF(KSDATAFORMAT_TYPE_AUDIO),
+            STATICGUIDOF(KSDATAFORMAT_SUBTYPE_IEEE_FLOAT),
+            STATICGUIDOF(KSDATAFORMAT_SPECIFIER_WAVEFORMATEX)
+        },
+        SPEAKER_HOST_MAX_CHANNELS,
+        SPEAKER_HOST_FLOAT_BITS_PER_SAMPLE,
+        SPEAKER_HOST_FLOAT_BITS_PER_SAMPLE,
+        SPEAKER_HOST_MIN_SAMPLE_RATE,
+        SPEAKER_HOST_MAX_SAMPLE_RATE
     }
 };
 
@@ -122,6 +165,8 @@ static
 PKSDATARANGE SpeakerPinDataRangePointersStream[] =
 {
     PKSDATARANGE(&SpeakerPinDataRangesStream[0]),
+    PKSDATARANGE(&PinDataRangeAttributeList),
+    PKSDATARANGE(&SpeakerPinDataRangesStream[1]),
     PKSDATARANGE(&PinDataRangeAttributeList),
 };
 

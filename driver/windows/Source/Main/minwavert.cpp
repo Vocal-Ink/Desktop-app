@@ -18,7 +18,6 @@ Abstract:
 #include "endpoints.h"
 #include "minwavert.h"
 #include "minwavertstream.h"
-#include "micarraywavtable.h"
 
 #define EFFECTS_LIST_COUNT 2
 
@@ -179,8 +178,9 @@ Routine Description:
   The DataRangeIntersection function determines the highest quality 
   intersection of two data ranges.
 
-  This sample just sets the ResultantFormat to be the only supported
-  format for the MicArray endpoint.
+  Both endpoints offer several formats (see speakerwavtable.h and
+  micarraywavtable.h), one data range per sample type and channel count,
+  so the class handler picks the format once the channel count matches.
 
 Arguments:
 
@@ -211,6 +211,7 @@ Arguments:
 --*/
 {
     UNREFERENCED_PARAMETER(PinId);
+    UNREFERENCED_PARAMETER(ResultantFormat);
 
     ULONG                   requiredSize;
 
@@ -221,66 +222,34 @@ Arguments:
         return STATUS_NOT_IMPLEMENTED;
     }
 
-    //If called for the mic array pin, set ResultantFormat to be the endpoint's only supported format.
-    //Otherwise, allow the class handler to set ResultantFormat.  
-    if ((this->m_DeviceType) == eMicArrayDevice1)
+    requiredSize = sizeof(KSDATAFORMAT_WAVEFORMATEX);
+
+    //
+    // Validate return buffer size, if the request is only for the
+    // size of the resultant structure, return it now before
+    // returning other types of errors.
+    //
+    if (!OutputBufferLength)
     {
-        requiredSize = sizeof(KSDATAFORMAT_WAVEFORMATEXTENSIBLE);
-
-        //
-        // Validate return buffer size, if the request is only for the
-        // size of the resultant structure, return it now before
-        // returning other types of errors.
-        //
-        if (!OutputBufferLength)
-        {
-            *ResultantFormatLength = requiredSize;
-            return STATUS_BUFFER_OVERFLOW;
-        }
-        else if (OutputBufferLength < requiredSize)
-        {
-            return STATUS_BUFFER_TOO_SMALL;
-        }
-
-        //Set ResultantFormat to be the only supported format for the MicArray endpoint. 
-        PKSDATAFORMAT_WAVEFORMATEXTENSIBLE resultantFormat;
-        resultantFormat = (PKSDATAFORMAT_WAVEFORMATEXTENSIBLE)ResultantFormat;
-        *resultantFormat = *MicArrayPinSupportedDeviceFormats;
         *ResultantFormatLength = requiredSize;
-
-        return STATUS_SUCCESS;
+        return STATUS_BUFFER_OVERFLOW;
     }
-    else
+    else if (OutputBufferLength < requiredSize)
     {
-        requiredSize = sizeof(KSDATAFORMAT_WAVEFORMATEX);
-
-        //
-        // Validate return buffer size, if the request is only for the
-        // size of the resultant structure, return it now before
-        // returning other types of errors.
-        //
-        if (!OutputBufferLength)
-        {
-            *ResultantFormatLength = requiredSize;
-            return STATUS_BUFFER_OVERFLOW;
-        }
-        else if (OutputBufferLength < requiredSize)
-        {
-            return STATUS_BUFFER_TOO_SMALL;
-        }
-
-        // Verify channel count is supported. This routine assumes a separate data
-        // range for each supported channel count.
-        if (((PKSDATARANGE_AUDIO)MyDataRange)->MaximumChannels != ((PKSDATARANGE_AUDIO)ClientDataRange)->MaximumChannels)
-        {
-            return STATUS_NO_MATCH;
-        }
-
-        //
-        // Ok, let the class handler do the rest.
-        //
-        return STATUS_NOT_IMPLEMENTED;
+        return STATUS_BUFFER_TOO_SMALL;
     }
+
+    // Verify channel count is supported. This routine assumes a separate data
+    // range for each supported channel count.
+    if (((PKSDATARANGE_AUDIO)MyDataRange)->MaximumChannels != ((PKSDATARANGE_AUDIO)ClientDataRange)->MaximumChannels)
+    {
+        return STATUS_NO_MATCH;
+    }
+
+    //
+    // Ok, let the class handler do the rest.
+    //
+    return STATUS_NOT_IMPLEMENTED;
 
 } // DataRangeIntersection
 

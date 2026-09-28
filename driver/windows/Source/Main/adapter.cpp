@@ -9,7 +9,9 @@ Module Name:
 Abstract:
 
     Setup and miniport installation.  No resources are used by Vocal Ink audio.
-    This sample is to demonstrate how to develop a full featured audio miniport driver.
+    Vocal Ink's virtual audio device: a "Vocal Ink Voice" render endpoint whose
+    audio comes back out of a "Vocal Ink Mic" capture endpoint (LoopbackBuffer.h).
+    Derived from Microsoft's SimpleAudioSample.
 --*/
 
 #pragma warning (disable : 4127)
@@ -49,7 +51,6 @@ DRIVER_DISPATCH PnpHandler;
 // DoNotCreateDataFiles (DWORD) = 0 to override this default.
 //
 DWORD g_DoNotCreateDataFiles = 1;  // default is off.
-DWORD g_DisableToneGenerator = 0;  // default is to generate tones.
 UNICODE_STRING g_RegistryPath;      // This is used to store the registry settings path for the driver
 
 //-----------------------------------------------------------------------------
@@ -199,7 +200,6 @@ Returns:
     RTL_QUERY_REGISTRY_TABLE    paramTable[] = {
     // QueryRoutine     Flags                                               Name                     EntryContext             DefaultType                                                    DefaultData              DefaultLength
         { NULL,   RTL_QUERY_REGISTRY_DIRECT | RTL_QUERY_REGISTRY_TYPECHECK, L"DoNotCreateDataFiles", &g_DoNotCreateDataFiles, (REG_DWORD << RTL_QUERY_REGISTRY_TYPECHECK_SHIFT) | REG_DWORD, &g_DoNotCreateDataFiles, sizeof(ULONG)},
-        { NULL,   RTL_QUERY_REGISTRY_DIRECT | RTL_QUERY_REGISTRY_TYPECHECK, L"DisableToneGenerator", &g_DisableToneGenerator, (REG_DWORD << RTL_QUERY_REGISTRY_TYPECHECK_SHIFT) | REG_DWORD, &g_DisableToneGenerator, sizeof(ULONG)},
         { NULL,   0,                                                        NULL,                    NULL,                    0,                                                             NULL,                    0}
     };
 
@@ -239,7 +239,6 @@ Returns:
     // Dump settings.
     //
     DPF(D_VERBOSE, ("DoNotCreateDataFiles: %u", g_DoNotCreateDataFiles));
-    DPF(D_VERBOSE, ("DisableToneGenerator: %u", g_DisableToneGenerator));
 
     if (DriverKey)
     {

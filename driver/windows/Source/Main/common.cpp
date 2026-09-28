@@ -17,6 +17,7 @@ Abstract:
 #include "definitions.h"
 #include "hw.h"
 #include "savedata.h"
+#include "LoopbackBuffer.h"
 #include "endpoints.h"
 
 //-----------------------------------------------------------------------------
@@ -45,6 +46,7 @@ class CAdapterCommon :
         DEVICE_POWER_STATE      m_PowerState;  
 
         PCVocalInkAudioHW   m_pHW;                  // Virtual Vocal Ink Audio HW object
+        PLOOPBACKBUFFER         m_pLoopback;            // Render -> capture loopback
         PPORTCLSETWHELPER       m_pPortClsEtwHelper;
 
         static LONG             m_AdapterInstances;     // # of adapter objects.
@@ -229,6 +231,8 @@ class CAdapterCommon :
         );
 
         STDMETHODIMP_(VOID) Cleanup();
+
+        STDMETHODIMP_(CLoopbackBuffer*) GetLoopbackBuffer();
 
         //=====================================================================
         // friends
@@ -436,6 +440,12 @@ Return Value:
         delete m_pHW;
         m_pHW = NULL;
     }
+
+    if (m_pLoopback)
+    {
+        delete m_pLoopback;
+        m_pLoopback = NULL;
+    }
     
     CSaveData::DestroyWorkItems();
     SAFE_RELEASE(m_pPortClsEtwHelper);
@@ -567,6 +577,7 @@ Return Value:
     m_WdfDevice             = NULL;
     m_PowerState            = PowerDeviceD0;
     m_pHW                   = NULL;
+    m_pLoopback             = NULL;
     m_pPortClsEtwHelper     = NULL;
 
     InitializeListHead(&m_SubdeviceCache);
@@ -608,6 +619,20 @@ Return Value:
     IF_FAILED_JUMP(ntStatus, Done);
     
     m_pHW->MixerReset();
+
+    //
+    // The loopback shared by the render and capture endpoints.
+    //
+    m_pLoopback = new (POOL_FLAG_NON_PAGED, VOCALINKAUDIO_POOLTAG) CLoopbackBuffer;
+    if (!m_pLoopback)
+    {
+        DPF(D_TERSE, ("Insufficient memory for the loopback buffer"));
+        ntStatus = STATUS_INSUFFICIENT_RESOURCES;
+    }
+    IF_FAILED_JUMP(ntStatus, Done);
+
+    ntStatus = m_pLoopback->Init();
+    IF_FAILED_JUMP(ntStatus, Done);
 
     //
     // Initialize SaveData class.
@@ -2103,6 +2128,22 @@ CAdapterCommon::Cleanup()
     PAGED_CODE();
     DPF_ENTER(("[CAdapterCommon::Cleanup]"));
     EmptySubdeviceCache();
+}
+
+//=============================================================================
+#pragma code_seg()
+STDMETHODIMP_(CLoopbackBuffer*)
+CAdapterCommon::GetLoopbackBuffer()
+/*++
+
+Routine Description:
+
+  Returns the loopback between the render and capture endpoints. Called from
+  the streaming path, so it is not pageable.
+
+--*/
+{
+    return m_pLoopback;
 }
 
 //=============================================================================

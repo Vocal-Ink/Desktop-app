@@ -310,6 +310,13 @@
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);..\Inc</AdditionalIncludeDirectories>
     </ResourceCompile>
   </ItemDefinitionGroup>
+  <ItemDefinitionGroup>
+    <Inf>
+      <!-- DriverVer version, stamped into the INF. Bump with every driver change. -->
+      <SpecifyDriverVerDirectiveVersion>true</SpecifyDriverVerDirectiveVersion>
+      <TimeStamp>1.0.0.0</TimeStamp>
+    </Inf>
+  </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="adapter.cpp" />
     <ClCompile Include="basetopo.cpp" />

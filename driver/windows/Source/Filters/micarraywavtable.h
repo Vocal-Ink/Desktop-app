@@ -8,7 +8,7 @@ Module Name:
 
 Abstract:-
 
-    Declaration of wave miniport tables for the mic array.
+    Declaration of wave miniport tables for the "Vocal Ink Mic" capture endpoint.
 
 --*/
 
@@ -16,23 +16,25 @@ Abstract:-
 #define _VOCALINKAUDIO_MICARRAYWAVTABLE_H_
 
 //
-// Mic array range.
+// "Vocal Ink Mic": plays back what was rendered to "Vocal Ink Voice" (see
+// LoopbackBuffer.h). 48 kHz, stereo or mono, 16-bit PCM or 32-bit float.
+// (Type and table names are kept from the sample's microphone array.)
 //
-#define MICARRAY_RAW_CHANNELS                   2       // Channels for raw mode
 #define MICARRAY_DEVICE_MAX_CHANNELS            2       // Max channels overall
-#define MICARRAY_32_BITS_PER_SAMPLE_PCM         32      // 32 Bits Per Sample
-#define MICARRAY_RAW_SAMPLE_RATE                48000   // Raw sample rate
+#define MICARRAY_PCM_BITS_PER_SAMPLE            16      // 16-bit PCM
+#define MICARRAY_FLOAT_BITS_PER_SAMPLE          32      // 32-bit IEEE float
+#define MICARRAY_SAMPLE_RATE                    48000   // Sample rate
 
 //
-// Max # of pin instances.
+// Max # of pin instances: one per signal processing mode (raw and default).
 //
-#define MICARRAY_MAX_INPUT_STREAMS              1
+#define MICARRAY_MAX_INPUT_STREAMS              2
 
 //=============================================================================
 static
 KSDATAFORMAT_WAVEFORMATEXTENSIBLE MicArrayPinSupportedDeviceFormats[] =
 {
-    // 48 KHz 32-bit 2 channels
+    // 0: 48 KHz 16-bit stereo (default)
     {
         {
             sizeof(KSDATAFORMAT_WAVEFORMATEXTENSIBLE),
@@ -48,6 +50,32 @@ KSDATAFORMAT_WAVEFORMATEXTENSIBLE MicArrayPinSupportedDeviceFormats[] =
                 WAVE_FORMAT_EXTENSIBLE,
                 2,
                 48000,
+                192000,
+                4,
+                16,
+                sizeof(WAVEFORMATEXTENSIBLE) - sizeof(WAVEFORMATEX)
+            },
+            16,
+            KSAUDIO_SPEAKER_STEREO,
+            STATICGUIDOF(KSDATAFORMAT_SUBTYPE_PCM)
+        }
+    },
+    // 1: 48 KHz 32-bit float stereo
+    {
+        {
+            sizeof(KSDATAFORMAT_WAVEFORMATEXTENSIBLE),
+            0,
+            0,
+            0,
+            STATICGUIDOF(KSDATAFORMAT_TYPE_AUDIO),
+            STATICGUIDOF(KSDATAFORMAT_SUBTYPE_IEEE_FLOAT),
+            STATICGUIDOF(KSDATAFORMAT_SPECIFIER_WAVEFORMATEX)
+        },
+        {
+            {
+                WAVE_FORMAT_EXTENSIBLE,
+                2,
+                48000,
                 384000,
                 8,
                 32,
@@ -55,19 +83,75 @@ KSDATAFORMAT_WAVEFORMATEXTENSIBLE MicArrayPinSupportedDeviceFormats[] =
             },
             32,
             KSAUDIO_SPEAKER_STEREO,
+            STATICGUIDOF(KSDATAFORMAT_SUBTYPE_IEEE_FLOAT)
+        }
+    },
+    // 2: 48 KHz 16-bit mono
+    {
+        {
+            sizeof(KSDATAFORMAT_WAVEFORMATEXTENSIBLE),
+            0,
+            0,
+            0,
+            STATICGUIDOF(KSDATAFORMAT_TYPE_AUDIO),
+            STATICGUIDOF(KSDATAFORMAT_SUBTYPE_PCM),
+            STATICGUIDOF(KSDATAFORMAT_SPECIFIER_WAVEFORMATEX)
+        },
+        {
+            {
+                WAVE_FORMAT_EXTENSIBLE,
+                1,
+                48000,
+                96000,
+                2,
+                16,
+                sizeof(WAVEFORMATEXTENSIBLE) - sizeof(WAVEFORMATEX)
+            },
+            16,
+            KSAUDIO_SPEAKER_MONO,
             STATICGUIDOF(KSDATAFORMAT_SUBTYPE_PCM)
+        }
+    },
+    // 3: 48 KHz 32-bit float mono
+    {
+        {
+            sizeof(KSDATAFORMAT_WAVEFORMATEXTENSIBLE),
+            0,
+            0,
+            0,
+            STATICGUIDOF(KSDATAFORMAT_TYPE_AUDIO),
+            STATICGUIDOF(KSDATAFORMAT_SUBTYPE_IEEE_FLOAT),
+            STATICGUIDOF(KSDATAFORMAT_SPECIFIER_WAVEFORMATEX)
+        },
+        {
+            {
+                WAVE_FORMAT_EXTENSIBLE,
+                1,
+                48000,
+                192000,
+                4,
+                32,
+                sizeof(WAVEFORMATEXTENSIBLE) - sizeof(WAVEFORMATEX)
+            },
+            32,
+            KSAUDIO_SPEAKER_MONO,
+            STATICGUIDOF(KSDATAFORMAT_SUBTYPE_IEEE_FLOAT)
         }
     }
 };
 
 //
-// Supported modes (only on streaming pins).
+// Supported modes (only on streaming pins). Both deliver the same loopback audio.
 //
 static
 MODE_AND_DEFAULT_FORMAT MicArrayPinSupportedDeviceModes[] =
 {
     {
         STATIC_AUDIO_SIGNALPROCESSINGMODE_RAW,
+        &MicArrayPinSupportedDeviceFormats[0].DataFormat
+    },
+    {
+        STATIC_AUDIO_SIGNALPROCESSINGMODE_DEFAULT,
         &MicArrayPinSupportedDeviceFormats[0].DataFormat
     }
 };
@@ -96,14 +180,14 @@ PIN_DEVICE_FORMATS_AND_MODES MicArrayPinDeviceFormatsAndModes[] =
 };
 
 //=============================================================================
-// Data ranges
+// Data ranges: one per sample type and channel count.
 //
 // See CMiniportWaveRT::DataRangeIntersection.
 //
 static
-KSDATARANGE_AUDIO MicArrayPinDataRangesRawStream[] =
+KSDATARANGE_AUDIO MicArrayPinDataRangesStream[] =
 {
-    {
+    { // 0: 16-bit stereo
         {
             sizeof(KSDATARANGE_AUDIO),
             KSDATARANGE_ATTRIBUTES,         // An attributes list follows this data range
@@ -113,19 +197,73 @@ KSDATARANGE_AUDIO MicArrayPinDataRangesRawStream[] =
             STATICGUIDOF(KSDATAFORMAT_SUBTYPE_PCM),
             STATICGUIDOF(KSDATAFORMAT_SPECIFIER_WAVEFORMATEX)
         },
-        MICARRAY_RAW_CHANNELS,
-        MICARRAY_32_BITS_PER_SAMPLE_PCM,
-        MICARRAY_32_BITS_PER_SAMPLE_PCM,
-        MICARRAY_RAW_SAMPLE_RATE,
-        MICARRAY_RAW_SAMPLE_RATE
+        2,
+        MICARRAY_PCM_BITS_PER_SAMPLE,
+        MICARRAY_PCM_BITS_PER_SAMPLE,
+        MICARRAY_SAMPLE_RATE,
+        MICARRAY_SAMPLE_RATE
     },
+    { // 1: float stereo
+        {
+            sizeof(KSDATARANGE_AUDIO),
+            KSDATARANGE_ATTRIBUTES,         // An attributes list follows this data range
+            0,
+            0,
+            STATICGUIDOF(KSDATAFORMAT_TYPE_AUDIO),
+            STATICGUIDOF(KSDATAFORMAT_SUBTYPE_IEEE_FLOAT),
+            STATICGUIDOF(KSDATAFORMAT_SPECIFIER_WAVEFORMATEX)
+        },
+        2,
+        MICARRAY_FLOAT_BITS_PER_SAMPLE,
+        MICARRAY_FLOAT_BITS_PER_SAMPLE,
+        MICARRAY_SAMPLE_RATE,
+        MICARRAY_SAMPLE_RATE
+    },
+    { // 2: 16-bit mono
+        {
+            sizeof(KSDATARANGE_AUDIO),
+            KSDATARANGE_ATTRIBUTES,         // An attributes list follows this data range
+            0,
+            0,
+            STATICGUIDOF(KSDATAFORMAT_TYPE_AUDIO),
+            STATICGUIDOF(KSDATAFORMAT_SUBTYPE_PCM),
+            STATICGUIDOF(KSDATAFORMAT_SPECIFIER_WAVEFORMATEX)
+        },
+        1,
+        MICARRAY_PCM_BITS_PER_SAMPLE,
+        MICARRAY_PCM_BITS_PER_SAMPLE,
+        MICARRAY_SAMPLE_RATE,
+        MICARRAY_SAMPLE_RATE
+    },
+    { // 3: float mono
+        {
+            sizeof(KSDATARANGE_AUDIO),
+            KSDATARANGE_ATTRIBUTES,         // An attributes list follows this data range
+            0,
+            0,
+            STATICGUIDOF(KSDATAFORMAT_TYPE_AUDIO),
+            STATICGUIDOF(KSDATAFORMAT_SUBTYPE_IEEE_FLOAT),
+            STATICGUIDOF(KSDATAFORMAT_SPECIFIER_WAVEFORMATEX)
+        },
+        1,
+        MICARRAY_FLOAT_BITS_PER_SAMPLE,
+        MICARRAY_FLOAT_BITS_PER_SAMPLE,
+        MICARRAY_SAMPLE_RATE,
+        MICARRAY_SAMPLE_RATE
+    }
 };
 
 static
 PKSDATARANGE MicArrayPinDataRangePointersStream[] =
 {
     // All supported device formats should be listed in the DataRange.
-    PKSDATARANGE(&MicArrayPinDataRangesRawStream[0]),
+    PKSDATARANGE(&MicArrayPinDataRangesStream[0]),
+    PKSDATARANGE(&PinDataRangeAttributeList),
+    PKSDATARANGE(&MicArrayPinDataRangesStream[1]),
+    PKSDATARANGE(&PinDataRangeAttributeList),
+    PKSDATARANGE(&MicArrayPinDataRangesStream[2]),
+    PKSDATARANGE(&PinDataRangeAttributeList),
+    PKSDATARANGE(&MicArrayPinDataRangesStream[3]),
     PKSDATARANGE(&PinDataRangeAttributeList),
 };
 
