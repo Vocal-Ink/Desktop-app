@@ -1,1 +1,329 @@
-/* overlay styles */
+/* Vocal Ink caption overlay. Runs in OBS's browser source on a transparent
+   background; overlay.js sets the variables below from the URL query. */
+
+:root {
+  --font-default: "Segoe UI Variable Display", "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont,
+    "SF Pro Display", "Helvetica Neue", Ubuntu, Cantarell, "Noto Sans", Arial, sans-serif,
+    "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji";
+  --font: var(--font-default);
+  --size: 42px;
+  --lh: 55px;
+  --color: #ffffff;
+  --bg: rgba(12, 11, 22, 0.74);
+  --maxw: 70vw;
+  --outline-shadow: 0 0 0 transparent;
+  --accent: #8b7bff;
+  --accent-2: #2fd0dc;
+  --edge-x: 5vw;
+  --edge-y: 6.5vh;
+  --enter: translateY(0.4em);
+  --ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --ease-pop: cubic-bezier(0.3, 1.35, 0.5, 1);
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: transparent;
+}
+
+body {
+  font-family: var(--font);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+.stage {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  box-sizing: border-box;
+  padding: var(--edge-y) var(--edge-x);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  pointer-events: none;
+}
+
+[data-position="top"] .stage { justify-content: flex-start; }
+[data-position="middle"] .stage { justify-content: center; }
+[data-align="left"] .stage { align-items: flex-start; }
+[data-align="right"] .stage { align-items: flex-end; }
+[data-position="top"] { --enter: translateY(-0.4em); }
+[data-position="middle"] { --enter: scale(0.96); }
+
+/* ---- The caption box ---------------------------------------------------- */
+
+.box {
+  position: relative;
+  box-sizing: border-box;
+  max-width: var(--maxw);
+  font-size: var(--size);
+  line-height: var(--lh);
+  color: var(--color);
+  text-align: center;
+  overflow-wrap: break-word;
+  opacity: 0;
+  visibility: hidden;
+  transform: var(--enter);
+  transition: opacity 0.35s ease, transform 0.35s var(--ease-out), visibility 0s linear 0.35s;
+}
+
+[data-align="left"] .box { text-align: left; }
+[data-align="right"] .box { text-align: right; }
+
+.box.show {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+  transition: opacity 0.22s ease, transform 0.4s var(--ease-out), visibility 0s;
+}
+
+.viewport {
+  height: 0;
+  overflow: hidden;
+  /* room for text shadows/outlines at the sides without clipping them */
+  padding: 0 0.3em;
+  margin: 0 -0.3em;
+  transition: height 0.28s var(--ease-out);
+}
+
+.scroller {
+  position: relative;
+  transition: transform 0.34s var(--ease-out);
+}
+
+.msg {
+  margin: 0;
+  transition: opacity 0.4s ease;
+}
+
+.keep { white-space: nowrap; }
+
+.msg.old { opacity: 0.55; }
+
+.w {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(0.22em);
+  transition: opacity 0.2s ease-out, transform 0.3s var(--ease-out);
+}
+
+.w.on {
+  opacity: 1;
+  transform: none;
+}
+
+/* ---- Name label and speaking / listening indicator ---------------------- */
+
+.meta {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45em;
+  font-size: 0.46em;
+  line-height: 1.25;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  opacity: 0.78;
+}
+
+[data-align="left"] .meta { justify-content: flex-start; }
+[data-align="right"] .meta { justify-content: flex-end; }
+.has-meta .meta { display: flex; }
+.has-meta:not(.meta-only) .meta { margin-bottom: 0.3em; }
+
+.label:empty { display: none; }
+
+.signal {
+  display: none;
+  position: relative;
+  width: 1.15em;
+  height: 1.15em;
+  align-items: center;
+  justify-content: center;
+}
+
+.signal-on .signal { display: inline-flex; }
+
+.dot {
+  position: relative;
+  width: 0.6em;
+  height: 0.6em;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  animation: beat 1.3s ease-in-out infinite;
+}
+
+.dot::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  border-radius: 50%;
+  background: inherit;
+  animation: ring 1.3s ease-out infinite;
+}
+
+.mic {
+  display: none;
+  width: 1.15em;
+  height: 1.15em;
+  fill: var(--accent-2);
+  animation: breathe 1.6s ease-in-out infinite;
+}
+
+.listening .dot { display: none; }
+.listening .mic { display: block; }
+
+@keyframes beat {
+  0%, 100% { transform: scale(0.82); }
+  50% { transform: scale(1.06); }
+}
+
+@keyframes ring {
+  from { transform: scale(1); opacity: 0.65; }
+  to { transform: scale(2.6); opacity: 0; }
+}
+
+@keyframes breathe {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+/* ---- style=subtitles (default) ------------------------------------------ */
+
+[data-style="subtitles"] .box {
+  background: var(--bg);
+  border-radius: 0.3em;
+  padding: 0.3em 0.72em 0.36em;
+  font-weight: 600;
+  letter-spacing: 0.005em;
+  text-shadow: var(--outline-shadow), 0 0.03em 0.08em rgba(0, 0, 0, 0.45);
+  box-shadow: 0 0.35em 1.2em rgba(0, 0, 0, 0.28);
+}
+
+[data-style="subtitles"] .box.meta-only { padding: 0.32em 0.6em; }
+
+/* ---- style=bubble: a speech bubble, e.g. next to a PNGtuber avatar ------ */
+
+[data-style="bubble"] {
+  --accent: #684cff;
+  --accent-2: #1eb8c4;
+  --enter: scale(0.82);
+}
+
+[data-style="bubble"] .box {
+  background: var(--bg);
+  border-radius: 0.95em;
+  padding: 0.5em 0.9em 0.56em;
+  margin-bottom: 0.62em; /* the tail hangs below */
+  font-weight: 650;
+  text-shadow: var(--outline-shadow);
+  filter: drop-shadow(0 0.2em 0.45em rgba(0, 0, 0, 0.3));
+  transform-origin: 1.5em 115%;
+  transition: opacity 0.25s ease, transform 0.3s var(--ease-out), visibility 0s linear 0.3s;
+}
+
+[data-style="bubble"] .box.show {
+  transition: opacity 0.18s ease, transform 0.45s var(--ease-pop), visibility 0s;
+}
+
+[data-style="bubble"] .box::after {
+  content: "";
+  position: absolute;
+  top: calc(100% - 1px);
+  left: 1.1em;
+  width: 0.95em;
+  height: 0.66em;
+  background: inherit;
+  clip-path: polygon(0 0, 100% 0, 12% 100%);
+}
+
+[data-style="bubble"][data-tail="center"] .box { transform-origin: 50% 115%; }
+[data-style="bubble"][data-tail="center"] .box::after {
+  left: calc(50% - 0.48em);
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+}
+
+[data-style="bubble"][data-tail="right"] .box { transform-origin: calc(100% - 1.5em) 115%; }
+[data-style="bubble"][data-tail="right"] .box::after {
+  left: auto;
+  right: 1.1em;
+  clip-path: polygon(0 0, 100% 0, 88% 100%);
+}
+
+[data-style="bubble"][data-tail="none"] .box { margin-bottom: 0; }
+[data-style="bubble"][data-tail="none"] .box::after { display: none; }
+
+[data-style="bubble"] .meta {
+  color: var(--accent);
+  opacity: 1;
+}
+
+[data-style="bubble"] .box.meta-only { padding: 0.36em 0.7em; }
+
+/* ---- style=plain: outlined text only, for custom scenes ----------------- */
+
+[data-style="plain"] .box {
+  font-weight: 700;
+  text-shadow: var(--outline-shadow), 0 0.05em 0.3em rgba(0, 0, 0, 0.55);
+}
+
+[data-style="plain"] .meta { opacity: 0.9; }
+
+/* A background colour set with bg= on plain/bubble-less boxes */
+.no-bg .box { box-shadow: none; }
+
+/* ---- Reduced motion: fades only ----------------------------------------- */
+
+.reduced-motion .box,
+.reduced-motion .box.show,
+.reduced-motion .w {
+  transform: none !important;
+}
+
+.reduced-motion .viewport,
+.reduced-motion .scroller {
+  transition: none !important;
+}
+
+.reduced-motion .dot,
+.reduced-motion .dot::after,
+.reduced-motion .mic {
+  animation: none !important;
+}
+
+.reduced-motion .dot::after { display: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .box,
+  .box.show,
+  .w {
+    transform: none !important;
+  }
+
+  .viewport,
+  .scroller {
+    transition: none !important;
+  }
+
+  .dot,
+  .dot::after,
+  .mic {
+    animation: none !important;
+  }
+
+  .dot::after { display: none; }
+}
