@@ -43,9 +43,11 @@ signals:
 
 private:
     void readNext();
+    void useFallback();
 
     Backend m_backend;
     bool m_loaded = false;
+    bool m_keychainBroken = false;
     QStringList m_pending;
     QHash<QString, QString> m_cache;
 };

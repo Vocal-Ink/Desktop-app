@@ -45,3 +45,6 @@ CMakeLists.txt.user*
 
 # Logs
 *.log
+
+# Local agent/editor state
+/.claude/
