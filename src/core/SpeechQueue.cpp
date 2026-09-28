@@ -21,6 +21,13 @@ SpeechQueue::~SpeechQueue()
     cancelStreams();
 }
 
+void SpeechQueue::setEffect(const QString &effectId, float intensity)
+{
+    // Stored here; the audio work package applies it to the stream in feed().
+    m_effectId = effectId;
+    m_effectIntensity = intensity;
+}
+
 quint64 SpeechQueue::say(const QString &text, const Voice &voiceOverride)
 {
     const QString normalized = TextProcessor::normalizeForSpeech(text);
@@ -38,6 +45,9 @@ quint64 SpeechQueue::say(const QString &text, const Voice &voiceOverride)
     }
     job.options = m_options;
     job.chunks = m_split ? TextProcessor::splitForSpeech(normalized) : QStringList{normalized};
+
+    if (m_interrupt && (m_current || !m_queue.isEmpty()))
+        stop(); // the newest message wins
 
     m_queue.enqueue(job);
     emit queued(job.id, job.text, job.voice);

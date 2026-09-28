@@ -2,6 +2,7 @@
 
 #include <QAudioDevice>
 #include <QMediaDevices>
+#include <QTimer>
 
 AudioPlayer::AudioPlayer(QObject *parent)
     : QObject(parent)
@@ -139,3 +140,15 @@ void AudioPlayer::onLaneDrained()
         emit drained();
     }
 }
+
+// Placeholders until the mixing engine lands (audio work package).
+void AudioPlayer::playSound(quint64 id, const QVector<float> &, int, float)
+{
+    QTimer::singleShot(0, this, [this, id] { emit soundFinished(id); });
+}
+void AudioPlayer::stopSound(quint64) {}
+void AudioPlayer::stopAllSounds() {}
+bool AudioPlayer::isSoundPlaying(quint64) const { return false; }
+void AudioPlayer::writeLive(const QVector<float> &, int) {}
+void AudioPlayer::clearLive() {}
+void AudioPlayer::setLiveDuckingDb(float) {}

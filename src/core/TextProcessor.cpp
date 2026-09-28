@@ -140,4 +140,25 @@ QStringList vocabularyFrom(const QString &text)
     return words;
 }
 
+// Placeholders (replaced by the text work package).
+QString expandVariables(const QString &text, const VariableContext &)
+{
+    return text;
+}
+
+QString handleEmoji(const QString &text, EmojiMode)
+{
+    return text;
+}
+
+QString handleUrls(const QString &text, UrlMode)
+{
+    return text;
+}
+
+QString autoCapitalize(const QString &text)
+{
+    return text;
+}
+
 } // namespace TextProcessor

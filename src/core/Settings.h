@@ -92,6 +92,13 @@ public:
     void setValue(const char *key, const QVariant &value);
     void remove(const char *key);
 
+    // Dynamic keys (e.g. "keybinds/<action id>") that have no central default.
+    QVariant value(const QString &key, const QVariant &fallback) const;
+    void setValue(const QString &key, const QVariant &value);
+    bool contains(const QString &key) const;
+    void remove(const QString &key);
+    QStringList childKeys(const QString &group) const;
+
     QString string(const char *key) const { return value(key).toString(); }
     int integer(const char *key) const { return value(key).toInt(); }
     bool flag(const char *key) const { return value(key).toBool(); }

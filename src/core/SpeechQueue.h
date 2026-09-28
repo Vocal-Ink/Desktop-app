@@ -28,6 +28,11 @@ public:
     Voice voice() const { return m_voice; }
     void setOptions(const SpeakOptions &options) { m_options = options; }
     SpeakOptions options() const { return m_options; }
+    // Voice effect applied to everything spoken (see audio/VoiceEffects.h).
+    // `effectId` is VoiceEffects::id(); intensity 0..1.
+    void setEffect(const QString &effectId, float intensity);
+    // When true, a new message interrupts the current one instead of queuing.
+    void setInterrupt(bool interrupt) { m_interrupt = interrupt; }
 
     // Queues text (already expanded/normalised by the caller). Returns the
     // message id, or 0 if there is nothing to say.
@@ -91,5 +96,8 @@ private:
     bool m_announced = false; // started() emitted for m_current
     bool m_feedingDone = false;
     bool m_speaking = false;
+    bool m_interrupt = false;
+    QString m_effectId;
+    float m_effectIntensity = 0.0f;
     QString m_error;
 };

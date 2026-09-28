@@ -39,9 +39,23 @@ public:
     // Names of the devices currently in use (for the status bar).
     QStringList activeDeviceNames() const;
 
+    // --- Extra sources mixed with speech --------------------------------------
+    // Sound effects (soundboard): mixed into every output, independent of speech.
+    void playSound(quint64 id, const QVector<float> &mono, int sampleRate, float gain = 1.0f);
+    void stopSound(quint64 id);
+    void stopAllSounds();
+    bool isSoundPlaying(quint64 id) const;
+    // Live microphone passthrough: mixed into the main output only (never the
+    // monitor, which would echo the user's own voice back at them).
+    void writeLive(const QVector<float> &mono, int sampleRate);
+    void clearLive();
+    // How much the live microphone is turned down while speech plays (0 = not at all).
+    void setLiveDuckingDb(float db);
+
 signals:
     void drained();
     void errorOccurred(const QString &message);
+    void soundFinished(quint64 id);
 
 private:
     void rebuildLanes();

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <QDateTime>
 #include <QString>
 #include <QStringList>
 #include <QVariantMap>
@@ -26,5 +27,28 @@ QString normalizeForSpeech(const QString &text);
 
 // Words for auto-completion, extracted from free text (lowercase, >= 3 letters).
 QStringList vocabularyFrom(const QString &text);
+
+// --- Message preparation (applied in this order before speaking) --------------
+struct VariableContext
+{
+    QVariantMap custom;  // user-defined {name} -> value
+    QString clipboard;
+    QString voiceName;
+    QDateTime now;       // invalid = current time
+};
+// Replaces {time}, {date}, {day}, {clipboard}, {voice} and custom {names}.
+// Unknown {tokens} are left as typed.
+QString expandVariables(const QString &text, const VariableContext &context);
+
+enum class EmojiMode { Speak, Remove, Keep };
+// Speak: common emoji become words ("😂" -> "laughing"); Remove strips them.
+QString handleEmoji(const QString &text, EmojiMode mode);
+
+enum class UrlMode { Keep, SayLink, Remove };
+// SayLink: "https://example.com/x" -> "link"; also handles bare www. links.
+QString handleUrls(const QString &text, UrlMode mode);
+
+// Capitalises the first letter of each sentence ("hi. ok" -> "Hi. Ok").
+QString autoCapitalize(const QString &text);
 
 } // namespace TextProcessor

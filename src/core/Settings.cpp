@@ -128,6 +128,38 @@ void Settings::remove(const char *key)
     emit changed(k);
 }
 
+QVariant Settings::value(const QString &key, const QVariant &fallback) const
+{
+    return m_settings->value(key, fallback);
+}
+
+void Settings::setValue(const QString &key, const QVariant &value)
+{
+    if (m_settings->contains(key) && m_settings->value(key) == value)
+        return;
+    m_settings->setValue(key, value);
+    emit changed(key);
+}
+
+bool Settings::contains(const QString &key) const
+{
+    return m_settings->contains(key);
+}
+
+void Settings::remove(const QString &key)
+{
+    m_settings->remove(key);
+    emit changed(key);
+}
+
+QStringList Settings::childKeys(const QString &group) const
+{
+    m_settings->beginGroup(group);
+    const QStringList keys = m_settings->childKeys();
+    m_settings->endGroup();
+    return keys;
+}
+
 void Settings::sync()
 {
     m_settings->sync();
