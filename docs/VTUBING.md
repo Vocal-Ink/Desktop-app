@@ -94,8 +94,8 @@ directly.
    **Allow**.
 
 Vocal Ink saves the access token in your system's keychain, so VTube Studio
-only asks once. If you click **Deny**, Vocal Ink stops asking; use **Ask for
-access** on the Avatar page to get the popup again. If you revoke Vocal Ink in
+only asks once. If you click **Deny**, Vocal Ink stops asking; use **Ask again**
+on the Avatar page to get the popup again. If you revoke Vocal Ink in
 VTube Studio's plugin list, Vocal Ink forgets its token and shows that access
 was denied.
 
@@ -288,7 +288,7 @@ same mouth settings as everything above. All its options are described in the
 | --- | --- |
 | VTube Studio: "not running" although it's open | Turn on **Allow Plugin API access** in VTube Studio's settings. Check that the port in Vocal Ink matches VTube Studio's. |
 | VTube Studio: "API is off" | Same switch: **Start API / Allow Plugin API access** in VTube Studio's settings. |
-| VTube Studio: "access denied" | You clicked Deny, or Vocal Ink was removed from VTube Studio's plugin list. Use **Ask for access** on the Avatar page and click **Allow**. |
+| VTube Studio: "access denied" | You clicked Deny, or Vocal Ink was removed from VTube Studio's plugin list. Use **Ask again** on the Avatar page and click **Allow**. |
 | VTube Studio is connected but the mouth doesn't move | Check the mouth open parameter name (it's case-sensitive; the status details show "parameter not found" for a wrong name). In the model settings, the mouth must be mapped from that parameter. Another plugin may be driving it (error 454 in the details). |
 | The mouth moves for soundboard sounds or my real mic | Set *What moves the mouth* to **Voice only**. |
 | The mouth barely opens, or is always wide open | Change **Sensitivity**. |

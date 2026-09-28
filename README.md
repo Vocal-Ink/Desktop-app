@@ -63,20 +63,44 @@ and add **effects** (radio, telephone, robot, echo, cave, underwater, megaphone)
   OpenAI-compatible service. Push-to-talk (or tap-to-talk), toggle or hands-free; review before speaking, or not.
 
 **Streaming** — see [docs/OBS.md](docs/OBS.md)
-- **Caption overlay** for OBS or any streaming app, including an **ink** style that fills words like the app.
-- obs-websocket: text-source subtitles, closed captions, and a "talking" source for PNGtuber avatars.
-- **Reads Twitch chat aloud** in a voice of your choice, with filters for commands, links, bots and words.
+- **Overlays** for OBS or any streaming app, as many as you like: **captions**, **chat read aloud** and a
+  built-in **PNGtuber**. Start from nine looks (subtitles, ink, speech bubble, outline, karaoke, typewriter,
+  neon, lower third, minimal) and change everything: fonts, colours, box, outline, glow, position on a 3×3 grid,
+  word and entrance animations, timing that follows the real voice, history, names, speaking indicator, custom
+  CSS. A live preview in the app, and every change reaches OBS instantly, no reload.
+  Full reference: [docs/overlay-style.md](docs/overlay-style.md).
+- obs-websocket: add overlays to a scene in one click, text-source subtitles, closed captions, and a "talking" source.
+- **Reads Twitch chat aloud** in a voice of your choice, with filters for commands, links, bots and words, and
+  shows it on stream (moderator deletes are respected).
+
+**VTubing** — see [docs/VTUBING.md](docs/VTUBING.md)
+- Any avatar app that lip-syncs from a microphone works with *Vocal Ink Mic*.
+- Direct connections: **VTube Studio** (plugin API: mouth, smile, expressions and hotkeys when you speak or your
+  mic goes live), **VSeeFace, Warudo, VNyan, VirtualMotionCapture** (mouth shapes A I U E O over VMC),
+  **veadotube mini** (push-to-talk and states), and **Streamer.bot** actions for everything else.
+- Mouth shapes follow the words being said, not just the volume. A built-in **PNGtuber** overlay with your own
+  pictures (talking, blinking, mic live) or Vocal Ink's ink drop.
 
 **Shortcuts**: 30+ actions, all rebindable, working while games have focus, with conflict checks and a warning
 before binding anything that turns on your real mic.
 
 **Accessibility & comfort**: four themes (Midnight ink, Vellum light, Amethyst true-black, High contrast) or match
-the system, nine ink colours, Atkinson Hyperlegible / Lexend / OpenDyslexic fonts, text size up to 250%, letter
-and line spacing, bigger buttons, bold focus ring, reduced or no motion, tap-to-talk, ignore repeated presses,
-ask before speaking, typing echo, screen-reader announcements, full keyboard control.
+the system, any ink colour (with a contrast warning), Atkinson Hyperlegible / Lexend / OpenDyslexic fonts, text
+size up to 250%, letter and line spacing, bigger buttons, bold focus ring, reduced or no motion, tap-to-talk,
+ignore repeated presses, ask before speaking, typing echo, screen-reader announcements, full keyboard control.
 
-**Setup**: a guided first run adapts to where you'll talk (calls, games, stream, in person…) and can be run again
-any time. Backups move your whole setup to another computer; the app can tell you when an update is out.
+**Make it yours**: background tint, paper texture, filled/outlined/flat cards and shadows, sidebar left or right,
+message box at the top or bottom, spoken lines left or centred in a display, reading or serif face, and **saved
+looks** you can switch between and share as `.vilook` files.
+
+**12 languages**: English, Español, Français, Deutsch, Português (Brasil), Italiano, Nederlands, Polski, Türkçe,
+日本語, 한국어, 简体中文. Vocal Ink follows your computer's language and can be switched any time
+([about the translations](i18n/README.md)).
+
+**Setup**: a full-window journey along one ink stroke, node by node. The first stop sets language, text size,
+fonts, contrast, motion and other comfort settings before anything else; the route then adapts to where you'll
+talk (calls, games, stream, VTubing, in person…). It can be run again any time. Backups move your whole setup to
+another computer; the app can tell you when an update is out.
 
 ## Getting started
 
@@ -117,8 +141,11 @@ On Ubuntu 24.04 the distribution's Qt 6.4 works too:
 sudo apt install cmake ninja-build g++ libsecret-1-dev libx11-dev qt6-base-dev qt6-declarative-dev \
   qt6-multimedia-dev qt6-speech-dev qt6-websockets-dev qml6-module-qtquick qml6-module-qtquick-controls \
   qml6-module-qtquick-layouts qml6-module-qtquick-shapes qml6-module-qtquick-dialogs qml6-module-qtquick-window \
-  qml6-module-qtquick-templates qml6-module-qtqml-workerscript qml6-module-qt-labs-folderlistmodel
+  qml6-module-qtquick-templates qml6-module-qtqml-workerscript qml6-module-qt-labs-folderlistmodel \
+  qt6-l10n-tools qt6-translations-l10n
 ```
+
+Chinese, Japanese and Korean need a CJK font on Linux (e.g. `fonts-noto-cjk`); Windows and macOS have one.
 
 ```sh
 cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release
@@ -128,7 +155,7 @@ ctest --test-dir build --output-on-failure
 ```
 
 Useful options: `-DVOCALINK_WITH_WHISPER=OFF`, `-DVOCALINK_WITH_HOTKEYS=OFF`, `-DVOCALINK_WITH_KEYCHAIN=OFF`,
-`-DVOCALINK_BUILD_TESTS=OFF`. Qt 6.4 also builds, but system voices need Qt 6.6+.
+`-DVOCALINK_WITH_TRANSLATIONS=OFF` (needs Qt LinguistTools otherwise; on Ubuntu `qt6-l10n-tools`), `-DVOCALINK_BUILD_TESTS=OFF`. Qt 6.4 also builds, but system voices need Qt 6.6+.
 `-DVOCALINK_WITH_MAC_DRIVER=ON` also builds the macOS virtual mic (a Core Audio plug-in) into the app; the Windows
 driver builds with MSBuild from `driver/windows`. See [docs/VIRTUAL_AUDIO.md](docs/VIRTUAL_AUDIO.md).
 
@@ -141,8 +168,9 @@ Packaging scripts (used by CI, see `.github/workflows/build.yml`):
 | Linux | `packaging/linux/build-appimage.sh build 0.1.0` | `.AppImage` |
 
 Command-line options: `--minimized` (start in the tray), `--no-onboarding`,
-`--show talk|board|voices|audio|stream|settings[:section]|onboarding[:step]|quicktype|compact|showtext`,
-`--demo` (sample conversation) and `--screenshot <file>` (used by CI smoke tests). A `portable.txt` next to the executable keeps all data in a `data`
+`--show talk|board|voices|audio|stream|avatar|settings[:section]|onboarding[:step id]|quicktype|compact|showtext`,
+`--lang <code>` (interface language for one run), `--demo` (sample conversation) and `--screenshot <file>`
+(used by CI smoke tests). A `portable.txt` next to the executable keeps all data in a `data`
 folder beside it.
 
 ### Project layout
@@ -155,11 +183,13 @@ src/audio      mixer, multi-device output, microphone, VAD, soundboard, effects,
 src/tts        voice engines (Piper, system, eSpeak, Azure, ElevenLabs, Fish Audio, OpenAI)
 src/stt        speech recognition (whisper.cpp, OpenAI-compatible) and the microphone controller
 src/models     downloads of Whisper models, the Piper runtime and Piper voices
-src/obs        obs-websocket client, OBS integration, caption overlay web server, Twitch chat
+src/obs        obs-websocket client, OBS integration, overlay web server and style model, Twitch chat
+src/avatar     lip sync for avatar apps: VTube Studio, VMC (OSC), veadotube, Streamer.bot
 src/platform   global hotkeys, virtual audio helpers, the virtual mic installer (VirtualDriver)
 src/ui         the bridge between the app and QML (App singleton, list models, the ink stroke item)
 src/qml        the Qt Quick interface: design tokens (Theme.qml), components, pages, onboarding, windows
 resources/     icons, fonts, word lists and the overlay web page
+i18n/          interface translations (Qt .ts files); tools/i18n.py helps translate
 tests/         Qt Test suites (run with ctest)
 packaging/     Windows, macOS and Linux packaging
 driver/        the virtual mic drivers: Windows (VocalInkAudio.sys, MS-PL) and macOS (HAL plug-in)

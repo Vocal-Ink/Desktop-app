@@ -34,7 +34,7 @@ newer include it. On older versions, update OBS.
 
 ### Connect from Vocal Ink
 
-1. In Vocal Ink, open the **Stream** page and turn on **Connect to OBS**.
+1. In Vocal Ink, open the **Stream** page, tab **OBS**, and turn on the switch next to **OBS**.
 2. Host: `127.0.0.1` if OBS runs on this computer. If OBS runs on another
    PC, enter that PC's IP address (see [Troubleshooting](#troubleshooting)).
 3. Port: `4455`, or whatever you set in OBS.
@@ -70,13 +70,14 @@ The first captions overlay is called *Captions* and lives at
 
 ### Add an overlay
 
-1. Open the **Stream** page, section **Overlays**, and click **Add** (or pick
-   the existing *Captions* overlay). Choose the kind and a look.
+1. Open the **Stream** page, tab **Overlays**, and click **Add overlay**
+   (Captions, Chat read aloud or PNGtuber), or pick the existing *Captions*
+   overlay. Choose a look under **Look**.
 2. Put it in OBS, either way:
    - **Add to OBS scene** (needs the [OBS connection](#connecting-vocal-ink-to-obs)):
      Vocal Ink adds a 1920×1080 Browser Source to the scene that's live. Click
      it again later and it updates that source instead of adding a second one.
-   - **Copy the address**, then in OBS click **+** under *Sources*, choose
+   - **Copy** the address, then in OBS click **+** under *Sources*, choose
      **Browser**, paste the address, set **Width** `1920` and **Height** `1080`
      (your canvas size), leave **Local file** unticked and click **OK**.
      Stretch the source to fill the canvas.
@@ -232,8 +233,8 @@ Update to OBS 28 or newer.
 **OBS runs on a second (streaming) PC**
 - For the connection, enter the streaming PC's IP address as the host, and
   allow port 4455 through its firewall.
-- For the overlays, turn on **Let other computers on my network load it** on
-  the **Stream** page. In the Browser Source on the streaming PC, replace
+- For the overlays, turn on **Let other computers on my network load them**
+  on the **Stream** page (tab **Overlays**). In the Browser Source on the streaming PC, replace
   `127.0.0.1` in the address with the IP address of the PC running Vocal Ink,
   e.g. `http://192.168.1.20:7342/?profile=chat`, and allow port 7342 through
   that PC's firewall. The one-click button always uses `127.0.0.1`, so edit
