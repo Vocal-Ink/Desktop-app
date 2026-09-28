@@ -1,24 +1,18 @@
-/* Vocal Ink caption overlay. Runs in OBS's browser source on a transparent
-   background; overlay.js sets the variables below from the URL query. */
+/* Vocal Ink overlay (docs/overlay-style.md). Runs in OBS's browser source
+   (Chromium 103) on a transparent background. overlay.js turns the profile's
+   style into the custom properties and classes below; custom CSS from the
+   style is added after this file.
+
+   Chromium 103: no :has(), nesting, text-wrap, @scope, container style queries,
+   color-mix() or the individual translate/scale/rotate properties. Outlines are
+   a stroked copy of the text layered underneath (paint-order doesn't apply to
+   HTML text there). */
 
 :root {
-  --font-default: "Segoe UI Variable Display", "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont,
-    "SF Pro Display", "Helvetica Neue", Ubuntu, Cantarell, "Noto Sans", Arial, sans-serif,
+  --vi-fallback: system-ui, -apple-system, "Segoe UI", Roboto, Ubuntu, Cantarell, "Noto Sans", Arial, sans-serif,
     "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji";
-  --font: var(--font-default);
-  --size: 42px;
-  --lh: 55px;
-  --color: #ffffff;
-  --bg: rgba(12, 11, 22, 0.74);
-  --maxw: 70vw;
-  --outline-shadow: 0 0 0 transparent;
-  --accent: #8b7bff;
-  --accent-2: #2fd0dc;
-  --edge-x: 5vw;
-  --edge-y: 6.5vh;
-  --enter: translateY(0.4em);
-  --ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
-  --ease-pop: cubic-bezier(0.3, 1.35, 0.5, 1);
+  --vi-ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --vi-ease-pop: cubic-bezier(0.3, 1.5, 0.5, 1);
 }
 
 html,
@@ -31,140 +25,435 @@ body {
   background: transparent;
 }
 
-body {
-  font-family: var(--font);
-  -webkit-font-smoothing: antialiased;
-  text-rendering: optimizeLegibility;
-}
+#vi-root {
+  /* Filled in from the style by overlay.js; these are the defaults. */
+  --vi-font: "Bricolage Grotesque", var(--vi-fallback);
+  --vi-size: 44px;
+  --vi-weight: 700;
+  --vi-ls: 0em;
+  --vi-lh: 1.25;
+  --vi-transform: none;
+  --vi-font-style: normal;
+  --vi-text: #ffffff;
+  --vi-ink: #b48cff;
+  --vi-unspoken: rgba(255, 255, 255, 0.35);
+  --vi-bg: rgba(18, 13, 31, 0.72);
+  --vi-border: rgba(255, 255, 255, 0.12);
+  --vi-border-w: 0px;
+  --vi-outline-color: #000000;
+  --vi-name: #d9c6ff;
+  --vi-pad: 18px;
+  --vi-radius: 14px;
+  --vi-box-shadow: 0 0.12em 0.9em rgba(0, 0, 0, 0.17);
+  --vi-box-drop: none;
+  --vi-maxw: 70vw;
+  --vi-align: center;
+  --vi-outline: 0px;
+  --vi-text-shadow: 0 0.04em 0.12em rgba(0, 0, 0, 0.36), 0 0.02em 0.5em rgba(0, 0, 0, 0.24);
+  --vi-glow: none;
+  --vi-margin: 48px;
+  --vi-dx: 0vw;
+  --vi-dy: 0vh;
+  --vi-dur: 1; /* 100 / animation.speed */
 
-.stage {
   position: fixed;
   top: 0;
   right: 0;
   bottom: 0;
   left: 0;
+  overflow: hidden;
+  pointer-events: none;
+  opacity: 0;
+  font-family: var(--vi-font);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  font-kerning: normal;
+}
+
+/* Invisible until the first config arrived (or 1.5 s passed), so the page
+   never flashes the default look. */
+.vi-ready #vi-root {
+  opacity: 1;
+  transition: opacity 0.2s ease;
+}
+
+/* ---- Placement ------------------------------------------------------------ */
+
+.vi-stage {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
   box-sizing: border-box;
-  padding: var(--edge-y) var(--edge-x);
+  padding: var(--vi-margin);
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
   align-items: center;
-  pointer-events: none;
 }
 
-[data-position="top"] .stage { justify-content: flex-start; }
-[data-position="middle"] .stage { justify-content: center; }
-[data-align="left"] .stage { align-items: flex-start; }
-[data-align="right"] .stage { align-items: flex-end; }
-[data-position="top"] { --enter: translateY(-0.4em); }
-[data-position="middle"] { --enter: scale(0.96); }
+.vi-shift {
+  display: flex;
+  flex-direction: column;
+  align-items: inherit;
+  max-width: 100%;
+  transform: translate(var(--vi-dx), var(--vi-dy));
+}
 
-/* ---- The caption box ---------------------------------------------------- */
+.vi-anchor-top-left .vi-stage,
+.vi-anchor-top .vi-stage,
+.vi-anchor-top-right .vi-stage { justify-content: flex-start; }
+.vi-anchor-left .vi-stage,
+.vi-anchor-center .vi-stage,
+.vi-anchor-right .vi-stage { justify-content: center; }
+.vi-anchor-top-left .vi-stage,
+.vi-anchor-left .vi-stage,
+.vi-anchor-bottom-left .vi-stage { align-items: flex-start; }
+.vi-anchor-top-right .vi-stage,
+.vi-anchor-right .vi-stage,
+.vi-anchor-bottom-right .vi-stage { align-items: flex-end; }
 
-.box {
+/* ---- The box --------------------------------------------------------------- */
+
+.vi-box {
   position: relative;
   box-sizing: border-box;
-  max-width: var(--maxw);
-  font-size: var(--size);
-  line-height: var(--lh);
-  color: var(--color);
-  text-align: center;
-  overflow-wrap: break-word;
-  opacity: 0;
-  visibility: hidden;
-  transform: var(--enter);
-  transition: opacity 0.35s ease, transform 0.35s var(--ease-out), visibility 0s linear 0.35s;
-}
-
-[data-align="left"] .box { text-align: left; }
-[data-align="right"] .box { text-align: right; }
-
-.box.show {
-  opacity: 1;
-  visibility: visible;
-  transform: none;
-  transition: opacity 0.22s ease, transform 0.4s var(--ease-out), visibility 0s;
-}
-
-.viewport {
-  height: 0;
-  overflow: hidden;
-  /* room for text shadows/outlines at the sides without clipping them */
-  padding: 0 0.3em;
-  margin: 0 -0.3em;
-  transition: height 0.28s var(--ease-out);
-}
-
-.scroller {
-  position: relative;
-  transition: transform 0.34s var(--ease-out);
-}
-
-.msg {
-  margin: 0;
-  transition: opacity 0.4s ease;
-}
-
-.keep { white-space: nowrap; }
-
-.msg.old { opacity: 0.55; }
-
-.w {
-  display: inline-block;
-  opacity: 0;
-  transform: translateY(0.22em);
-  transition: opacity 0.2s ease-out, transform 0.3s var(--ease-out);
-}
-
-.w.on {
-  opacity: 1;
-  transform: none;
-}
-
-/* ---- Name label and speaking / listening indicator ---------------------- */
-
-.meta {
-  display: none;
+  display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 0.45em;
-  font-size: 0.46em;
+  gap: 0.4em;
+  max-width: var(--vi-maxw);
+  padding: var(--vi-pad) calc(var(--vi-pad) * 1.3);
+  border: var(--vi-border-w) solid var(--vi-border);
+  border-radius: var(--vi-radius);
+  background: var(--vi-bg);
+  box-shadow: var(--vi-box-shadow);
+  color: var(--vi-text);
+  font-size: var(--vi-size);
+  font-weight: var(--vi-weight);
+  font-style: var(--vi-font-style);
+  line-height: var(--vi-lh);
+  letter-spacing: var(--vi-ls);
+  text-transform: var(--vi-transform);
+  text-align: var(--vi-align);
+  overflow-wrap: break-word;
+  visibility: hidden;
+}
+
+.vi-box.vi-shown { visibility: visible; }
+
+.vi-no-box .vi-box { box-shadow: none; }
+
+.vi-content {
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.vi-empty .vi-content { display: none; }
+
+/* Bubble tail: a triangle in the box colour under the box. */
+.vi-box::after {
+  content: "";
+  display: none;
+  position: absolute;
+  top: calc(100% + var(--vi-border-w) - 1px);
+  left: calc(var(--vi-radius) * 0.6 + 0.5em);
+  width: 0.9em;
+  height: 0.7em;
+  background: var(--vi-bg);
+  -webkit-clip-path: polygon(0 0, 100% 0, 8% 100%);
+  clip-path: polygon(0 0, 100% 0, 8% 100%);
+}
+
+.vi-tail-left .vi-box::after,
+.vi-tail-center .vi-box::after,
+.vi-tail-right .vi-box::after { display: block; }
+.vi-tail-center .vi-box::after {
+  left: calc(50% - 0.45em);
+  -webkit-clip-path: polygon(0 0, 100% 0, 50% 100%);
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+}
+.vi-tail-right .vi-box::after {
+  left: auto;
+  right: calc(var(--vi-radius) * 0.6 + 0.5em);
+  -webkit-clip-path: polygon(0 0, 100% 0, 92% 100%);
+  clip-path: polygon(0 0, 100% 0, 92% 100%);
+}
+/* The tail hangs below the box: keep room for it, and let the shadow follow it. */
+.vi-tail-left .vi-box,
+.vi-tail-center .vi-box,
+.vi-tail-right .vi-box {
+  margin-bottom: 0.7em;
+  box-shadow: none;
+  -webkit-filter: var(--vi-box-drop);
+  filter: var(--vi-box-drop);
+}
+
+/* ---- Caption lines --------------------------------------------------------- */
+
+.vi-lines {
+  display: flex;
+  flex-direction: column;
+}
+
+.vi-line {
+  position: relative;
+  transition: opacity calc(0.45s * var(--vi-dur)) ease;
+}
+
+.vi-roll .vi-line.vi-age-1 { opacity: 0.55; }
+.vi-roll .vi-line.vi-age-2 { opacity: 0.38; }
+.vi-roll .vi-line.vi-age-3 { opacity: 0.28; }
+
+.vi-viewport {
+  position: relative;
+  transition: height calc(0.3s * var(--vi-dur)) var(--vi-ease-out);
+}
+
+/* Long captions scroll inside a window of history.maxLines lines: the lines
+   outside it fade out (overlay.js marks them), nothing is clipped. */
+.vi-text .vi-off {
+  opacity: 0 !important;
+  transition: opacity calc(0.25s * var(--vi-dur)) ease !important;
+}
+
+.vi-text {
+  position: relative;
+  z-index: 0; /* the stroked outline copies stay above the box background */
+  transition: transform calc(0.35s * var(--vi-dur)) var(--vi-ease-out);
+}
+
+.vi-keep { white-space: nowrap; }
+
+/* A unit is what gets revealed: a word, or a letter for the typewriter. */
+.vi-u {
+  position: relative;
+  display: inline-block;
+  vertical-align: top;
+  text-shadow: var(--vi-text-shadow);
+}
+
+.vi-word { max-width: 100%; }
+
+.vi-ch { white-space: pre; }
+
+/* Outline: a stroked copy of the text underneath (see the browser note above). */
+.vi-has-outline .vi-u { text-shadow: var(--vi-glow); }
+.vi-has-outline .vi-u::before {
+  content: attr(data-t);
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: -1;
+  color: var(--vi-outline-color);
+  -webkit-text-stroke: calc(var(--vi-outline) * 2) var(--vi-outline-color);
+  text-shadow: var(--vi-text-shadow);
+  pointer-events: none;
+}
+.vi-has-outline .vi-word.vi-split::before { content: none; }
+
+/* ---- Word animations: unspoken words keep their place but are invisible ---- */
+
+.vi-u {
+  transition: opacity calc(0.25s * var(--vi-dur)) ease-out, transform calc(0.35s * var(--vi-dur)) var(--vi-ease-out),
+    color calc(0.7s * var(--vi-dur)) ease;
+}
+
+.vi-wa-none .vi-u,
+.vi-wa-fade .vi-u,
+.vi-wa-rise .vi-u,
+.vi-wa-pop .vi-u,
+.vi-wa-bounce .vi-u,
+.vi-wa-glow .vi-u,
+.vi-wa-type .vi-ch { opacity: 0; }
+
+.vi-wa-none .vi-u,
+.vi-wa-type .vi-ch { transition: none; }
+
+.vi-wa-rise .vi-u { transform: translateY(0.34em); }
+.vi-wa-pop .vi-u {
+  transform: scale(0.35);
+  transition: opacity calc(0.12s * var(--vi-dur)) ease-out, transform calc(0.42s * var(--vi-dur)) var(--vi-ease-pop),
+    color calc(0.6s * var(--vi-dur)) ease;
+}
+
+.vi-u.spoken,
+.vi-wa-type .vi-ch.spoken {
+  opacity: 1;
+  transform: none;
+}
+
+.vi-wa-bounce .vi-u.spoken { animation: vi-bounce calc(0.55s * var(--vi-dur)) ease-out both; }
+.vi-wa-glow .vi-u.spoken { animation: vi-glow-in calc(0.9s * var(--vi-dur)) ease-out both; }
+
+/* The newest word is still wet with ink, then dries to the text colour. */
+.vi-wa-pop .vi-u.wet,
+.vi-wa-bounce .vi-u.wet,
+.vi-wa-glow .vi-u.wet { color: var(--vi-ink); }
+
+@keyframes vi-bounce {
+  0% { opacity: 0; transform: translateY(-0.55em); }
+  45% { opacity: 1; transform: translateY(0.06em); }
+  70% { transform: translateY(-0.12em); }
+  100% { opacity: 1; transform: none; }
+}
+
+@keyframes vi-glow-in {
+  0% { opacity: 0; transform: scale(0.94); }
+  25% { opacity: 1; transform: scale(1.04); }
+  100% { opacity: 1; transform: none; }
+}
+
+/* ink: every word is there from the start, faint, and fills with ink as it
+   is spoken (a sweep across the word). */
+.vi-wa-ink .vi-u { color: var(--vi-unspoken); }
+.vi-wa-ink .vi-u::after {
+  content: attr(data-t);
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  color: var(--vi-ink);
+  text-shadow: var(--vi-glow);
+  -webkit-clip-path: inset(-0.3em 100% -0.3em -0.1em);
+  clip-path: inset(-0.3em 100% -0.3em -0.1em);
+  transition: -webkit-clip-path var(--vi-fill, 0.3s) linear, clip-path var(--vi-fill, 0.3s) linear,
+    color calc(0.9s * var(--vi-dur)) ease;
+  pointer-events: none;
+}
+.vi-rtl.vi-wa-ink .vi-u::after,
+.vi-rtl .vi-wa-ink .vi-u::after {
+  -webkit-clip-path: inset(-0.3em -0.1em -0.3em 100%);
+  clip-path: inset(-0.3em -0.1em -0.3em 100%);
+}
+.vi-wa-ink .vi-u.spoken::after,
+.vi-rtl .vi-wa-ink .vi-u.spoken::after {
+  -webkit-clip-path: inset(-0.3em -0.2em -0.3em -0.2em);
+  clip-path: inset(-0.3em -0.2em -0.3em -0.2em);
+}
+.vi-wa-ink .vi-u.dry::after { color: var(--vi-text); }
+.vi-wa-ink .vi-u.spoken { color: transparent; }
+/* A stroked outline would show through the faint words: dim it with them. */
+.vi-has-outline.vi-wa-ink .vi-u::before,
+.vi-has-outline .vi-wa-ink .vi-u::before { opacity: 0.55; }
+.vi-has-outline.vi-wa-ink .vi-u.spoken::before,
+.vi-has-outline .vi-wa-ink .vi-u.spoken::before { opacity: 1; }
+
+/* Karaoke: the spoken words stay lit in the ink colour. */
+.vi-preset-karaoke .vi-wa-ink .vi-u.dry::after,
+.vi-preset-karaoke.vi-wa-ink .vi-u.dry::after { color: var(--vi-ink); }
+.vi-preset-karaoke .vi-u.wet { transform: translateY(-0.04em) scale(1.06); }
+
+/* Typewriter: letters appear one by one behind a blinking caret. */
+.vi-caret {
+  display: inline-block;
+  width: 0.09em;
+  height: 1.05em;
+  margin: 0 -0.09em 0 0.02em;
+  vertical-align: -0.16em;
+  border-radius: 0.04em;
+  background: var(--vi-ink);
+  animation: vi-caret 1s steps(1) infinite;
+}
+.vi-wa-type .vi-line.vi-done .vi-caret { animation-duration: 1.1s; }
+.vi-line:not(.vi-current) .vi-caret { display: none; }
+
+@keyframes vi-caret {
+  0%, 55% { opacity: 1; }
+  56%, 100% { opacity: 0; }
+}
+
+/* ---- Name and indicator ------------------------------------------------------ */
+
+.vi-name {
+  display: none;
+  color: var(--vi-name);
+  font-size: 0.5em;
+  font-weight: 800;
   line-height: 1.25;
-  font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   white-space: nowrap;
-  opacity: 0.78;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-shadow: var(--vi-text-shadow);
 }
 
-[data-align="left"] .meta { justify-content: flex-start; }
-[data-align="right"] .meta { justify-content: flex-end; }
-.has-meta .meta { display: flex; }
-.has-meta:not(.meta-only) .meta { margin-bottom: 0.3em; }
+.vi-name:empty { display: none !important; }
+.vi-show-name.vi-np-above .vi-name-above,
+.vi-show-name.vi-np-below .vi-name-below { display: block; }
+.vi-name-above { margin-bottom: 0.3em; }
+.vi-name-below { margin-top: 0.3em; }
 
-.label:empty { display: none; }
-
-.signal {
-  display: none;
+.vi-show-name.vi-np-inline .vi-name-inline {
+  display: inline;
   position: relative;
-  width: 1.15em;
-  height: 1.15em;
+  margin-right: 0.35em;
+  font-size: 1em;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  vertical-align: top;
+}
+.vi-name-inline::after { content: ":"; }
+
+.vi-ind {
+  display: none;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 0.4em;
+  font-size: 0.5em;
+  font-weight: 800;
+  line-height: 1.25;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--vi-text);
+  text-shadow: var(--vi-text-shadow);
+}
+
+.vi-show-ind .vi-signal .vi-ind { display: inline-flex; }
+.vi-ind-label { opacity: 0.85; }
+.vi-ind-pos-after .vi-ind { order: 2; }
+.vi-ind-pos-corner .vi-ind {
+  position: absolute;
+  top: -0.7em;
+  right: -0.7em;
+  padding: 0.35em 0.55em;
+  border-radius: 1em;
+  background: var(--vi-bg);
+  box-shadow: 0 0.1em 0.4em rgba(0, 0, 0, 0.3);
+}
+.vi-ind-pos-corner .vi-empty .vi-ind { position: static; padding: 0; background: none; box-shadow: none; }
+.vi-ind-label { display: none; }
+.vi-empty .vi-ind-label { display: inline; }
+
+.vi-ind-icon {
+  position: relative;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
+  width: 1.3em;
+  height: 1.3em;
 }
 
-.signal-on .signal { display: inline-flex; }
+.vi-ind-icon > * { display: none; }
+.vi-ind-dot .vi-state-speaking .vi-dot { display: block; }
+.vi-ind-bars .vi-state-speaking .vi-bars,
+.vi-ind-wave .vi-state-speaking .vi-wave { display: inline-flex; }
+.vi-state-listening .vi-mic,
+.vi-state-mic .vi-mic { display: block; }
 
-.dot {
+.vi-dot {
   position: relative;
-  width: 0.6em;
-  height: 0.6em;
+  width: 0.62em;
+  height: 0.62em;
   border-radius: 50%;
-  background: linear-gradient(135deg, var(--accent), var(--accent-2));
-  animation: beat 1.3s ease-in-out infinite;
+  background: var(--vi-ink);
+  box-shadow: 0 0 0.5em var(--vi-ink);
+  animation: vi-beat 1.3s ease-in-out infinite;
 }
-
-.dot::after {
+.vi-dot::after {
   content: "";
   position: absolute;
   top: 0;
@@ -173,194 +462,258 @@ body {
   left: 0;
   border-radius: 50%;
   background: inherit;
-  animation: ring 1.3s ease-out infinite;
+  animation: vi-ring 1.3s ease-out infinite;
 }
 
-.mic {
-  display: none;
-  width: 1.15em;
-  height: 1.15em;
-  fill: var(--accent-2);
-  animation: breathe 1.6s ease-in-out infinite;
+.vi-bars,
+.vi-wave {
+  align-items: center;
+  gap: 0.12em;
+  height: 1.1em;
 }
+.vi-bars i,
+.vi-wave i {
+  display: block;
+  width: 0.16em;
+  height: 100%;
+  border-radius: 0.1em;
+  background: var(--vi-ink);
+  transform-origin: 50% 50%;
+}
+.vi-bars i { animation: vi-bar 0.9s ease-in-out infinite; }
+.vi-bars i:nth-child(2) { animation-delay: -0.3s; }
+.vi-bars i:nth-child(3) { animation-delay: -0.6s; }
+.vi-wave i { transform: scaleY(0.3); transition: transform 0.08s linear; }
 
-.listening .dot { display: none; }
-.listening .mic { display: block; }
+.vi-mic {
+  width: 1.25em;
+  height: 1.25em;
+  fill: var(--vi-ink);
+  animation: vi-breathe 1.6s ease-in-out infinite;
+}
+.vi-state-mic:not(.vi-state-listening) .vi-mic { fill: #ff5a6e; }
 
-@keyframes beat {
+@keyframes vi-beat {
   0%, 100% { transform: scale(0.82); }
   50% { transform: scale(1.06); }
 }
-
-@keyframes ring {
-  from { transform: scale(1); opacity: 0.65; }
+@keyframes vi-ring {
+  from { transform: scale(1); opacity: 0.6; }
   to { transform: scale(2.6); opacity: 0; }
 }
-
-@keyframes breathe {
-  0%, 100% { opacity: 0.6; }
+@keyframes vi-bar {
+  0%, 100% { transform: scaleY(0.3); }
+  50% { transform: scaleY(1); }
+}
+@keyframes vi-breathe {
+  0%, 100% { opacity: 0.65; }
   50% { opacity: 1; }
 }
 
-/* ---- style=subtitles (default) ------------------------------------------ */
+/* ---- Presets that need more than fields ---------------------------------------- */
 
-[data-style="subtitles"] .box {
-  background: var(--bg);
-  border-radius: 0.3em;
-  padding: 0.3em 0.72em 0.36em;
-  font-weight: 600;
-  letter-spacing: 0.005em;
-  text-shadow: var(--outline-shadow), 0 0.03em 0.08em rgba(0, 0, 0, 0.45);
-  box-shadow: 0 0.35em 1.2em rgba(0, 0, 0, 0.28);
+/* Lower third: a name tab on top of a box with an ink edge. */
+.vi-preset-lowerthird .vi-box {
+  --vi-accent: calc(var(--vi-size) * 0.14);
+  border-left: var(--vi-accent) solid var(--vi-ink);
+  border-radius: 0 var(--vi-radius) var(--vi-radius) 0;
 }
-
-[data-style="subtitles"] .box.meta-only { padding: 0.32em 0.6em; }
-
-/* ---- style=ink: words are there from the start, pale, and fill with ink
-   as they are spoken (the newest word in wet violet), like the app -------- */
-
-[data-style="ink"] {
-  --accent: #8c52ff;
-  --accent-2: #ff7ad9;
-  --enter: translateY(0.25em);
-}
-
-[data-style="ink"] .box {
-  background: var(--bg);
-  border-radius: 0.34em;
-  padding: 0.3em 0.72em 0.36em;
-  font-weight: 700;
-  box-shadow: 0 0.35em 1.2em rgba(0, 0, 0, 0.3);
-}
-
-[data-style="ink"] .w {
-  opacity: 1;
-  transform: none;
-  color: transparent;
-  background-image: linear-gradient(90deg, var(--color) 50%, rgba(255, 255, 255, 0.26) 50%);
-  background-size: 200% 100%;
-  background-position: 100% 0;
-  -webkit-background-clip: text;
-  background-clip: text;
-  transition: background-position 0.32s var(--ease-out);
-}
-
-[data-style="ink"] .w.on { background-position: 0 0; }
-
-[data-style="ink"] .w.wet {
-  background-image: linear-gradient(90deg, var(--ink) 50%, rgba(255, 255, 255, 0.26) 50%);
-}
-
-[data-style="ink"] .meta { color: var(--ink); opacity: 1; }
-
-/* ---- style=bubble: a speech bubble, e.g. next to a PNGtuber avatar ------ */
-
-[data-style="bubble"] {
-  --accent: #684cff;
-  --accent-2: #1eb8c4;
-  --enter: scale(0.82);
-}
-
-[data-style="bubble"] .box {
-  background: var(--bg);
-  border-radius: 0.95em;
-  padding: 0.5em 0.9em 0.56em;
-  margin-bottom: 0.62em; /* the tail hangs below */
-  font-weight: 650;
-  text-shadow: var(--outline-shadow);
-  filter: drop-shadow(0 0.2em 0.45em rgba(0, 0, 0, 0.3));
-  transform-origin: 1.5em 115%;
-  transition: opacity 0.25s ease, transform 0.3s var(--ease-out), visibility 0s linear 0.3s;
-}
-
-[data-style="bubble"] .box.show {
-  transition: opacity 0.18s ease, transform 0.45s var(--ease-pop), visibility 0s;
-}
-
-[data-style="bubble"] .box::after {
-  content: "";
+.vi-preset-lowerthird .vi-name-above {
   position: absolute;
-  top: calc(100% - 1px);
-  left: 1.1em;
-  width: 0.95em;
-  height: 0.66em;
-  background: inherit;
-  clip-path: polygon(0 0, 100% 0, 12% 100%);
+  bottom: 100%;
+  left: calc(-1 * var(--vi-accent));
+  max-width: 100%;
+  margin: 0;
+  padding: 0.4em 1em 0.34em;
+  border-radius: var(--vi-radius) var(--vi-radius) 0 0;
+  background: var(--vi-ink);
+  color: var(--vi-name);
+  font-size: 0.46em;
+  letter-spacing: 0.12em;
+  text-shadow: none;
+}
+.vi-preset-lowerthird .vi-empty .vi-name-above { display: none; }
+
+/* Neon: the text itself is the light source. */
+.vi-has-glow .vi-u { text-shadow: var(--vi-glow); }
+.vi-has-glow.vi-has-outline .vi-u::before { text-shadow: none; }
+
+/* Typewriter paper: a faint ruled line under each row of text. */
+.vi-preset-typewriter .vi-text {
+  background-image: linear-gradient(to bottom, transparent calc(100% - 1px), rgba(0, 0, 0, 0.07) calc(100% - 1px));
+  background-size: 100% calc(var(--vi-lh) * 1em);
 }
 
-[data-style="bubble"][data-tail="center"] .box { transform-origin: 50% 115%; }
-[data-style="bubble"][data-tail="center"] .box::after {
-  left: calc(50% - 0.48em);
-  clip-path: polygon(0 0, 100% 0, 50% 100%);
+/* ---- Chat ------------------------------------------------------------------------ */
+
+.vi-chat {
+  display: flex;
+  flex-direction: column;
+  align-items: inherit;
+  gap: 0.35em;
+  font-size: var(--vi-size);
+  max-width: 100%;
 }
 
-[data-style="bubble"][data-tail="right"] .box { transform-origin: calc(100% - 1.5em) 115%; }
-[data-style="bubble"][data-tail="right"] .box::after {
-  left: auto;
-  right: 1.1em;
-  clip-path: polygon(0 0, 100% 0, 88% 100%);
+.vi-chat .vi-box {
+  display: block;
+  visibility: visible;
+  width: -webkit-max-content;
+  width: max-content;
+  font-size: 1em;
 }
 
-[data-style="bubble"][data-tail="none"] .box { margin-bottom: 0; }
-[data-style="bubble"][data-tail="none"] .box::after { display: none; }
-
-[data-style="bubble"] .meta {
-  color: var(--accent);
-  opacity: 1;
+.vi-chat-slot {
+  display: flex;
+  flex-direction: column;
+  align-items: inherit;
+  overflow: visible;
 }
 
-[data-style="bubble"] .box.meta-only { padding: 0.36em 0.7em; }
+.vi-chat-head {
+  display: flex;
+  align-items: center;
+  gap: 0.35em;
+  margin-bottom: 0.2em;
+  font-size: 0.72em;
+  line-height: 1.2;
+  text-transform: none;
+}
+.vi-np-below .vi-chat-head { margin: 0.25em 0 0; }
+.vi-np-inline .vi-chat-head {
+  display: inline-flex;
+  margin: 0 0.35em 0 0;
+  font-size: 1em;
+  vertical-align: top;
+}
+.vi-np-inline .vi-chat-name::after { content: ":"; }
+.vi-align-right .vi-chat-head { justify-content: flex-end; }
+.vi-align-center .vi-chat-head { justify-content: center; }
 
-/* ---- style=plain: outlined text only, for custom scenes ----------------- */
-
-[data-style="plain"] .box {
-  font-weight: 700;
-  text-shadow: var(--outline-shadow), 0 0.05em 0.3em rgba(0, 0, 0, 0.55);
+.vi-chat-name {
+  color: var(--vi-name);
+  font-weight: 800;
+  text-shadow: var(--vi-text-shadow);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 14em;
 }
 
-[data-style="plain"] .meta { opacity: 0.9; }
+.vi-badge {
+  display: inline-block;
+  padding: 0.18em 0.45em 0.14em;
+  border-radius: 0.35em;
+  background: rgba(255, 255, 255, 0.16);
+  color: #ffffff;
+  font-size: 0.62em;
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-shadow: none;
+}
+.vi-badge-broadcaster { background: #e0243c; }
+.vi-badge-mod { background: #11a55a; }
+.vi-badge-vip { background: #d61fa8; }
+.vi-badge-sub,
+.vi-badge-founder { background: #7b3fe4; }
 
-/* A background colour set with bg= on plain/bubble-less boxes */
-.no-bg .box { box-shadow: none; }
+.vi-chat .vi-text { display: inline; }
+.vi-chat-action .vi-text { font-style: italic; }
+.vi-chat-action .vi-u { color: var(--vi-chatter, var(--vi-name)); }
 
-/* ---- Reduced motion: fades only ----------------------------------------- */
+/* The message being read fills with ink, then dries again. */
+.vi-chat .vi-wa-ink .vi-u,
+.vi-chat .vi-u { color: inherit; opacity: 1; transform: none; }
+.vi-chat .vi-reading { box-shadow: var(--vi-box-shadow), 0 0 0 0.09em var(--vi-ink); }
+.vi-chat .vi-u::after {
+  content: attr(data-t);
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  color: var(--vi-ink);
+  text-shadow: var(--vi-glow);
+  -webkit-clip-path: inset(-0.3em 100% -0.3em -0.1em);
+  clip-path: inset(-0.3em 100% -0.3em -0.1em);
+  transition: -webkit-clip-path var(--vi-fill, 0.3s) linear, clip-path var(--vi-fill, 0.3s) linear,
+    color calc(1.2s * var(--vi-dur)) ease;
+  pointer-events: none;
+}
+.vi-chat .vi-u.spoken::after {
+  -webkit-clip-path: inset(-0.3em -0.2em -0.3em -0.2em);
+  clip-path: inset(-0.3em -0.2em -0.3em -0.2em);
+}
+.vi-chat .vi-u.spoken { color: transparent; }
+.vi-chat .vi-read .vi-u.spoken { color: inherit; }
+.vi-chat .vi-read .vi-u::after { color: transparent; }
 
-.reduced-motion .box,
-.reduced-motion .box.show,
-.reduced-motion .w {
-  transform: none !important;
+/* ---- Avatar (built-in PNGtuber) ------------------------------------------------ */
+
+.vi-kind-avatar .vi-stage { padding: var(--vi-margin); }
+
+.vi-avatar {
+  position: relative;
+  height: var(--vi-avatar-size, 60vh);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
 }
 
-.reduced-motion .viewport,
-.reduced-motion .scroller {
-  transition: none !important;
+.vi-avatar-look {
+  height: 100%;
+  -webkit-filter: var(--vi-avatar-filter, none);
+  filter: var(--vi-avatar-filter, none);
+  transition: -webkit-filter 0.25s ease, filter 0.25s ease;
 }
 
-.reduced-motion .dot,
-.reduced-motion .dot::after,
-.reduced-motion .mic {
-  animation: none !important;
+.vi-avatar-motion {
+  height: 100%;
+  transform-origin: 50% 100%;
+  will-change: transform;
 }
 
-.reduced-motion .dot::after { display: none; }
+.vi-avatar-flip { height: 100%; }
+.vi-avatar-flipped .vi-avatar-flip { transform: scaleX(-1); }
+
+.vi-avatar-img {
+  display: none;
+  height: 100%;
+  width: auto;
+  -webkit-user-drag: none;
+  user-select: none;
+}
+.vi-avatar-img.vi-on { display: block; }
+
+.vi-blob {
+  display: block;
+  height: 100%;
+  width: auto;
+  overflow: visible;
+}
+.vi-blob .vi-lid { transform-origin: 50% 50%; transform-box: fill-box; transition: transform 0.07s ease; }
+.vi-blob.vi-blinking .vi-lid { transform: scaleY(0.12); }
+
+/* ---- Reduced motion: fades only ---------------------------------------------- */
+
+.vi-reduced .vi-u,
+.vi-reduced .vi-u.spoken,
+.vi-reduced .vi-text,
+.vi-reduced .vi-viewport { transform: none !important; animation: none !important; }
+.vi-reduced .vi-dot,
+.vi-reduced .vi-dot::after,
+.vi-reduced .vi-bars i,
+.vi-reduced .vi-mic,
+.vi-reduced .vi-caret { animation: none !important; }
+.vi-reduced .vi-dot::after { display: none; }
 
 @media (prefers-reduced-motion: reduce) {
-  .box,
-  .box.show,
-  .w {
-    transform: none !important;
-  }
-
-  .viewport,
-  .scroller {
-    transition: none !important;
-  }
-
-  .dot,
-  .dot::after,
-  .mic {
-    animation: none !important;
-  }
-
-  .dot::after { display: none; }
+  .vi-u,
+  .vi-u.spoken { transform: none !important; animation: none !important; }
+  .vi-dot,
+  .vi-dot::after,
+  .vi-bars i,
+  .vi-mic,
+  .vi-caret { animation: none !important; }
 }

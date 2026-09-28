@@ -357,8 +357,21 @@ void TwitchChat::handleLine(const QString &line)
             emit statusChanged(false, tr("#%1 can't be read right now (the channel may be suspended or renamed).")
                                           .arg(m_channel));
         }
+    } else if (irc.command == QLatin1String("CLEARMSG")) {
+        // A moderator deleted one message: "@login=...;target-msg-id=<id> :tmi.twitch.tv CLEARMSG #chan :text"
+        const QString id = irc.tags.value(QStringLiteral("target-msg-id")).trimmed();
+        if (!id.isEmpty())
+            emit messageDeleted(id);
+    } else if (irc.command == QLatin1String("CLEARCHAT")) {
+        // Timeout or ban ("CLEARCHAT #chan :login"), or the whole chat ("CLEARCHAT #chan").
+        const QString login = irc.params.value(1).trimmed().toLower();
+        if (login.isEmpty())
+            emit chatCleared();
+        else
+            emit userCleared(login);
     } else if (irc.command == QLatin1String("PRIVMSG") && irc.params.size() >= 2) {
         Message message;
+        message.id = irc.tags.value(QStringLiteral("id")).trimmed();
         message.login = irc.nick.toLower();
         message.displayName = irc.tags.value(QStringLiteral("display-name")).trimmed();
         if (message.displayName.isEmpty())

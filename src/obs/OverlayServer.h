@@ -2,14 +2,20 @@
 
 #include "obs/OverlayStyle.h"
 
+#include <QByteArray>
+#include <QElapsedTimer>
 #include <QHash>
+#include <QJsonArray>
 #include <QJsonObject>
 #include <QList>
 #include <QObject>
+#include <QPair>
 #include <QPointer>
 #include <QString>
+#include <QStringList>
 #include <QUrl>
 
+class QTimer;
 class QTcpServer;
 class QTcpSocket;
 class QWebSocket;
@@ -80,16 +86,55 @@ public:
     void setSpeaking(bool speaking);
     void setListening(bool listening);
 
+    // The fonts pages can load: [{family, url, weight, style}] (from the font dir).
+    QJsonArray fonts() const { return m_fonts; }
+    // "<version>+<hash of the page files>"; pages reload when it changes.
+    QString build() const { return m_build; }
+
+    static constexpr int kMaxPages = 32;
+    static constexpr int kChatReplay = 20;
+
 signals:
     void clientCountChanged(int count);
 
 private:
+    struct Client
+    {
+        QPointer<QWebSocket> socket;
+        QString requested;     // ?profile= of the page ("" = main)
+        QString kind;          // of the profile it gets (unknown ids get main)
+        bool wantsLevel = false;
+        QByteArray lastConfig; // last config sent, so unchanged configs aren't re-sent
+    };
+    struct ChatEntry
+    {
+        QJsonObject message;   // the {"type":"chat"} message as sent
+        qint64 receivedMs = 0; // m_clock time
+    };
+    struct AwaitingChat
+    {
+        QString id;
+        QStringList words;
+        qint64 receivedMs = 0;
+    };
+    enum PageKinds { CaptionPages = 1, ChatPages = 2, AvatarPages = 4, LevelPages = 8, AllPages = 7 };
+
     void onNewConnection();
     void onWebSocketConnection();
     void handleHttp(QTcpSocket *socket);
     void respond(QTcpSocket *socket, int status, const QByteArray &contentType, const QByteArray &body,
-                 bool headOnly = false);
+                 bool headOnly = false, const QList<QPair<QByteArray, QByteArray>> &extraHeaders = {});
     void broadcast(const QByteArray &json);
+    void sendTo(int pageKinds, const QByteArray &json);
+    void refreshClients(); // re-resolve every page's profile, push configs that changed
+    void updateClient(Client &client);
+    void sendReplay(const Client &client);
+    OverlayProfile profileFor(const QString &requested) const;
+    QByteArray configJson(const OverlayProfile &profile) const;
+    QByteArray avatarJson() const;
+    void flushProgress();
+    void flushLevel();
+    void loadFonts();
     bool isAllowedHost(const QByteArray &host) const;
     bool isAllowedOrigin(const QByteArray &origin, const QByteArray &host) const;
     QByteArray stateJson() const;
@@ -97,16 +142,39 @@ private:
     QList<OverlayProfile> m_profiles;
     QHash<QString, QString> m_assets;
     QString m_fontDir = QStringLiteral(":/fonts");
-    QStringList m_allowedHosts;
+    QHash<QString, QString> m_fontFiles; // served file name -> path
+    QJsonArray m_fonts;
+    QStringList m_allowedHosts;          // lower case
+    QStringList m_ownHostNames;          // this machine's names (LAN mode)
     QJsonObject m_labels;
     QString m_legacyQuery;
+    QString m_build;
     QTcpServer *m_http = nullptr;
     QWebSocketServer *m_ws = nullptr;
-    QList<QPointer<QWebSocket>> m_clients;
+    QList<Client> m_clients;
     QString m_error;
+    QElapsedTimer m_clock;
     QByteArray m_lastCaption; // replayed to pages that connect mid-sentence
     quint64 m_lastCaptionId = 0;
+    QString m_lastCaptionChat;           // id of the chat message the caption reads
+    QStringList m_lastCaptionWords;
+    QList<ChatEntry> m_chat;             // last kChatReplay, replayed to chat pages
+    QList<AwaitingChat> m_chatAwaiting;  // shown on chat pages, not read yet
+    quint64 m_chatCounter = 0;
+    QTimer *m_progressTimer = nullptr;   // progress: at most ~15 per second
+    QByteArray m_progressPending;
+    quint64 m_progressId = 0;
+    qint64 m_progressSentMs = -1;
+    QTimer *m_levelTimer = nullptr;      // level: <= 20 Hz, dead band, always ends with 0
+    double m_levelPending = 0.0;
+    QString m_visemePending;
+    bool m_levelHasPending = false;
+    double m_levelSent = 0.0;
+    QString m_visemeSent;
+    qint64 m_levelSentMs = -1;
     bool m_allowLan = false;
     bool m_speaking = false;
     bool m_listening = false;
+    bool m_talking = false;
+    bool m_micLive = false;
 };
