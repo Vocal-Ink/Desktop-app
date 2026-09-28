@@ -379,3 +379,61 @@ QByteArray OverlayServer::stateJson() const
                    {QStringLiteral("listening"), m_listening},
                    {QStringLiteral("clients"), clientCount()}});
 }
+
+// --- Profiles, styles and extra events (placeholders; implemented by the overlay work) ---
+
+// Placeholders of the new contract; the overlay engine fills them in.
+
+void OverlayServer::setProfiles(const QList<OverlayProfile> &resolved)
+{
+    m_profiles = resolved;
+}
+
+void OverlayServer::setStyle(const QString &profileId, const QJsonObject &resolvedStyle)
+{
+    for (OverlayProfile &p : m_profiles) {
+        if (p.id == profileId)
+            p.style = resolvedStyle;
+    }
+}
+
+QUrl OverlayServer::profileUrl(const QString &profileId) const
+{
+    return overlayUrl(profileId.isEmpty() || profileId == QLatin1String("main")
+                          ? QString()
+                          : QStringLiteral("profile=") + profileId);
+}
+
+void OverlayServer::setLegacyQuery(const QString &query)
+{
+    m_legacyQuery = query;
+}
+
+void OverlayServer::setAssets(const QHash<QString, QString> &assetIdToPath)
+{
+    m_assets = assetIdToPath;
+}
+
+void OverlayServer::setFontDir(const QString &dir)
+{
+    m_fontDir = dir;
+}
+
+void OverlayServer::setAllowedHosts(const QStringList &hostNames)
+{
+    m_allowedHosts = hostNames;
+}
+
+void OverlayServer::setLabels(const QJsonObject &labels)
+{
+    m_labels = labels;
+}
+
+void OverlayServer::sendProgress(quint64, double, qint64, qint64, bool) {}
+void OverlayServer::sendLevel(double, const QString &) {}
+void OverlayServer::setTalking(bool) {}
+void OverlayServer::setMicLive(bool) {}
+void OverlayServer::chatMessage(const QJsonObject &) {}
+void OverlayServer::chatDelete(const QString &) {}
+void OverlayServer::chatClearUser(const QString &) {}
+void OverlayServer::chatClear() {}

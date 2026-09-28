@@ -2,6 +2,7 @@
 
 #include "Version.h"
 #include "app/AppContext.h"
+#include "avatar/AvatarController.h"
 #include "audio/AudioPlayer.h"
 #include "audio/MicPassthrough.h"
 #include "audio/RoutingCheck.h"
@@ -44,7 +45,7 @@
 namespace {
 // Reading speed used to pace the ink fill when the engine can't tell us
 // how much has been heard yet.
-constexpr double kWordsPerSecond = 2.6;
+constexpr double kWordsPerSecond = SpeechQueue::kWordsPerSecond;
 
 bool isModifierKey(int key)
 {
@@ -120,11 +121,8 @@ Bridge::Bridge(AppContext *context, QObject *parent)
                 if (id != m_currentId || totalMs <= 0)
                     return;
                 m_haveRealProgress = true;
-                // Until synthesis is complete the total keeps growing; don't race ahead.
-                const double estimateMs = m_currentLine.split(QLatin1Char(' '), Qt::SkipEmptyParts).size()
-                    / kWordsPerSecond * 1000.0 / qMax(0.5, m_ctx->speech()->options().rate);
-                const double total = totalKnown ? double(totalMs) : qMax(double(totalMs), estimateMs);
-                setLineProgress(qBound(0.0, playedMs / total, 1.0));
+                setLineProgress(SpeechQueue::progressFraction(m_currentLine, playedMs, totalMs, totalKnown,
+                                                              m_ctx->speech()->options().rate));
             });
     m_progressTimer->setInterval(33);
     connect(m_progressTimer, &QTimer::timeout, this, [this] {
@@ -255,6 +253,7 @@ QObject *Bridge::piperVoices() const { return m_piper; }
 QObject *Bridge::presets() const { return m_presetModel; }
 QObject *Bridge::history() const { return m_ctx->history(); }
 QObject *Bridge::virtualMic() const { return m_ctx->virtualDriver(); }
+QObject *Bridge::avatar() const { return m_ctx->avatar(); }
 
 bool Bridge::captionsPaused() const
 {

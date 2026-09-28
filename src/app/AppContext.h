@@ -10,6 +10,7 @@
 #include <QSet>
 
 class ActionRegistry;
+class AvatarController;
 class AudioPlayer;
 class Earcons;
 class GlobalHotkeys;
@@ -59,6 +60,7 @@ public:
     ModelManager *models() const { return m_models; }
     ObsIntegration *obs() const { return m_obs; }
     OverlayServer *overlay() const { return m_overlay; }
+    AvatarController *avatar() const { return m_avatar; }
     GlobalHotkeys *hotkeys() const { return m_hotkeys; }
     ActionRegistry *actions() const { return m_actions; }
     MicPassthrough *mic() const { return m_mic; }
@@ -100,7 +102,9 @@ public:
     void applySpeechOptions();
     void applySttSettings();
     void applyObsSettings();
-    void applyOverlaySettings();
+    void applyOverlaySettings(); // server: enabled, port, LAN (restarts only if one changed)
+    void applyOverlayStyles();   // profiles, styles, assets, labels: pushed live, no restart
+    void applyAvatarSettings();
     void applyHotkeys();
     void applyMicSettings();
     void applyCueSettings();
@@ -111,7 +115,8 @@ public:
     void setHotkeysSuspended(bool suspended);
     bool hotkeysSuspended() const { return m_hotkeysSuspended; }
 
-    QString overlayUrl() const;
+    QString overlayUrl(const QString &profileId = QString()) const;
+    QString avatarAssetDir() const; // where imported PNGtuber images live
 
 signals:
     // level: 0 = info, 1 = warning, 2 = error
@@ -154,6 +159,7 @@ private:
     ModelManager *m_models = nullptr;
     ObsIntegration *m_obs = nullptr;
     OverlayServer *m_overlay = nullptr;
+    AvatarController *m_avatar = nullptr;
     GlobalHotkeys *m_hotkeys = nullptr;
     ActionRegistry *m_actions = nullptr;
     MicPassthrough *m_mic = nullptr;
@@ -173,6 +179,8 @@ private:
     bool m_voiceResolved = false;
     bool m_initialized = false;
     bool m_hotkeysSuspended = false;
+    bool m_overlayLan = false;
+    QString m_speakingText; // for progress fractions
     bool m_captionsPaused = false;
     bool m_micFromShortcut = false;
     bool m_pttLatched = false;

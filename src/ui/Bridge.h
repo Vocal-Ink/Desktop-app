@@ -41,6 +41,7 @@ class Bridge : public QObject
     Q_PROPERTY(QObject *presets READ presets CONSTANT)
     Q_PROPERTY(QObject *history READ history CONSTANT)
     Q_PROPERTY(QObject *virtualMic READ virtualMic CONSTANT)
+    Q_PROPERTY(QObject *avatar READ avatar CONSTANT) // AvatarController (.vts, .vmc, .veado)
 
     // Speaking
     Q_PROPERTY(bool speaking READ speaking NOTIFY speakingChanged)
@@ -121,6 +122,7 @@ public:
     QObject *presets() const;
     QObject *history() const;
     QObject *virtualMic() const;
+    QObject *avatar() const;
 
     bool speaking() const { return m_speaking; }
     int queued() const { return m_queued; }

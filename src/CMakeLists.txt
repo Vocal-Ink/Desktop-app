@@ -1,5 +1,5 @@
 # vocalink_core: everything except the widgets UI. The app and the tests link it.
-set(VOCALINK_CORE_DIRS app core audio tts stt models obs platform)
+set(VOCALINK_CORE_DIRS app core audio tts stt models obs platform avatar)
 set(VOCALINK_CORE_SOURCES)
 foreach(dir IN LISTS VOCALINK_CORE_DIRS)
     file(GLOB _dir_sources CONFIGURE_DEPENDS

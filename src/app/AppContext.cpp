@@ -1,6 +1,7 @@
 #include "app/AppContext.h"
 
 #include "audio/AudioPlayer.h"
+#include "avatar/AvatarController.h"
 #include "audio/Earcons.h"
 #include "audio/MicPassthrough.h"
 #include "audio/Soundboard.h"
@@ -19,6 +20,7 @@
 #include "models/ModelManager.h"
 #include "obs/ObsIntegration.h"
 #include "obs/OverlayServer.h"
+#include "obs/OverlayStyle.h"
 #include "obs/TwitchChat.h"
 #include "platform/GlobalHotkeys.h"
 #include "platform/VirtualDriver.h"
@@ -31,6 +33,8 @@
 #include <QCryptographicHash>
 #include <QDateTime>
 #include <QGuiApplication>
+#include <QJsonArray>
+#include <QJsonObject>
 #include <QKeySequence>
 #include <QNetworkAccessManager>
 #include <QRegularExpression>
@@ -55,8 +59,15 @@ QString areaOf(const QString &key)
         return QStringLiteral("stt");
     if (key.startsWith(QLatin1String("obs/")))
         return QStringLiteral("obs");
-    if (key.startsWith(QLatin1String("overlay/")))
+    if (key == QLatin1String(Keys::OverlayEnabled) || key == QLatin1String(Keys::OverlayPort)
+        || key == QLatin1String(Keys::OverlayAllowLan))
         return QStringLiteral("overlay");
+    if (key.startsWith(QLatin1String("overlay/")))
+        return QStringLiteral("overlayStyle");
+    if (key.startsWith(QLatin1String("avatar/")) || key.startsWith(QLatin1String("vts/"))
+        || key.startsWith(QLatin1String("vmc/")) || key.startsWith(QLatin1String("veado/"))
+        || key.startsWith(QLatin1String("streamerbot/")))
+        return QStringLiteral("avatar");
     if (key.startsWith(QLatin1String("mic/")))
         return QStringLiteral("mic");
     if (key.startsWith(QLatin1String("a11y/soundCue")))
@@ -95,6 +106,7 @@ AppContext::AppContext(QObject *parent)
     m_models = new ModelManager(m_network, this);
     m_obs = new ObsIntegration(this);
     m_overlay = new OverlayServer(this);
+    m_avatar = new AvatarController(m_settings, m_secrets, this);
     m_hotkeys = new GlobalHotkeys(this);
     m_actions = new ActionRegistry(m_settings, this);
     m_mic = new MicPassthrough(m_player, this);
@@ -121,8 +133,12 @@ AppContext::AppContext(QObject *parent)
             applySttSettings();
         if (areas.contains(QStringLiteral("obs")))
             applyObsSettings();
+        if (areas.contains(QStringLiteral("overlayStyle")))
+            applyOverlayStyles();
         if (areas.contains(QStringLiteral("overlay")))
             applyOverlaySettings();
+        if (areas.contains(QStringLiteral("avatar")))
+            applyAvatarSettings();
         if (areas.contains(QStringLiteral("mic")))
             applyMicSettings();
         if (areas.contains(QStringLiteral("cues")))
@@ -229,7 +245,9 @@ void AppContext::initialize()
     applyAudioRouting();
     applySpeechOptions();
     applySttSettings();
+    applyOverlayStyles();
     applyOverlaySettings();
+    applyAvatarSettings();
     applyMicSettings();
     applyCueSettings();
     applyTwitchSettings();
@@ -259,24 +277,44 @@ void AppContext::wireSpeech()
     });
     connect(m_speech, &SpeechQueue::started, this, [this](quint64 id, const QString &text, const Voice &voice) {
         m_history->setStatus(id, HistoryModel::Status::Speaking);
+        m_speakingText = text;
+        m_avatar->onSpeechStarted(id, text);
         if (m_captionsPaused)
             return;
         m_obs->utteranceStarted(text);
         m_overlay->showCaption(id, text, voice.name);
     });
+    connect(m_speech, &SpeechQueue::progress, this,
+            [this](quint64 id, qint64 playedMs, qint64 totalMs, bool totalKnown) {
+                const double fraction = SpeechQueue::progressFraction(m_speakingText, playedMs, totalMs, totalKnown,
+                                                                      m_speech->options().rate);
+                m_avatar->onSpeechProgress(id, fraction);
+                if (!m_captionsPaused)
+                    m_overlay->sendProgress(id, fraction, playedMs, totalMs, totalKnown);
+            });
     connect(m_speech, &SpeechQueue::finished, this, [this](quint64 id, const QString &text, bool completed) {
         m_history->setStatus(id, completed ? HistoryModel::Status::Done : HistoryModel::Status::Stopped);
+        m_avatar->onSpeechFinished(id);
         m_obs->utteranceFinished(text);
         m_overlay->endCaption(id);
     });
     connect(m_speech, &SpeechQueue::failed, this, [this](quint64 id, const QString &text, const QString &error) {
         m_history->setStatus(id, HistoryModel::Status::Failed, error);
+        m_avatar->onSpeechFinished(id);
         m_obs->utteranceFinished(text);
         m_overlay->endCaption(id);
         m_earcons->play(Earcons::Cue::Error);
         emit notify(error, 2);
     });
     connect(m_speech, &SpeechQueue::speakingChanged, m_overlay, &OverlayServer::setSpeaking);
+
+    // Avatars: one smoothed mouth value drives VTS/VMC/veadotube and the PNGtuber overlay.
+    connect(m_player, &AudioPlayer::levelChanged, m_avatar, &AvatarController::onOutputLevel);
+    connect(m_avatar, &AvatarController::frame, this, [this] {
+        m_overlay->sendLevel(m_avatar->mouth(), m_avatar->viseme());
+    });
+    connect(m_avatar, &AvatarController::talkingChanged, m_overlay, &OverlayServer::setTalking);
+    connect(m_avatar, &AvatarController::notify, this, &AppContext::notify);
 }
 
 void AppContext::wireStt()
@@ -306,10 +344,17 @@ void AppContext::wireExtras()
             m_earcons->play(live ? Earcons::Cue::MicLive : Earcons::Cue::MicMuted);
         emit micLiveChanged(live, std::exchange(m_micFromShortcut, false));
     });
+    connect(m_mic, &MicPassthrough::liveChanged, m_avatar, &AvatarController::onMicLiveChanged);
+    connect(m_mic, &MicPassthrough::liveChanged, m_overlay, &OverlayServer::setMicLive);
+    connect(m_mic, &MicPassthrough::levelChanged, m_avatar, &AvatarController::onMicLevel);
+    connect(m_soundboard, &Soundboard::playingChanged, this, [this](const QString &id, bool playing) {
+        if (playing)
+            m_avatar->onSoundStarted(id);
+    });
     connect(m_mic, &MicPassthrough::errorOccurred, this, [this](const QString &msg) { emit notify(msg, 2); });
     connect(m_soundboard, &Soundboard::errorOccurred, this, [this](const QString &msg) { emit notify(msg, 1); });
 
-    connect(m_twitch, &TwitchChat::speakRequested, this, [this](const QString &text, const TwitchChat::Message &) {
+    connect(m_twitch, &TwitchChat::speakRequested, this, [this](const QString &text, const TwitchChat::Message &message) {
         // Chat is untrusted: no {variables} (a viewer could ask for {clipboard}),
         // no learning into word predictions.
         QString t = TextProcessor::expandReplacements(text, m_settings->value(Keys::Replacements).toMap());
@@ -318,7 +363,27 @@ void AppContext::wireExtras()
         const QString voiceKey = m_settings->string(Keys::TwitchVoice);
         const Voice voice = voiceKey.isEmpty() ? Voice() : m_tts->resolve(voiceKey);
         m_speech->say(t, voice);
+        // Chat overlays show only what passed the filters, never the raw feed.
+        QJsonArray badges;
+        if (message.broadcaster)
+            badges.append(QStringLiteral("broadcaster"));
+        if (message.moderator)
+            badges.append(QStringLiteral("mod"));
+        if (message.vip)
+            badges.append(QStringLiteral("vip"));
+        if (message.subscriber)
+            badges.append(QStringLiteral("sub"));
+        m_overlay->chatMessage(QJsonObject{{QStringLiteral("id"), message.id},
+                                           {QStringLiteral("login"), message.login},
+                                           {QStringLiteral("name"), message.displayName},
+                                           {QStringLiteral("color"), message.color},
+                                           {QStringLiteral("text"), message.text},
+                                           {QStringLiteral("badges"), badges},
+                                           {QStringLiteral("action"), message.action}});
     });
+    connect(m_twitch, &TwitchChat::messageDeleted, m_overlay, &OverlayServer::chatDelete);
+    connect(m_twitch, &TwitchChat::userCleared, m_overlay, &OverlayServer::chatClearUser);
+    connect(m_twitch, &TwitchChat::chatCleared, m_overlay, &OverlayServer::chatClear);
     connect(m_twitch, &TwitchChat::statusChanged, this, [this](bool connected, const QString &status) {
         if (connected)
             m_lastNotice.remove(QStringLiteral("twitch"));
@@ -398,6 +463,7 @@ void AppContext::panic()
     m_stt->cancel();
     if (m_mic->isLive())
         m_mic->setLive(false);
+    m_avatar->onPanic();
     emit notify(tr("Everything stopped. Your real mic is muted."), 0);
 }
 
@@ -670,15 +736,40 @@ void AppContext::applyOverlaySettings()
         m_overlay->stop();
         return;
     }
+    // Restarting drops every OBS page, so only do it when the binding changed.
+    if (m_overlay->isRunning() && m_overlay->port() == port && m_overlayLan == lan)
+        return;
     if (m_overlay->isRunning())
-        m_overlay->stop(); // re-bind in case the port or LAN setting changed
+        m_overlay->stop();
+    m_overlayLan = lan;
     if (!m_overlay->start(port, lan))
         emit notify(tr("The OBS caption overlay could not start on port %1: %2").arg(port).arg(m_overlay->errorString()), 1);
 }
 
-QString AppContext::overlayUrl() const
+void AppContext::applyOverlayStyles()
 {
-    return m_overlay->overlayUrl(m_settings->string(Keys::OverlayQuery)).toString();
+    QList<OverlayProfile> profiles = OverlayStyle::loadProfiles(m_settings);
+    for (OverlayProfile &p : profiles)
+        p.style = OverlayStyle::effective(p.style, p.kind);
+    m_overlay->setLegacyQuery(m_settings->string(Keys::OverlayLegacyQuery));
+    m_overlay->setAllowedHosts(splitList(m_settings->string(Keys::OverlayAllowedHosts)));
+    m_overlay->setAssets(OverlayStyle::scanAssets(avatarAssetDir()));
+    m_overlay->setProfiles(profiles);
+}
+
+void AppContext::applyAvatarSettings()
+{
+    m_avatar->applySettings();
+}
+
+QString AppContext::overlayUrl(const QString &profileId) const
+{
+    return m_overlay->profileUrl(profileId).toString();
+}
+
+QString AppContext::avatarAssetDir() const
+{
+    return Paths::ensureDir(Paths::dataDir() + QStringLiteral("/avatars"));
 }
 
 void AppContext::applyMicSettings()
@@ -780,7 +871,9 @@ void AppContext::applyAll()
     applySpeechOptions();
     applySttSettings();
     applyObsSettings();
+    applyOverlayStyles();
     applyOverlaySettings();
+    applyAvatarSettings();
     applyMicSettings();
     applyCueSettings();
     applyTwitchSettings();

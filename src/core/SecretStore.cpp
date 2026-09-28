@@ -40,7 +40,7 @@ void writeFallback(const QString &name, const QString &value)
 
 QStringList Secrets::all()
 {
-    return {Azure, ElevenLabs, FishAudio, OpenAi, OpenAiStt, Obs};
+    return {Azure, ElevenLabs, FishAudio, OpenAi, OpenAiStt, Obs, VTubeStudio};
 }
 
 SecretStore::SecretStore(Backend backend, QObject *parent)

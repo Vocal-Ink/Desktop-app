@@ -55,7 +55,47 @@ inline constexpr auto ObsIndicatorSource = "obs/indicator/source";
 inline constexpr auto OverlayEnabled = "overlay/enabled";
 inline constexpr auto OverlayPort = "overlay/port";
 inline constexpr auto OverlayAllowLan = "overlay/allowLan";
-inline constexpr auto OverlayQuery = "overlay/query"; // style options appended to the overlay URL
+inline constexpr auto OverlayQuery = "overlay/query"; // legacy: style options appended to the URL (migrated)
+inline constexpr auto OverlayProfiles = "overlay/profiles"; // JSON [{id,name,kind,style}], see docs/overlay-style.md
+inline constexpr auto OverlayLegacyQuery = "overlay/legacyQuery"; // the query old OBS links carry (they follow the profile)
+inline constexpr auto OverlayAllowedHosts = "overlay/allowedHosts"; // LAN mode: extra host names, comma separated
+
+// Avatars and VTubing (see docs/VTUBING.md)
+inline constexpr auto AvatarSource = "avatar/source";           // "voice" | "voiceAndSounds" | "everything"
+inline constexpr auto AvatarSensitivity = "avatar/sensitivity"; // 20..300 (%)
+inline constexpr auto AvatarSmoothing = "avatar/smoothing";     // 0..100
+inline constexpr auto AvatarVisemes = "avatar/visemes";         // mouth shapes from the text, not just open/closed
+inline constexpr auto VtsEnabled = "vts/enabled";
+inline constexpr auto VtsPort = "vts/port";
+inline constexpr auto VtsMouthParam = "vts/mouthParam";         // input parameter to drive, e.g. "MouthOpen"
+inline constexpr auto VtsMouthFormParam = "vts/mouthFormParam"; // "" = don't drive mouth shape
+inline constexpr auto VtsExpression = "vts/expressionWhileSpeaking"; // expression file, "" = none
+inline constexpr auto VtsHotkeyStart = "vts/hotkeyOnStart";     // hotkey ids, "" = none
+inline constexpr auto VtsHotkeyStop = "vts/hotkeyOnStop";
+inline constexpr auto VtsHotkeyMicLive = "vts/hotkeyOnMicLive";
+inline constexpr auto VtsHotkeyMicMuted = "vts/hotkeyOnMicMuted";
+inline constexpr auto VtsFaceFound = "vts/faceFound";           // tell VTS the face is found while driving the mouth
+inline constexpr auto VtsCustomParams = "vts/customParams";     // also drive VocalInkVolume / VocalInkSpeaking
+inline constexpr auto VtsSoundHotkeys = "vts/soundHotkeys";     // JSON {soundId: hotkeyId}
+inline constexpr auto VmcEnabled = "vmc/enabled";
+inline constexpr auto VmcHost = "vmc/host";
+inline constexpr auto VmcPort = "vmc/port";
+inline constexpr auto VmcPreset = "vmc/preset";                 // "vseeface" | "warudo" | "vnyan" | "vmc" | "custom"
+inline constexpr auto VmcBlendset = "vmc/blendset";             // "vrm0" (A I U E O) | "vrm1" (aa ih ou ee oh)
+inline constexpr auto VmcExpression = "vmc/expression";         // blendshape held while speaking, "" = none
+inline constexpr auto VmcGain = "vmc/gain";                     // 20..200 (%)
+inline constexpr auto VeadoEnabled = "veado/enabled";
+inline constexpr auto VeadoTalkingState = "veado/talkingState"; // state ids, "" = leave alone
+inline constexpr auto VeadoIdleState = "veado/idleState";
+inline constexpr auto VeadoMicLiveState = "veado/micLiveState";
+inline constexpr auto VeadoPushToTalk = "veado/pushToTalk";     // mini's mouth listens only while Vocal Ink speaks
+inline constexpr auto SbotEnabled = "streamerbot/enabled";
+inline constexpr auto SbotHost = "streamerbot/host";
+inline constexpr auto SbotPort = "streamerbot/port";            // Streamer.bot UDP server
+inline constexpr auto SbotActionStart = "streamerbot/actionStart"; // action names, "" = none
+inline constexpr auto SbotActionStop = "streamerbot/actionStop";
+inline constexpr auto SbotActionMicLive = "streamerbot/actionMicLive";
+inline constexpr auto SbotActionMicMuted = "streamerbot/actionMicMuted";
 
 // Hotkeys (QKeySequence portable text)
 inline constexpr auto HotkeyPushToTalk = "hotkeys/pushToTalk";
@@ -99,6 +139,7 @@ inline constexpr auto TwitchIgnored = "twitch/ignoredUsers"; // comma separated
 inline constexpr auto TwitchBlocked = "twitch/blockedWords";
 
 // Appearance
+inline constexpr auto Language = "ui/language";     // "" = follow the system, else a locale name ("de", "pt_BR")
 inline constexpr auto Theme = "ui/theme";           // "midnight" | "vellum" | "amethyst" | "contrast" | "system"
 inline constexpr auto Accent = "ui/accent";         // "#rrggbb"
 inline constexpr auto FontScale = "ui/fontScale";   // 80..250 (%)
@@ -114,6 +155,16 @@ inline constexpr auto WaveStyle = "ui/waveStyle";   // "ink" | "bars" | "off"
 inline constexpr auto InkEffect = "ui/inkEffect";   // words fill with ink as they're spoken
 inline constexpr auto Motion = "ui/motion";         // "full" | "reduced" | "off"
 inline constexpr auto CompactOpacity = "ui/compactOpacity"; // 40..100 (%)
+inline constexpr auto BackgroundTint = "ui/backgroundTint"; // 0..100 (% of the ink colour washed into the page)
+inline constexpr auto PaperTexture = "ui/paperTexture";     // 0..100 grain
+inline constexpr auto SurfaceStyle = "ui/surfaceStyle";     // "filled" | "outlined" | "flat"
+inline constexpr auto ShadowDepth = "ui/shadowDepth";       // 0..100
+inline constexpr auto StageAlign = "ui/stageAlign";         // "left" | "center"
+inline constexpr auto StageFont = "ui/stageFont";           // "display" | "reading" | "serif"
+inline constexpr auto SidebarSide = "ui/sidebarSide";       // "left" | "right"
+inline constexpr auto HeaderChips = "ui/headerChips";       // show voice/route/mic chips on the Talk header
+inline constexpr auto ComposerPosition = "ui/composerPosition"; // "bottom" | "top"
+inline constexpr auto SavedLooks = "ui/looks";              // JSON [{name, values:{key: value}}]
 inline constexpr auto OnboardingDone = "ui/onboardingDone";
 inline constexpr auto Uses = "ui/uses";             // QStringList: "calls" "stream" "inperson" "games"
 inline constexpr auto FirstRunDone = "ui/firstRunDone";

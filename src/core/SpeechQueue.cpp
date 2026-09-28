@@ -26,6 +26,17 @@ SpeechQueue::SpeechQueue(TtsRegistry *registry, AudioPlayer *player, QObject *pa
     connect(m_progressTimer, &QTimer::timeout, this, [this] { emitProgress(false); });
 }
 
+double SpeechQueue::progressFraction(const QString &text, qint64 playedMs, qint64 totalMs, bool totalKnown,
+                                     double rate)
+{
+    if (totalMs <= 0)
+        return 0.0;
+    const double estimateMs = text.split(QLatin1Char(' '), Qt::SkipEmptyParts).size() / kWordsPerSecond * 1000.0
+        / qMax(0.5, rate);
+    const double total = totalKnown ? double(totalMs) : qMax(double(totalMs), estimateMs);
+    return qBound(0.0, playedMs / total, 1.0);
+}
+
 SpeechQueue::~SpeechQueue()
 {
     cancelStreams();

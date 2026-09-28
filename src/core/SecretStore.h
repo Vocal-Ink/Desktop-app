@@ -13,6 +13,7 @@ inline const QString FishAudio = QStringLiteral("fishaudio");
 inline const QString OpenAi = QStringLiteral("openai");
 inline const QString OpenAiStt = QStringLiteral("openai-stt");
 inline const QString Obs = QStringLiteral("obs");
+inline const QString VTubeStudio = QStringLiteral("vtubestudio"); // plugin token
 QStringList all();
 } // namespace Secrets
 

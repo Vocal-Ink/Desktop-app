@@ -48,6 +48,14 @@ public:
     bool isSpeaking() const { return m_current.has_value(); }
     int queuedCount() const { return int(m_queue.size()); }
 
+    // How much of `text` has been heard (0..1) from a progress() report: while
+    // synthesis is still running the total keeps growing, so an estimate from
+    // the word count (at `rate`) keeps the fraction from racing ahead. The app's
+    // "now speaking" line, the overlay and the avatar all use this.
+    static double progressFraction(const QString &text, qint64 playedMs, qint64 totalMs, bool totalKnown,
+                                   double rate);
+    static constexpr double kWordsPerSecond = 2.6; // typical TTS pace at rate 1.0
+
 signals:
     void queued(quint64 id, const QString &text, const Voice &voice);
     void started(quint64 id, const QString &text, const Voice &voice); // first audio is playing

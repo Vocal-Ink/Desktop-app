@@ -14,6 +14,7 @@ class TwitchChat : public QObject
 public:
     struct Message
     {
+        QString id;          // IRC "id" tag (for moderator deletes)
         QString login;       // lower-case user name
         QString displayName;
         QString text;
@@ -59,6 +60,11 @@ signals:
     void messageReceived(const TwitchChat::Message &message);
     // A message that passed the filter, ready to speak.
     void speakRequested(const QString &text, const TwitchChat::Message &message);
+    // Moderation: CLEARMSG (one message), CLEARCHAT with a user (timeout/ban),
+    // CLEARCHAT without one (whole chat).
+    void messageDeleted(const QString &messageId);
+    void userCleared(const QString &login);
+    void chatCleared();
 
 private:
     void openSocket();

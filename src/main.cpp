@@ -1,6 +1,10 @@
 #include "Version.h"
 #include "app/AppContext.h"
 #include "audio/MicPassthrough.h"
+#include "avatar/AvatarController.h"
+#include "avatar/VeadotubeClient.h"
+#include "avatar/VmcSender.h"
+#include "avatar/VtsClient.h"
 #include "core/HistoryModel.h"
 #include "core/Paths.h"
 #include "core/Settings.h"
@@ -150,6 +154,10 @@ int main(int argc, char *argv[])
     qmlRegisterType<RoleFilter>("Ink.Core", 1, 0, "RoleFilter");
     qmlRegisterUncreatableType<VirtualDriver>("Ink.Core", 1, 0, "VirtualDriver", QStringLiteral("Use App.virtualMic"));
     qmlRegisterUncreatableType<HistoryModel>("Ink.Core", 1, 0, "HistoryModel", QStringLiteral("Use App.history"));
+    qmlRegisterUncreatableType<AvatarController>("Ink.Core", 1, 0, "AvatarController", QStringLiteral("Use App.avatar"));
+    qmlRegisterUncreatableType<VtsClient>("Ink.Core", 1, 0, "VtsClient", QStringLiteral("Use App.avatar.vts"));
+    qmlRegisterUncreatableType<VmcSender>("Ink.Core", 1, 0, "VmcSender", QStringLiteral("Use App.avatar.vmc"));
+    qmlRegisterUncreatableType<VeadotubeClient>("Ink.Core", 1, 0, "VeadotubeClient", QStringLiteral("Use App.avatar.veado"));
 
     QQmlApplicationEngine engine;
     engine.rootContext()->setContextProperty(QStringLiteral("launchPage"), parser.value(showWhat));
