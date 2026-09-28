@@ -45,12 +45,16 @@ public:
     // Human-readable names of everything else already using `sequence`.
     QStringList conflictsWith(const QString &id, const QString &sequence) const;
 
+    // Rebuilds titles and descriptions in the current language.
+    void retranslate();
+
     // Normalises user input to a single-chord portable string ("Ctrl+Alt+T").
     static QString normalize(const QString &sequence);
 
 signals:
     void shortcutChanged(const QString &id);
     void shortcutsReset();
+    void actionsChanged(); // titles/descriptions changed (language)
 
 private:
     static QString settingsKey(const QString &id);

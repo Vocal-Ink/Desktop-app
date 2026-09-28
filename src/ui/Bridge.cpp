@@ -26,6 +26,7 @@
 #include "platform/VirtualDriver.h"
 #include "stt/SttController.h"
 #include "tts/TtsRegistry.h"
+#include "ui/LanguageManager.h"
 #include "ui/Models.h"
 #include "ui/PrefsMap.h"
 #include "ui/VoicePreview.h"
@@ -254,6 +255,23 @@ QObject *Bridge::presets() const { return m_presetModel; }
 QObject *Bridge::history() const { return m_ctx->history(); }
 QObject *Bridge::virtualMic() const { return m_ctx->virtualDriver(); }
 QObject *Bridge::avatar() const { return m_ctx->avatar(); }
+QObject *Bridge::language() const { return m_languages; }
+
+void Bridge::setLanguageManager(LanguageManager *languages)
+{
+    m_languages = languages;
+    connect(languages, &LanguageManager::languageChanged, this, [this] {
+        m_ctx->actions()->retranslate();
+        m_ctx->phrases()->retranslateDefaults();
+        m_whisper->retranslate();
+        m_piper->retranslate();
+        emit translationsChanged();
+        // Texts these properties compute on read.
+        emit sttChanged();
+        emit obsChanged();
+        emit routeChanged();
+    });
+}
 
 bool Bridge::captionsPaused() const
 {

@@ -9,6 +9,24 @@ ScrollPage {
 
     Card {
         Layout.fillWidth: true
+        title: qsTr("Language")
+        iconName: "languages"
+        SettingRow {
+            title: qsTr("Interface language")
+            description: qsTr("Menus, buttons and messages. Your voice keeps speaking whatever language you type.")
+            LanguagePicker {}
+        }
+        Txt {
+            Layout.fillWidth: true
+            visible: App.language && App.language.current !== "en"
+            role: "caption"
+            //: Shown under the language picker when a translation is in use.
+            text: qsTr("This translation was made with the help of AI and hasn't been checked by a native speaker yet. If something reads oddly, tell us on GitHub.")
+        }
+    }
+
+    Card {
+        Layout.fillWidth: true
         title: qsTr("Theme")
         iconName: "palette"
         Flow {

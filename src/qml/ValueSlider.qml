@@ -1,7 +1,9 @@
 import QtQuick
 import QtQuick.Controls.Basic
 
-// Slider with the current value shown to its right. `suffix` like "%" or " dB".
+// Slider with the current value shown to its right. `suffix` is a unit: "%",
+// " px", " pt", " dB", " ms" or " s" (shown the way the interface language
+// writes it: "50 %" in French, "%50" in Turkish).
 Slider {
     id: root
     property string suffix: ""
@@ -19,7 +21,20 @@ Slider {
     Accessible.name: label
     Accessible.description: valueText.text
 
-    readonly property string displayValue: format ? format(value) : Math.round(value) + suffix
+    readonly property string displayValue: format ? format(value) : withUnit(Math.round(value))
+
+    function withUnit(v) {
+        const n = Number(v).toLocaleString(Qt.locale(), "f", 0)
+        switch (suffix.trim()) {
+        case "%": return qsTr("%1%", "percentage").arg(n)
+        case "px": return qsTr("%1 px", "pixels").arg(n)
+        case "pt": return qsTr("%1 pt", "font size in points").arg(n)
+        case "dB": return qsTr("%1 dB", "decibels").arg(n)
+        case "ms": return qsTr("%1 ms", "milliseconds").arg(n)
+        case "s": return qsTr("%1 s", "seconds").arg(n)
+        default: return n + suffix
+        }
+    }
 
     background: Item {
         x: root.leftPadding

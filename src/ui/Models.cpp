@@ -441,6 +441,10 @@ KeybindModel::KeybindModel(ActionRegistry *registry, QObject *parent)
         beginResetModel();
         endResetModel();
     });
+    connect(m_registry, &ActionRegistry::actionsChanged, this, [this] {
+        beginResetModel();
+        endResetModel();
+    });
 }
 
 int KeybindModel::rowCount(const QModelIndex &parent) const
@@ -689,7 +693,7 @@ void DownloadModel::rebuild()
         for (const PiperVoiceInfo &v : std::as_const(voices)) {
             QString details = QStringLiteral("%1 · %2").arg(v.languageName, v.quality);
             if (v.numSpeakers > 1)
-                details += tr(" · %n speakers", nullptr, v.numSpeakers);
+                details += QStringLiteral(" · ") + tr("%n speaker(s)", nullptr, v.numSpeakers);
             m_all << Row{v.key, v.name, details, v.totalBytes(), v.key == rec};
         }
     }

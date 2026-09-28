@@ -1,4 +1,5 @@
 #include "platform/VirtualDriverDetail.h"
+#include "platform/VirtualDriver.h"
 
 #include <QCoreApplication>
 #include <QDir>
@@ -9,11 +10,6 @@
 namespace VirtualDriverDetail {
 
 namespace {
-
-QString tr(const char *s)
-{
-    return QCoreApplication::translate("VirtualDriver", s);
-}
 
 QString q(const char *s)
 {
@@ -403,55 +399,55 @@ StateInfo describe(const Facts &f)
     case Platform::Linux:
         if (!f.available)
             return {State::Unsupported,
-                    tr("Vocal Ink couldn't find PipeWire or PulseAudio on this computer, so it can't create "
+                    VirtualDriver::tr("Vocal Ink couldn't find PipeWire or PulseAudio on this computer, so it can't create "
                        "a virtual mic.")};
         if (f.installed && f.devicesVisible)
             return {State::Installed,
-                    tr("Installed. Pick “Vocal Ink Mic” as the microphone in Discord or OBS. It comes back "
+                    VirtualDriver::tr("Installed. Pick “Vocal Ink Mic” as the microphone in Discord or OBS. It comes back "
                        "by itself when you log in.")};
         if (f.installed && f.restartPending)
-            return {State::RestartNeeded, tr("Log out and back in to finish setting up the virtual mic.")};
+            return {State::RestartNeeded, VirtualDriver::tr("Log out and back in to finish setting up the virtual mic.")};
         if (f.devicesVisible)
             return {State::NotInstalled,
-                    tr("The virtual mic works until you log out. Click Install to keep it.")};
+                    VirtualDriver::tr("The virtual mic works until you log out. Click Install to keep it.")};
         return {State::NotInstalled,
-                tr("Not installed. Vocal Ink can create a virtual mic that stays after you log out. "
+                VirtualDriver::tr("Not installed. Vocal Ink can create a virtual mic that stays after you log out. "
                    "No password needed.")};
 
     case Platform::MacOS:
         if (f.installed && f.devicesVisible) {
             if (f.available && f.updateAvailable)
                 return {State::NotInstalled,
-                        tr("An update to the virtual mic is available. Click Install to update it "
+                        VirtualDriver::tr("An update to the virtual mic is available. Click Install to update it "
                            "(you'll be asked for your password).")};
             return {State::Installed,
-                    tr("Installed. Pick “Vocal Ink Virtual Mic” as the microphone in Discord or OBS.")};
+                    VirtualDriver::tr("Installed. Pick “Vocal Ink Virtual Mic” as the microphone in Discord or OBS.")};
         }
         if (f.installed)
-            return {State::RestartNeeded, tr("Your Mac needs a restart before the virtual mic appears.")};
+            return {State::RestartNeeded, VirtualDriver::tr("Your Mac needs a restart before the virtual mic appears.")};
         if (!f.available)
             return {State::Unavailable,
-                    tr("This build doesn't include the macOS virtual mic. Use BlackHole instead (free).")};
+                    VirtualDriver::tr("This build doesn't include the macOS virtual mic. Use BlackHole instead (free).")};
         return {State::NotInstalled,
-                tr("Not installed. Vocal Ink can add a virtual mic to your Mac. You'll be asked for your "
+                VirtualDriver::tr("Not installed. Vocal Ink can add a virtual mic to your Mac. You'll be asked for your "
                    "password.")};
 
     case Platform::Windows:
         if (f.devicesVisible)
             return {State::Installed,
-                    tr("Installed. Pick “Vocal Ink Mic” as the microphone in Discord or OBS.")};
+                    VirtualDriver::tr("Installed. Pick “Vocal Ink Mic” as the microphone in Discord or OBS.")};
         if (f.installed || f.restartPending)
-            return {State::RestartNeeded, tr("Restart Windows to finish installing the virtual mic.")};
+            return {State::RestartNeeded, VirtualDriver::tr("Restart Windows to finish installing the virtual mic.")};
         if (!f.available)
             return {State::Unavailable,
-                    tr("This build doesn't include the signed Windows driver. Use VB-CABLE instead (free).")};
+                    VirtualDriver::tr("This build doesn't include the signed Windows driver. Use VB-CABLE instead (free).")};
         return {State::NotInstalled,
-                tr("Not installed. Vocal Ink can add a virtual mic. Windows will ask for permission.")};
+                VirtualDriver::tr("Not installed. Vocal Ink can add a virtual mic. Windows will ask for permission.")};
 
     case Platform::Other:
         break;
     }
-    return {State::Unsupported, tr("No bundled virtual mic for this system yet.")};
+    return {State::Unsupported, VirtualDriver::tr("No bundled virtual mic for this system yet.")};
 }
 
 } // namespace VirtualDriverDetail

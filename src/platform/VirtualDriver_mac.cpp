@@ -2,6 +2,7 @@
 // plug-in shipped in Vocal Ink.app/Contents/Resources) to /Library/Audio/Plug-Ins/HAL
 // behind one administrator password prompt, and restarts coreaudiod.
 #include "platform/VirtualDriverPlatform.h"
+#include "platform/VirtualDriver.h"
 
 #if defined(Q_OS_MACOS)
 
@@ -16,11 +17,6 @@ namespace VirtualDriverPlatform {
 namespace {
 
 using namespace VirtualDriverDetail;
-
-QString tr(const char *s)
-{
-    return QCoreApplication::translate("VirtualDriver", s);
-}
 
 QString bundledDriverPath()
 {
@@ -75,7 +71,7 @@ Result runAsAdministrator(const QString &script, const QString &prompt, const QS
     if (at >= 0)
         stderrText = stderrText.mid(at + marker.size());
     if (stderrText.isEmpty())
-        stderrText = tr("osascript exited with code %1").arg(p.exitCode());
+        stderrText = VirtualDriver::tr("osascript exited with code %1").arg(p.exitCode());
     result.message = failedMessage.arg(stderrText);
     return result;
 }
@@ -108,31 +104,31 @@ Result install()
         return result;
     }
     Result result = runAsAdministrator(macInstallShellScript(bundled),
-                                       tr("Vocal Ink needs your password to install its virtual microphone."),
-                                       tr("Installation cancelled."),
-                                       tr("Couldn't install the virtual mic: %1"));
+                                       VirtualDriver::tr("Vocal Ink needs your password to install its virtual microphone."),
+                                       VirtualDriver::tr("Installation cancelled."),
+                                       VirtualDriver::tr("Couldn't install the virtual mic: %1"));
     if (result.outcome != Result::Outcome::Ok)
         return result;
     // coreaudiod restarts and loads the plug-in; give Qt's device list time to catch up.
-    result.message = tr("Installed. Pick “Vocal Ink Virtual Mic” as the microphone in Discord or OBS.");
+    result.message = VirtualDriver::tr("Installed. Pick “Vocal Ink Virtual Mic” as the microphone in Discord or OBS.");
     result.wait = Result::Wait::DevicesAppear;
     result.waitSeconds = 10;
-    result.timeoutMessage = tr("Installed. Your Mac needs a restart before the virtual mic appears.");
+    result.timeoutMessage = VirtualDriver::tr("Installed. Your Mac needs a restart before the virtual mic appears.");
     return result;
 }
 
 Result uninstall()
 {
     Result result = runAsAdministrator(macUninstallShellScript(),
-                                       tr("Vocal Ink needs your password to remove its virtual microphone."),
-                                       tr("Removal cancelled."),
-                                       tr("Couldn't remove the virtual mic: %1"));
+                                       VirtualDriver::tr("Vocal Ink needs your password to remove its virtual microphone."),
+                                       VirtualDriver::tr("Removal cancelled."),
+                                       VirtualDriver::tr("Couldn't remove the virtual mic: %1"));
     if (result.outcome != Result::Outcome::Ok)
         return result;
-    result.message = tr("The virtual mic was removed.");
+    result.message = VirtualDriver::tr("The virtual mic was removed.");
     result.wait = Result::Wait::DevicesDisappear;
     result.waitSeconds = 10;
-    result.timeoutMessage = tr("The virtual mic was removed. It disappears completely after a restart.");
+    result.timeoutMessage = VirtualDriver::tr("The virtual mic was removed. It disappears completely after a restart.");
     return result;
 }
 

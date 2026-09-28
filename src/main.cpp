@@ -11,6 +11,7 @@
 #include "platform/VirtualDriver.h"
 #include "ui/Bridge.h"
 #include "ui/InkWave.h"
+#include "ui/LanguageManager.h"
 #include "ui/RoleFilter.h"
 
 #include <QAction>
@@ -58,7 +59,13 @@ void loadFonts()
         QFontDatabase::addApplicationFont(dir.filePath(file));
 }
 
-QSystemTrayIcon *createTray(Bridge *bridge, AppContext *context, QObject *parent)
+// Tray menu texts live in their own context (lupdate can't see QObject::tr in a free function).
+class TrayText
+{
+    Q_DECLARE_TR_FUNCTIONS(Tray)
+};
+
+QSystemTrayIcon *createTray(Bridge *bridge, AppContext *context, LanguageManager *languages, QObject *parent)
 {
     if (!QSystemTrayIcon::isSystemTrayAvailable())
         return nullptr;
@@ -66,15 +73,24 @@ QSystemTrayIcon *createTray(Bridge *bridge, AppContext *context, QObject *parent
     tray->setToolTip(QStringLiteral(VOCALINK_DISPLAY_NAME));
     auto *menu = new QMenu;
     QObject::connect(tray, &QObject::destroyed, menu, &QObject::deleteLater);
-    menu->addAction(QObject::tr("Open Vocal Ink"), bridge, [bridge] { emit bridge->uiAction(QStringLiteral("window.show")); });
-    menu->addAction(QObject::tr("Quick type…"), bridge, [bridge] { emit bridge->uiAction(QStringLiteral("window.quickType")); });
+    QAction *open = menu->addAction(QString(), bridge, [bridge] { emit bridge->uiAction(QStringLiteral("window.show")); });
+    QAction *quick = menu->addAction(QString(), bridge, [bridge] { emit bridge->uiAction(QStringLiteral("window.quickType")); });
     menu->addSeparator();
-    menu->addAction(QObject::tr("Stop speaking"), context, &AppContext::stopSpeaking);
-    QAction *mute = menu->addAction(QObject::tr("Mute my real mic"), context, [context] { context->mic()->setLive(false); });
+    QAction *stop = menu->addAction(QString(), context, &AppContext::stopSpeaking);
+    QAction *mute = menu->addAction(QString(), context, [context] { context->mic()->setLive(false); });
     mute->setEnabled(false);
     QObject::connect(context->mic(), &MicPassthrough::liveChanged, mute, &QAction::setEnabled);
     menu->addSeparator();
-    menu->addAction(QObject::tr("Quit"), qApp, &QCoreApplication::quit);
+    QAction *quit = menu->addAction(QString(), qApp, &QCoreApplication::quit);
+    const auto setTexts = [=] {
+        open->setText(TrayText::tr("Open Vocal Ink"));
+        quick->setText(TrayText::tr("Quick type…"));
+        stop->setText(TrayText::tr("Stop speaking"));
+        mute->setText(TrayText::tr("Mute my real mic"));
+        quit->setText(TrayText::tr("Quit"));
+    };
+    setTexts();
+    QObject::connect(languages, &LanguageManager::languageChanged, menu, setTexts);
     tray->setContextMenu(menu);
     QObject::connect(tray, &QSystemTrayIcon::activated, bridge, [bridge](QSystemTrayIcon::ActivationReason reason) {
         if (reason == QSystemTrayIcon::Trigger || reason == QSystemTrayIcon::DoubleClick)
@@ -121,6 +137,9 @@ int main(int argc, char *argv[])
                                      QStringLiteral("Keep settings and data in <dir> instead of the usual places."),
                                      QStringLiteral("dir"));
     const QCommandLineOption noOnboarding(QStringLiteral("no-onboarding"), QStringLiteral("Don't show the first-run setup."));
+    const QCommandLineOption language(QStringLiteral("lang"),
+                                      QStringLiteral("Interface language for this run, e.g. de, ja, pt_BR (not saved)."),
+                                      QStringLiteral("code"));
     parser.addOption(screenshot);
     parser.addOption(showWhat);
     parser.addOption(minimized);
@@ -128,6 +147,7 @@ int main(int argc, char *argv[])
     parser.addOption(noOnboarding);
     parser.addOption(windowSize);
     parser.addOption(profile);
+    parser.addOption(language);
     parser.process(app);
 
     if (parser.isSet(profile))
@@ -145,6 +165,11 @@ int main(int argc, char *argv[])
 
     loadFonts();
 
+    // Translators go in before any service builds its strings.
+    LanguageManager languages;
+    if (parser.isSet(language))
+        languages.setOverride(parser.value(language));
+
     AppContext context;
     context.initialize();
     Bridge bridge(&context);
@@ -160,6 +185,8 @@ int main(int argc, char *argv[])
     qmlRegisterUncreatableType<VeadotubeClient>("Ink.Core", 1, 0, "VeadotubeClient", QStringLiteral("Use App.avatar.veado"));
 
     QQmlApplicationEngine engine;
+    languages.attach(context.settings(), &engine);
+    bridge.setLanguageManager(&languages);
     engine.rootContext()->setContextProperty(QStringLiteral("launchPage"), parser.value(showWhat));
     engine.rootContext()->setContextProperty(QStringLiteral("launchMinimized"), parser.isSet(minimized));
     engine.rootContext()->setContextProperty(QStringLiteral("demoMode"), parser.isSet(demo));
@@ -191,7 +218,7 @@ int main(int argc, char *argv[])
     if (parser.isSet(demo))
         QTimer::singleShot(200, &bridge, &Bridge::startDemo);
 
-    QSystemTrayIcon *tray = smokeTest ? nullptr : createTray(&bridge, &context, &app);
+    QSystemTrayIcon *tray = smokeTest ? nullptr : createTray(&bridge, &context, &languages, &app);
     Q_UNUSED(tray)
 
     QObject::connect(&instanceServer, &QLocalServer::newConnection, &bridge, [&] {

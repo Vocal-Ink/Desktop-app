@@ -1,6 +1,7 @@
 // Windows half of VirtualDriver: installs the signed VocalInkAudio driver package that
 // ships in <exe dir>\driver with nefconw.exe, elevated through one UAC prompt.
 #include "platform/VirtualDriverPlatform.h"
+#include "platform/VirtualDriver.h"
 
 #if defined(Q_OS_WIN)
 
@@ -31,11 +32,6 @@ namespace VirtualDriverPlatform {
 namespace {
 
 using namespace VirtualDriverDetail;
-
-QString tr(const char *s)
-{
-    return QCoreApplication::translate("VirtualDriver", s);
-}
 
 QString driverDir()
 {
@@ -167,28 +163,28 @@ Result install()
     switch (run.status) {
     case Elevated::Status::Cancelled:
         result.outcome = Result::Outcome::Cancelled;
-        result.message = tr("Installation cancelled.");
+        result.message = VirtualDriver::tr("Installation cancelled.");
         return result;
     case Elevated::Status::Failed:
-        result.message = tr("Couldn't start the driver installer (error %1).").arg(run.error);
+        result.message = VirtualDriver::tr("Couldn't start the driver installer (error %1).").arg(run.error);
         return result;
     case Elevated::Status::Ran:
         break;
     }
     if (run.exitCode == DWORD(WindowsRebootRequired)) {
         result.outcome = Result::Outcome::OkRestartNeeded;
-        result.message = tr("Restart Windows to finish installing the virtual mic.");
+        result.message = VirtualDriver::tr("Restart Windows to finish installing the virtual mic.");
         return result;
     }
     if (run.exitCode != 0) {
-        result.message = tr("The driver installer failed (error %1).").arg(run.exitCode);
+        result.message = VirtualDriver::tr("The driver installer failed (error %1).").arg(run.exitCode);
         return result;
     }
     result.outcome = Result::Outcome::Ok;
-    result.message = tr("Installed. Pick “Vocal Ink Mic” as the microphone in Discord or OBS.");
+    result.message = VirtualDriver::tr("Installed. Pick “Vocal Ink Mic” as the microphone in Discord or OBS.");
     result.wait = Result::Wait::DevicesAppear;
     result.waitSeconds = 10;
-    result.timeoutMessage = tr("The driver is installed. Restart Windows to finish setting up the virtual mic.");
+    result.timeoutMessage = VirtualDriver::tr("The driver is installed. Restart Windows to finish setting up the virtual mic.");
     result.restartOnTimeout = true;
     return result;
 }
@@ -197,7 +193,7 @@ Result uninstall()
 {
     Result result;
     if (!QFileInfo::exists(nefconPath())) {
-        result.message = tr("This copy of Vocal Ink can't remove the driver (nefconw.exe is missing). Remove "
+        result.message = VirtualDriver::tr("This copy of Vocal Ink can't remove the driver (nefconw.exe is missing). Remove "
                             "“Vocal Ink Virtual Audio Device” in Device Manager instead.");
         return result;
     }
@@ -205,29 +201,29 @@ Result uninstall()
     switch (run.status) {
     case Elevated::Status::Cancelled:
         result.outcome = Result::Outcome::Cancelled;
-        result.message = tr("Removal cancelled.");
+        result.message = VirtualDriver::tr("Removal cancelled.");
         return result;
     case Elevated::Status::Failed:
-        result.message = tr("Couldn't start the driver installer (error %1).").arg(run.error);
+        result.message = VirtualDriver::tr("Couldn't start the driver installer (error %1).").arg(run.error);
         return result;
     case Elevated::Status::Ran:
         break;
     }
     if (run.exitCode == DWORD(WindowsRebootRequired)) {
         result.outcome = Result::Outcome::Ok;
-        result.message = tr("Restart Windows to finish removing the virtual mic.");
+        result.message = VirtualDriver::tr("Restart Windows to finish removing the virtual mic.");
         return result;
     }
     // nefcon fails when there was nothing to remove; that's fine.
     if (run.exitCode != 0 && deviceNodePresent()) {
-        result.message = tr("Couldn't remove the driver (error %1).").arg(run.exitCode);
+        result.message = VirtualDriver::tr("Couldn't remove the driver (error %1).").arg(run.exitCode);
         return result;
     }
     result.outcome = Result::Outcome::Ok;
-    result.message = tr("The virtual mic was removed.");
+    result.message = VirtualDriver::tr("The virtual mic was removed.");
     result.wait = Result::Wait::DevicesDisappear;
     result.waitSeconds = 10;
-    result.timeoutMessage = tr("The virtual mic was removed. Restart Windows if it still shows up.");
+    result.timeoutMessage = VirtualDriver::tr("The virtual mic was removed. Restart Windows if it still shows up.");
     return result;
 }
 

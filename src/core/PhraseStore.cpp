@@ -1,5 +1,7 @@
 #include "core/PhraseStore.h"
 
+#include <QCoreApplication>
+
 #include <QFile>
 #include <QJsonArray>
 #include <QJsonDocument>
@@ -21,38 +23,69 @@ QList<Phrase> PhraseStore::defaultPhrases()
         const char *hotkey;
     };
     static const Seed seeds[] = {
-        {"Basics", "Yes", "Ctrl+Alt+1"},
-        {"Basics", "No", "Ctrl+Alt+2"},
-        {"Basics", "One moment, I'm typing.", "Ctrl+Alt+3"},
-        {"Basics", "Thank you!", "Ctrl+Alt+4"},
-        {"Basics", "Could you repeat that, please?", ""},
-        {"Basics", "I use text-to-speech to talk. Give me a second to type.", ""},
-        {"Basics", "I agree.", ""},
-        {"Basics", "I'll be right back.", ""},
-        {"Social", "Hi! How are you?", ""},
-        {"Social", "That's so funny.", ""},
-        {"Social", "Nice to meet you.", ""},
-        {"Social", "Sorry, I missed that.", ""},
-        {"Social", "Good night, everyone!", ""},
-        {"Stream", "Welcome in! Thanks for stopping by.", ""},
-        {"Stream", "Thank you so much for the follow!", ""},
-        {"Stream", "Thanks for the raid, welcome raiders!", ""},
-        {"Stream", "Taking a quick break, back in five.", ""},
-        {"Stream", "Clip that!", ""},
-        {"Games", "Nice shot!", ""},
-        {"Games", "Enemy over here!", ""},
-        {"Games", "I need help.", ""},
-        {"Games", "Good game, everyone.", ""},
+        {QT_TRANSLATE_NOOP("PhraseStore", "Basics"),
+         QT_TRANSLATE_NOOP("PhraseStore", "Yes"), "Ctrl+Alt+1"},
+        {QT_TRANSLATE_NOOP("PhraseStore", "Basics"),
+         QT_TRANSLATE_NOOP("PhraseStore", "No"), "Ctrl+Alt+2"},
+        {QT_TRANSLATE_NOOP("PhraseStore", "Basics"),
+         QT_TRANSLATE_NOOP("PhraseStore", "One moment, I'm typing."), "Ctrl+Alt+3"},
+        {QT_TRANSLATE_NOOP("PhraseStore", "Basics"),
+         QT_TRANSLATE_NOOP("PhraseStore", "Thank you!"), "Ctrl+Alt+4"},
+        {QT_TRANSLATE_NOOP("PhraseStore", "Basics"),
+         QT_TRANSLATE_NOOP("PhraseStore", "Could you repeat that, please?"), ""},
+        {QT_TRANSLATE_NOOP("PhraseStore", "Basics"),
+         QT_TRANSLATE_NOOP("PhraseStore", "I use text-to-speech to talk. Give me a second to type."), ""},
+        {QT_TRANSLATE_NOOP("PhraseStore", "Basics"),
+         QT_TRANSLATE_NOOP("PhraseStore", "I agree."), ""},
+        {QT_TRANSLATE_NOOP("PhraseStore", "Basics"),
+         QT_TRANSLATE_NOOP("PhraseStore", "I'll be right back."), ""},
+        {QT_TRANSLATE_NOOP("PhraseStore", "Social"),
+         QT_TRANSLATE_NOOP("PhraseStore", "Hi! How are you?"), ""},
+        {QT_TRANSLATE_NOOP("PhraseStore", "Social"),
+         QT_TRANSLATE_NOOP("PhraseStore", "That's so funny."), ""},
+        {QT_TRANSLATE_NOOP("PhraseStore", "Social"),
+         QT_TRANSLATE_NOOP("PhraseStore", "Nice to meet you."), ""},
+        {QT_TRANSLATE_NOOP("PhraseStore", "Social"),
+         QT_TRANSLATE_NOOP("PhraseStore", "Sorry, I missed that."), ""},
+        {QT_TRANSLATE_NOOP("PhraseStore", "Social"),
+         QT_TRANSLATE_NOOP("PhraseStore", "Good night, everyone!"), ""},
+        {QT_TRANSLATE_NOOP("PhraseStore", "Stream"),
+         QT_TRANSLATE_NOOP("PhraseStore", "Welcome in! Thanks for stopping by."), ""},
+        {QT_TRANSLATE_NOOP("PhraseStore", "Stream"),
+         QT_TRANSLATE_NOOP("PhraseStore", "Thank you so much for the follow!"), ""},
+        {QT_TRANSLATE_NOOP("PhraseStore", "Stream"),
+         QT_TRANSLATE_NOOP("PhraseStore", "Thanks for the raid, welcome raiders!"), ""},
+        {QT_TRANSLATE_NOOP("PhraseStore", "Stream"),
+         QT_TRANSLATE_NOOP("PhraseStore", "Taking a quick break, back in five."), ""},
+        {QT_TRANSLATE_NOOP("PhraseStore", "Stream"),
+         QT_TRANSLATE_NOOP("PhraseStore", "Clip that!"), ""},
+        {QT_TRANSLATE_NOOP("PhraseStore", "Games"),
+         QT_TRANSLATE_NOOP("PhraseStore", "Nice shot!"), ""},
+        {QT_TRANSLATE_NOOP("PhraseStore", "Games"),
+         QT_TRANSLATE_NOOP("PhraseStore", "Enemy over here!"), ""},
+        {QT_TRANSLATE_NOOP("PhraseStore", "Games"),
+         QT_TRANSLATE_NOOP("PhraseStore", "I need help."), ""},
+        {QT_TRANSLATE_NOOP("PhraseStore", "Games"),
+         QT_TRANSLATE_NOOP("PhraseStore", "Good game, everyone."), ""},
     };
     QList<Phrase> list;
     for (const Seed &s : seeds) {
         Phrase p;
-        p.category = QString::fromLatin1(s.category);
-        p.text = QString::fromUtf8(s.text);
+        // Written in the interface language; they're saved as plain text once edited.
+        p.category = QCoreApplication::translate("PhraseStore", s.category);
+        p.text = QCoreApplication::translate("PhraseStore", s.text);
         p.hotkey = QString::fromLatin1(s.hotkey);
         list << p;
     }
     return list;
+}
+
+void PhraseStore::retranslateDefaults()
+{
+    if (QFile::exists(m_path))
+        return; // the user has made them their own
+    m_phrases = defaultPhrases();
+    emit changed();
 }
 
 QStringList PhraseStore::categories() const

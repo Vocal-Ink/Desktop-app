@@ -1,6 +1,7 @@
 // Linux half of VirtualDriver: a persistent PipeWire loopback or PulseAudio null
 // sink + remapped source, created without administrator rights.
 #include "platform/VirtualDriverPlatform.h"
+#include "platform/VirtualDriver.h"
 
 #if defined(Q_OS_LINUX)
 
@@ -19,11 +20,6 @@ namespace VirtualDriverPlatform {
 namespace {
 
 using namespace VirtualDriverDetail;
-
-QString tr(const char *s)
-{
-    return QCoreApplication::translate("VirtualDriver", s);
-}
 
 QString configHome()
 {
@@ -53,12 +49,12 @@ bool readFile(const QString &path, QString *text)
 bool writeFile(const QString &path, const QString &text, QString *error)
 {
     if (!QDir().mkpath(QFileInfo(path).absolutePath())) {
-        *error = tr("Couldn't create the folder for %1.").arg(QDir::toNativeSeparators(path));
+        *error = VirtualDriver::tr("Couldn't create the folder for %1.").arg(QDir::toNativeSeparators(path));
         return false;
     }
     QSaveFile file(path);
     if (!file.open(QIODevice::WriteOnly) || file.write(text.toUtf8()) < 0 || !file.commit()) {
-        *error = tr("Couldn't save %1: %2").arg(QDir::toNativeSeparators(path), file.errorString());
+        *error = VirtualDriver::tr("Couldn't save %1: %2").arg(QDir::toNativeSeparators(path), file.errorString());
         return false;
     }
     return true;
@@ -106,7 +102,7 @@ bool pactlSeesDevices()
 
 QString readyMessage()
 {
-    return tr("The virtual mic is ready. Pick “Vocal Ink Mic” as the microphone in Discord or OBS.");
+    return VirtualDriver::tr("The virtual mic is ready. Pick “Vocal Ink Mic” as the microphone in Discord or OBS.");
 }
 
 } // namespace
@@ -134,7 +130,7 @@ Result install()
     if (server == SoundServer::Unknown && havePipeWireTools())
         server = SoundServer::PipeWire;
     if (server == SoundServer::Unknown) {
-        result.message = tr("Vocal Ink couldn't reach PulseAudio or PipeWire. Check that sound works on this "
+        result.message = VirtualDriver::tr("Vocal Ink couldn't reach PulseAudio or PipeWire. Check that sound works on this "
                             "computer, then try again.");
         return result;
     }
@@ -159,11 +155,11 @@ Result install()
     // 2. Create it for this session too, so nobody has to log out.
     if (!pactl) {
         result.outcome = Result::Outcome::OkRestartNeeded;
-        result.message = tr("Log out and back in to finish setting up the virtual mic.");
+        result.message = VirtualDriver::tr("Log out and back in to finish setting up the virtual mic.");
         return result;
     }
     if (!pactlSeesDevices() && !VirtualAudio::createVirtualMic(&error)) {
-        result.message = tr("The virtual mic was saved but couldn't be started now: %1").arg(error);
+        result.message = VirtualDriver::tr("The virtual mic was saved but couldn't be started now: %1").arg(error);
         return result;
     }
     result.outcome = Result::Outcome::Ok;
@@ -181,7 +177,7 @@ Result uninstall()
     const QString confPath = pipeWireConfPath(home);
     const bool hadPipeWireConf = QFileInfo::exists(confPath);
     if (hadPipeWireConf && !QFile::remove(confPath)) {
-        result.message = tr("Couldn't delete %1.").arg(confPath);
+        result.message = VirtualDriver::tr("Couldn't delete %1.").arg(confPath);
         return result;
     }
 
@@ -192,7 +188,7 @@ Result uninstall()
         QString error;
         if (isOnlyGeneratedPulseHeader(updated)) {
             if (!QFile::remove(paPath)) {
-                result.message = tr("Couldn't delete %1.").arg(paPath);
+                result.message = VirtualDriver::tr("Couldn't delete %1.").arg(paPath);
                 return result;
             }
         } else if (!writeFile(paPath, updated, &error)) {
@@ -209,11 +205,11 @@ Result uninstall()
     }
 
     result.outcome = Result::Outcome::Ok;
-    result.message = tr("The virtual mic was removed.");
+    result.message = VirtualDriver::tr("The virtual mic was removed.");
     result.wait = Result::Wait::DevicesDisappear;
     result.waitSeconds = 5;
     // A PipeWire loopback loaded at log-in can't be unloaded from outside; it goes with the session.
-    result.timeoutMessage = tr("The virtual mic was removed. It disappears completely the next time you log in.");
+    result.timeoutMessage = VirtualDriver::tr("The virtual mic was removed. It disappears completely the next time you log in.");
     if (havePactl() && pactlSeesDevices())
         result.message = result.timeoutMessage;
     return result;

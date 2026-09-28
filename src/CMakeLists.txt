@@ -100,3 +100,48 @@ if(APPLE)
         MACOSX_BUNDLE_SHORT_VERSION_STRING "${PROJECT_VERSION}"
         MACOSX_BUNDLE_ICON_FILE VocalInk.icns)
 endif()
+
+# --- Translations ---------------------------------------------------------------
+# i18n/vocalink_<lang>.ts are compiled into the app as :/i18n/vocalink_<lang>.qm.
+# After changing interface text, refresh them from the sources with
+#   cmake --build build --target update_translations
+# (tools/i18n.py helps translate what's new; see i18n/README.md).
+if(VOCALINK_WITH_TRANSLATIONS)
+    find_package(Qt6 QUIET COMPONENTS LinguistTools)
+endif()
+if(VOCALINK_WITH_TRANSLATIONS AND Qt6LinguistTools_FOUND)
+    set(VOCALINK_LANGUAGES en es fr de pt_BR it nl pl tr ja ko zh_CN)
+    set(VOCALINK_TS_FILES)
+    foreach(lang IN LISTS VOCALINK_LANGUAGES)
+        list(APPEND VOCALINK_TS_FILES ${PROJECT_SOURCE_DIR}/i18n/vocalink_${lang}.ts)
+    endforeach()
+    # Everything with interface text. TextProcessor.cpp stays out: its strings
+    # (emoji names, "link") are spoken, so they follow the voice's language.
+    set(VOCALINK_I18N_SOURCES main.cpp ${VOCALINK_UI_SOURCES} ${VOCALINK_CORE_SOURCES} ${VOCALINK_QML_FILES})
+    list(FILTER VOCALINK_I18N_SOURCES EXCLUDE REGEX "TextProcessor\\.cpp$")
+    qt_add_translations(VocalInk
+        TS_FILES ${VOCALINK_TS_FILES}
+        SOURCES ${VOCALINK_I18N_SOURCES}
+        RESOURCE_PREFIX /i18n
+        LUPDATE_OPTIONS -locations relative -no-obsolete
+        LRELEASE_OPTIONS -silent)
+
+    # Qt's own translations (key names like "Strg", standard dialogs), when this
+    # Qt install has them.
+    set(_vi_qt_qm_dir "${QT6_INSTALL_PREFIX}/${QT6_INSTALL_TRANSLATIONS}")
+    set(_vi_qt_qm)
+    foreach(lang IN LISTS VOCALINK_LANGUAGES)
+        foreach(module IN ITEMS qtbase qtdeclarative)
+            if(NOT lang STREQUAL "en" AND EXISTS "${_vi_qt_qm_dir}/${module}_${lang}.qm")
+                list(APPEND _vi_qt_qm "${_vi_qt_qm_dir}/${module}_${lang}.qm")
+            endif()
+        endforeach()
+    endforeach()
+    if(_vi_qt_qm)
+        qt_add_resources(VocalInk vocalink_qt_translations PREFIX /i18n BASE "${_vi_qt_qm_dir}" FILES ${_vi_qt_qm})
+    endif()
+    list(LENGTH _vi_qt_qm _vi_qt_qm_count)
+    message(STATUS "Translations: ${VOCALINK_LANGUAGES} (+${_vi_qt_qm_count} Qt catalogs)")
+elseif(VOCALINK_WITH_TRANSLATIONS)
+    message(WARNING "Qt LinguistTools not found: building without translations (English only).")
+endif()

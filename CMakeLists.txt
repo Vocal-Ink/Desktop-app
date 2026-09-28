@@ -39,6 +39,7 @@ option(VOCALINK_WITH_WHISPER  "Local speech recognition with whisper.cpp" ON)
 option(VOCALINK_WITH_HOTKEYS  "System-wide hotkeys with QHotkey" ON)
 option(VOCALINK_WITH_KEYCHAIN "Store API keys in the OS keychain with QtKeychain" ON)
 option(VOCALINK_BUILD_TESTS   "Build the unit tests" ON)
+option(VOCALINK_WITH_TRANSLATIONS "Compile the interface translations (needs Qt LinguistTools)" ON)
 
 set(VOCALINK_QT_COMPONENTS Core Gui Widgets Network Multimedia TextToSpeech WebSockets Concurrent
     Qml Quick QuickControls2)

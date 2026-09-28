@@ -12,17 +12,18 @@ namespace VirtualAudio {
 
 namespace {
 
-QString tr(const char *s)
+// lupdate needs a class to find the context of these strings.
+class VirtualAudioTr
 {
-    return QCoreApplication::translate("VirtualAudio", s);
-}
+    Q_DECLARE_TR_FUNCTIONS(VirtualAudioTr)
+};
 
 bool runPactl(const QStringList &args, QString *output, QString *error)
 {
     const QString pactl = QStandardPaths::findExecutable(QStringLiteral("pactl"));
     if (pactl.isEmpty()) {
         if (error)
-            *error = tr("pactl was not found. Install pulseaudio-utils (works with PipeWire too).");
+            *error = VirtualAudioTr::tr("pactl was not found. Install pulseaudio-utils (works with PipeWire too).");
         return false;
     }
     QProcess p;
@@ -31,7 +32,7 @@ bool runPactl(const QStringList &args, QString *output, QString *error)
         if (error)
             *error = QString::fromUtf8(p.readAllStandardError()).trimmed();
         if (error && error->isEmpty())
-            *error = tr("pactl %1 failed").arg(args.value(0));
+            *error = VirtualAudioTr::tr("pactl %1 failed").arg(args.value(0));
         return false;
     }
     if (output)
@@ -44,20 +45,20 @@ bool runPactl(const QStringList &args, QString *output, QString *error)
 QString setupInstructions()
 {
 #if defined(Q_OS_WIN)
-    return tr("<p>Install the free <b>VB-CABLE</b> virtual audio device from "
+    return VirtualAudioTr::tr("<p>Install the free <b>VB-CABLE</b> virtual audio device from "
               "<a href=\"https://vb-audio.com/Cable/\">vb-audio.com/Cable</a> and restart Vocal Ink.</p>"
               "<ol><li>Choose <b>CABLE Input (VB-Audio Virtual Cable)</b> as Vocal Ink's <i>voice output</i>.</li>"
               "<li>In Discord, games or OBS choose <b>CABLE Output (VB-Audio Virtual Cable)</b> as the microphone.</li>"
               "<li>Keep <i>Also play on my speakers</i> on to hear yourself.</li></ol>");
 #elif defined(Q_OS_MACOS)
-    return tr("<p>Install the free <b>BlackHole 2ch</b> virtual audio driver from "
+    return VirtualAudioTr::tr("<p>Install the free <b>BlackHole 2ch</b> virtual audio driver from "
               "<a href=\"https://existential.audio/blackhole/\">existential.audio/blackhole</a> "
               "(or <code>brew install blackhole-2ch</code>) and restart Vocal Ink.</p>"
               "<ol><li>Choose <b>BlackHole 2ch</b> as Vocal Ink's <i>voice output</i>.</li>"
               "<li>In Discord, games or OBS choose <b>BlackHole 2ch</b> as the microphone.</li>"
               "<li>Keep <i>Also play on my speakers</i> on to hear yourself.</li></ol>");
 #else
-    return tr("<p>Vocal Ink can create a virtual microphone for you (PulseAudio or PipeWire). "
+    return VirtualAudioTr::tr("<p>Vocal Ink can create a virtual microphone for you (PulseAudio or PipeWire). "
               "Click <b>Create virtual microphone</b>, then:</p>"
               "<ol><li>Choose <b>Vocal Ink Voice</b> as Vocal Ink's <i>voice output</i>.</li>"
               "<li>In Discord, games or OBS choose <b>Vocal Ink Mic</b> as the microphone "
@@ -88,7 +89,7 @@ bool createVirtualMic(QString *error)
 {
     if (!canCreateVirtualMic()) {
         if (error)
-            *error = tr("Creating a virtual microphone is only supported on Linux with PulseAudio or PipeWire.");
+            *error = VirtualAudioTr::tr("Creating a virtual microphone is only supported on Linux with PulseAudio or PipeWire.");
         return false;
     }
     if (virtualMicExists())
@@ -130,7 +131,7 @@ bool removeVirtualMic(QString *error)
     }
     if (virtualMicExists()) {
         if (error)
-            *error = tr("Could not remove the virtual microphone.");
+            *error = VirtualAudioTr::tr("Could not remove the virtual microphone.");
         return false;
     }
     return true;

@@ -79,6 +79,12 @@ ActionRegistry::ActionRegistry(Settings *settings, QObject *parent)
 {
 }
 
+void ActionRegistry::retranslate()
+{
+    m_actions = builtInActions();
+    emit actionsChanged();
+}
+
 QString ActionRegistry::settingsKey(const QString &id)
 {
     return QStringLiteral("keybinds/") + id;

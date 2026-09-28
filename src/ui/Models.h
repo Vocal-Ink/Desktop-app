@@ -214,6 +214,7 @@ public:
     Q_INVOKABLE void downloadRuntime();
     Q_INVOKABLE void downloadRecommended();
     Q_INVOKABLE QString recommended() const;
+    void retranslate() { rebuild(); } // details are built in the current language
 
 signals:
     void filterChanged();

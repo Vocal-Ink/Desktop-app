@@ -33,7 +33,8 @@ Popup {
         Txt { text: qsTr("Favourite voices"); role: "caption"; font.weight: Font.DemiBold }
         Txt {
             visible: pop.favorites.length === 0
-            text: qsTr("Star voices in Voices to switch between them here and with Ctrl+Alt+→.")
+            text: App.shortcuts["voice.next"] ? qsTr("Star voices in Voices to switch between them here and with %1.").arg(App.nativeShortcut(App.shortcuts["voice.next"]))
+                                              : qsTr("Star voices in Voices to switch between them here.")
             role: "caption"
             Layout.fillWidth: true
         }

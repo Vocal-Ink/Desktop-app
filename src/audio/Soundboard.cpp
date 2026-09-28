@@ -254,6 +254,7 @@ bool Soundboard::decodeWav(const QByteArray &bytes, QVector<float> *mono, int *s
     const AudioConvert::WavHeader h = AudioConvert::parseWavHeader(bytes);
     if (!h.valid) {
         if (error)
+            //: Reason, shown after "Couldn't read <file>:"
             *error = h.needMoreData ? tr("the file is cut short") : tr("this kind of WAV file isn't supported");
         return false;
     }
@@ -264,6 +265,7 @@ bool Soundboard::decodeWav(const QByteArray &bytes, QVector<float> *mono, int *s
     const QVector<float> out = AudioConvert::toMonoFloat(bytes.constData() + h.dataOffset, qsizetype(size), h.format);
     if (out.isEmpty() || h.format.sampleRate() <= 0) {
         if (error)
+            //: Reason, shown after "Couldn't read <file>:"
             *error = tr("it contains no audio");
         return false;
     }
@@ -392,6 +394,7 @@ void Soundboard::startDecoder(const QString &id, const QString &file)
                 d->playWhenReady.remove(id);
                 QString reason = decoder->errorString();
                 if (reason.isEmpty())
+                    //: Reason, shown after "Couldn't read <file>:"
                     reason = tr("the format isn't supported");
                 decoder->deleteLater();
                 emit errorOccurred(tr("Couldn't read %1: %2").arg(name, reason));

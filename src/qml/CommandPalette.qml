@@ -40,6 +40,8 @@ Popup {
         { kind: "page", id: "audio", title: qsTr("Go to Audio & mic"), icon: "cable", detail: qsTr("Virtual mic, output, real microphone") },
         { kind: "page", id: "stream", title: qsTr("Go to Stream"), icon: "radio", detail: qsTr("Captions, OBS, Twitch") },
         { kind: "page", id: "settings:appearance", title: qsTr("Appearance settings"), icon: "palette", detail: qsTr("Theme, ink colour, fonts, sizes") },
+        // "Language" stays findable in English whatever the interface language is.
+        { kind: "page", id: "settings:appearance", title: qsTr("Change language"), icon: "languages", detail: "Language" },
         { kind: "page", id: "settings:access", title: qsTr("Accessibility settings"), icon: "accessibility", detail: qsTr("Focus ring, bigger buttons, switch access") },
         { kind: "page", id: "settings:shortcuts", title: qsTr("Shortcut settings"), icon: "keyboard", detail: "" },
         { kind: "page", id: "settings:speech", title: qsTr("Speech input settings"), icon: "mic-vocal", detail: qsTr("Dictation models and languages") },
@@ -67,6 +69,10 @@ Popup {
         }
         pages.forEach(p => add(p, p.title + " " + p.detail))
         App.commands().forEach(c => add({ kind: "action", id: c.id, title: c.title, detail: c.detail, icon: c.id.startsWith("phrase:") ? "message-square-text" : "zap", shortcut: c.shortcut, hold: c.hold }, c.title + " " + c.detail + " " + c.category))
+        if (q.length >= 2 && App.language) {
+            for (const l of App.language.available)
+                add({ kind: "language", id: l.code, title: l.name, detail: l.english, icon: "languages" }, l.name + " " + l.english + " " + l.code)
+        }
         if (q.length >= 2) {
             for (let i = 0; i < App.voices.count && out.length < 200; ++i) {
                 const v = App.voices.get(i)
@@ -84,6 +90,7 @@ Popup {
         if (item.kind === "page") pal.navigate(item.id)
         else if (item.kind === "setup") pal.runOnboarding()
         else if (item.kind === "voice") App.setVoice(item.id)
+        else if (item.kind === "language") App.language.choose(item.id)
         else App.trigger(item.id)
     }
 

@@ -65,7 +65,7 @@ ScrollPage {
             ValueSlider {
                 label: qsTr("Ignore repeated presses within")
                 from: 0; to: 1500; stepSize: 50
-                format: (v) => v === 0 ? qsTr("Off") : Math.round(v) + " ms"
+                format: (v) => v === 0 ? qsTr("Off") : qsTr("%1 ms", "milliseconds").arg(Number(Math.round(v)).toLocaleString(Qt.locale(), "f", 0))
                 value: App.prefs["a11y/debounceMs"]
                 onMoved: App.prefs["a11y/debounceMs"] = value
             }
@@ -92,7 +92,7 @@ ScrollPage {
             ValueSlider {
                 label: qsTr("Scanning speed")
                 from: 400; to: 4000; stepSize: 100
-                format: (v) => (v / 1000).toFixed(1) + " s"
+                format: (v) => qsTr("%1 s", "seconds").arg(Number(v / 1000).toLocaleString(Qt.locale(), "f", 1))
                 value: App.prefs["a11y/scanIntervalMs"]
                 onMoved: App.prefs["a11y/scanIntervalMs"] = value
             }

@@ -6,7 +6,8 @@ import Ink.Core
 OnbStep {
     id: step
     title: said ? qsTr("That's your voice now.") : qsTr("Say your first words")
-    lead: said ? qsTr("Everything you need is on the Talk page. Ctrl+K finds anything else.")
+    lead: said ? (App.shortcuts["window.palette"] ? qsTr("Everything you need is on the Talk page. %1 finds anything else.").arg(App.nativeShortcut(App.shortcuts["window.palette"]))
+                                                   : qsTr("Everything you need is on the Talk page."))
                : qsTr("Type anything and press Enter. Watch it fill with ink as it's spoken.")
     property bool said: false
 

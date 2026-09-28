@@ -10,6 +10,7 @@
 class AppContext;
 class DeviceModel;
 class DownloadModel;
+class LanguageManager;
 class HistoryModel;
 class KeybindModel;
 class PhraseModel;
@@ -42,6 +43,7 @@ class Bridge : public QObject
     Q_PROPERTY(QObject *history READ history CONSTANT)
     Q_PROPERTY(QObject *virtualMic READ virtualMic CONSTANT)
     Q_PROPERTY(QObject *avatar READ avatar CONSTANT) // AvatarController (.vts, .vmc, .veado)
+    Q_PROPERTY(QObject *language READ language CONSTANT) // LanguageManager
 
     // Speaking
     Q_PROPERTY(bool speaking READ speaking NOTIFY speakingChanged)
@@ -91,8 +93,8 @@ class Bridge : public QObject
     Q_PROPERTY(QString platform READ platform CONSTANT)
     Q_PROPERTY(QString version READ version CONSTANT)
     Q_PROPERTY(bool hotkeysSupported READ hotkeysSupported CONSTANT)
-    Q_PROPERTY(QString hotkeysUnsupportedReason READ hotkeysUnsupportedReason CONSTANT)
-    Q_PROPERTY(QVariantList effects READ effects CONSTANT)
+    Q_PROPERTY(QString hotkeysUnsupportedReason READ hotkeysUnsupportedReason NOTIFY translationsChanged)
+    Q_PROPERTY(QVariantList effects READ effects NOTIFY translationsChanged)
     Q_PROPERTY(QString updateVersion READ updateVersion NOTIFY updateChanged)
     Q_PROPERTY(QString updateUrl READ updateUrl NOTIFY updateChanged)
     Q_PROPERTY(QString updateNotes READ updateNotes NOTIFY updateChanged)
@@ -123,6 +125,9 @@ public:
     QObject *history() const;
     QObject *virtualMic() const;
     QObject *avatar() const;
+    QObject *language() const;
+    // Called once from main(); refreshes texts built in C++ when the language changes.
+    void setLanguageManager(LanguageManager *languages);
 
     bool speaking() const { return m_speaking; }
     int queued() const { return m_queued; }
@@ -257,6 +262,7 @@ public:
     Q_INVOKABLE QUrl fileUrl(const QString &path) const;
 
 signals:
+    void translationsChanged();
     void speakingChanged();
     void queuedChanged();
     void currentLineChanged();
@@ -309,6 +315,7 @@ private:
     DeviceModel *m_inputs;
     DownloadModel *m_whisper;
     DownloadModel *m_piper;
+    LanguageManager *m_languages = nullptr;
     PresetModel *m_presetModel;
     VoicePreview *m_preview;
     VoicePreview *m_echo;

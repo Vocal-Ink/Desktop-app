@@ -95,7 +95,7 @@ Card {
         ValueSlider {
             label: qsTr("Mic gain")
             from: -24; to: 24
-            format: (v) => (v > 0 ? "+" : "") + Math.round(v) + " dB"
+            format: (v) => qsTr("%1 dB", "decibels").arg((v > 0 ? "+" : "") + Number(Math.round(v)).toLocaleString(Qt.locale(), "f", 0))
             value: App.prefs["mic/gainDb"]
             onMoved: App.prefs["mic/gainDb"] = value
         }
@@ -107,7 +107,7 @@ Card {
         ValueSlider {
             label: qsTr("Noise gate")
             from: -90; to: -20
-            format: (v) => v <= -89 ? qsTr("Off") : Math.round(v) + " dB"
+            format: (v) => v <= -89 ? qsTr("Off") : qsTr("%1 dB", "decibels").arg(Number(Math.round(v)).toLocaleString(Qt.locale(), "f", 0))
             value: App.prefs["mic/gateDb"]
             onMoved: App.prefs["mic/gateDb"] = value
         }

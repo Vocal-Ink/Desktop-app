@@ -114,7 +114,7 @@ ScrollPage {
                 ValueSlider {
                     label: qsTr("Caption hold time")
                     from: 1; to: 30
-                    format: (v) => Math.round(v) + " s"
+                    format: (v) => qsTr("%1 s", "seconds").arg(Number(Math.round(v)).toLocaleString(Qt.locale(), "f", 0))
                     value: parseFloat(page.queryMap()["hold"] || "4")
                     onMoved: page.setQuery("hold", String(Math.round(value)), "4")
                 }

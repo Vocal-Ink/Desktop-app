@@ -36,7 +36,10 @@ public:
     bool load();  // falls back to defaultPhrases() if the file doesn't exist
     bool save() const;
 
-    static QList<Phrase> defaultPhrases();
+    static QList<Phrase> defaultPhrases(); // in the interface language
+    // While the starter phrases are untouched (never saved), switch them to
+    // the current interface language.
+    void retranslateDefaults();
     QStringList categories() const; // in first-use order
     static QByteArray toJson(const QList<Phrase> &phrases);
     static QList<Phrase> fromJson(const QByteArray &json, bool *ok = nullptr);

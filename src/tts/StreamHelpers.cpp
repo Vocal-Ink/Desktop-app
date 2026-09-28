@@ -175,10 +175,8 @@ ProcessTtsStream::ProcessTtsStream(QProcess *process, PcmStreamParser::Container
             QString msg = QString::fromUtf8(m_stderr).trimmed();
             if (msg.size() > 300)
                 msg = msg.right(300);
-            deliverFailed(tr("%1 stopped with an error (code %2)%3")
-                              .arg(m_engine)
-                              .arg(exitCode)
-                              .arg(msg.isEmpty() ? QString() : QStringLiteral(": ") + msg));
+            deliverFailed(msg.isEmpty() ? tr("%1 stopped with an error (code %2)").arg(m_engine).arg(exitCode)
+                                        : tr("%1 stopped with an error (code %2): %3").arg(m_engine).arg(exitCode).arg(msg));
         } else if (m_parser.totalBytes() == 0) {
             deliverFailed(tr("%1 produced no audio").arg(m_engine));
         } else {
