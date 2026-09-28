@@ -45,6 +45,20 @@ jobs:
             $global:LASTEXITCODE = 0
           }
 
+      # The NuGet WDK doesn't put its tools (stampinf, inf2cat...) on PATH; the
+      # driver project runs stampinf by name.
+      - name: Put the kit tools on PATH
+        run: |
+          $stamp = Get-ChildItem driver\windows\packages -Recurse -Filter stampinf.exe -ErrorAction SilentlyContinue |
+                   Where-Object { $_.DirectoryName -match '\\x64$' } | Sort-Object FullName -Descending | Select-Object -First 1
+          if (-not $stamp) {
+            $stamp = Get-ChildItem "${env:ProgramFiles(x86)}\Windows Kits\10\bin" -Recurse -Filter stampinf.exe -ErrorAction SilentlyContinue |
+                     Where-Object { $_.DirectoryName -match '\\x64$' } | Sort-Object FullName -Descending | Select-Object -First 1
+          }
+          if (-not $stamp) { throw "stampinf.exe not found in the WDK" }
+          Write-Host "Kit tools: $($stamp.DirectoryName)"
+          $stamp.DirectoryName >> $env:GITHUB_PATH
+
       - name: Build
         run: |
           msbuild driver\windows\VocalInkAudio.sln /m /nologo /p:Configuration=Release /p:Platform=x64 /p:SignMode=Off

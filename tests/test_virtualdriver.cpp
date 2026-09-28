@@ -267,7 +267,9 @@ private slots:
         QFETCH(QString, path);
         if (!haveShell())
             QSKIP("needs /bin/sh");
-        QCOMPARE(runShell(QStringLiteral("S=") + shellQuote(path) + QStringLiteral("; printf %s \"$S\"")), path);
+        // macOS hands arguments to the shell decomposed (NFD): compare canonical forms.
+        const QString echoed = runShell(QStringLiteral("S=") + shellQuote(path) + QStringLiteral("; printf %s \"$S\""));
+        QCOMPARE(echoed.normalized(QString::NormalizationForm_C), path.normalized(QString::NormalizationForm_C));
     }
 
     void appleScriptEscapingRoundTrips()

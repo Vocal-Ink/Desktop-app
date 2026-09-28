@@ -538,7 +538,7 @@ private slots:
         settings.setValue(Keys::WhisperModel, QStringLiteral("ggml-broken.bin"));
         QVERIFY(engine.isLoading());
         QCOMPARE(engine.notReadyReason(), QStringLiteral("Loading speech model…"));
-        QTRY_COMPARE_WITH_TIMEOUT(loadFailed.count(), 1, 10000);
+        QTRY_COMPARE_WITH_TIMEOUT(loadFailed.count(), 1, 60000); // slow on CI macOS (Metal set-up)
         QVERIFY(!engine.isReady());
         QVERIFY(!engine.isLoading());
         QVERIFY(engine.notReadyReason().contains(QStringLiteral("ggml-broken.bin")));
@@ -562,7 +562,7 @@ private slots:
         later.write("still not a model");
         later.close();
         // The engine notices the new file and tries to load it.
-        QTRY_COMPARE_WITH_TIMEOUT(loadFailed.count(), 1, 10000);
+        QTRY_COMPARE_WITH_TIMEOUT(loadFailed.count(), 1, 60000); // slow on CI macOS (Metal set-up)
         QCOMPARE(loadFailed.first().at(0).toString(), engine.modelPath());
 #endif
     }

@@ -20,29 +20,43 @@ set(CMAKE_AUTOUIC OFF)
 set(CMAKE_AUTORCC OFF)
 
 # --- libASPL v3.1.2 ---------------------------------------------------------------
-# Must be fetched from a tag with full history: libASPL's CMakeLists runs
-# `git describe --tags` and parses the result, and v3.1.2 isn't a branch tip, so a
-# shallow clone can't check it out. Its targets (`compile_commands` is ALL) and
-# install rules stay out of the build via EXCLUDE_FROM_ALL.
-include(FetchContent)
-set(BUILD_TESTING OFF)
-set(BUILD_DOCUMENTATION OFF)
-set(_vi_aspl_source
+# Built as a separate project and installed into the build tree, the way libASPL's
+# README documents it: its CMakeLists isn't meant to be a subproject (as one, ninja
+# rejects it: "_deps/libaspl-build is defined as an output multiple times").
+# It must be cloned from the tag with full history: its CMakeLists runs
+# `git describe --tags`, and v3.1.2 isn't a branch tip, so a shallow clone fails.
+include(ExternalProject)
+set(_vi_aspl_prefix ${CMAKE_CURRENT_BINARY_DIR}/libaspl)
+set(_vi_aspl_lib ${_vi_aspl_prefix}/lib/${CMAKE_STATIC_LIBRARY_PREFIX}ASPL${CMAKE_STATIC_LIBRARY_SUFFIX})
+string(REPLACE ";" "$<SEMICOLON>" _vi_aspl_archs "${CMAKE_OSX_ARCHITECTURES}")
+ExternalProject_Add(libaspl_project
     GIT_REPOSITORY https://github.com/gavv/libASPL.git
     GIT_TAG        v3.1.2
     GIT_SHALLOW    FALSE
-    GIT_PROGRESS   FALSE)
-if(CMAKE_VERSION VERSION_GREATER_EQUAL 3.28)
-    FetchContent_Declare(libaspl ${_vi_aspl_source} EXCLUDE_FROM_ALL)
-    FetchContent_MakeAvailable(libaspl)
-else()
-    FetchContent_Declare(libaspl ${_vi_aspl_source})
-    FetchContent_GetProperties(libaspl)
-    if(NOT libaspl_POPULATED)
-        FetchContent_Populate(libaspl)
-        add_subdirectory(${libaspl_SOURCE_DIR} ${libaspl_BINARY_DIR} EXCLUDE_FROM_ALL)
-    endif()
-endif()
+    GIT_PROGRESS   FALSE
+    UPDATE_COMMAND ""
+    PREFIX         ${CMAKE_CURRENT_BINARY_DIR}/libaspl-work
+    INSTALL_DIR    ${_vi_aspl_prefix}
+    CMAKE_ARGS
+        -DCMAKE_INSTALL_PREFIX=<INSTALL_DIR>
+        -DCMAKE_INSTALL_LIBDIR=lib
+        -DCMAKE_BUILD_TYPE=Release
+        -DCMAKE_OSX_ARCHITECTURES=${_vi_aspl_archs}
+        -DCMAKE_OSX_DEPLOYMENT_TARGET=${CMAKE_OSX_DEPLOYMENT_TARGET}
+        -DCMAKE_C_COMPILER=${CMAKE_C_COMPILER}
+        -DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER}
+        -DBUILD_TESTING=OFF
+        -DBUILD_DOCUMENTATION=OFF
+    BUILD_BYPRODUCTS ${_vi_aspl_lib})
+
+# The headers only exist after the external build; the directory must exist now.
+file(MAKE_DIRECTORY ${_vi_aspl_prefix}/include)
+add_library(libASPL STATIC IMPORTED GLOBAL)
+set_target_properties(libASPL PROPERTIES
+    IMPORTED_LOCATION ${_vi_aspl_lib}
+    INTERFACE_INCLUDE_DIRECTORIES ${_vi_aspl_prefix}/include
+    INTERFACE_LINK_LIBRARIES "-framework CoreFoundation;-framework CoreAudio")
+add_dependencies(libASPL libaspl_project)
 
 # --- The plug-in bundle -------------------------------------------------------------
 # A MODULE built as a CFBundle: VocalInkVirtualMic.driver/Contents/{Info.plist,MacOS/VocalInkVirtualMic}.
@@ -53,6 +67,7 @@ add_library(VocalInkVirtualMic MODULE
 target_compile_features(VocalInkVirtualMic PRIVATE cxx_std_17)
 target_compile_options(VocalInkVirtualMic PRIVATE -Wall -Wextra)
 target_link_libraries(VocalInkVirtualMic PRIVATE libASPL)
+add_dependencies(VocalInkVirtualMic libaspl_project)
 # coreaudiod only needs the entry point; keep everything else (libASPL included) private.
 target_link_options(VocalInkVirtualMic PRIVATE "LINKER:-exported_symbol,_VocalInkVirtualMicEntryPoint")
 set_target_properties(VocalInkVirtualMic PROPERTIES
