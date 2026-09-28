@@ -146,7 +146,7 @@
         <message>
             <location line="+1" />
             <source>Cycles forward through your favorite voices.</source>
-            <translation>向后切换你收藏的声音。</translation>
+            <translation>按顺序切换到下一个收藏的声音。</translation>
         </message>
         <message>
             <location line="+1" />
@@ -156,7 +156,7 @@
         <message>
             <location line="+1" />
             <source>Cycles back through your favorite voices.</source>
-            <translation>向前切换你收藏的声音。</translation>
+            <translation>按顺序切换到上一个收藏的声音。</translation>
         </message>
         <message>
             <location line="+1" />
@@ -560,12 +560,12 @@
         <message>
             <location line="+2" />
             <source>Your computer will ask for your password once.</source>
-            <translation>电脑会向你询问一次密码。</translation>
+            <translation>电脑会要求你输入一次密码。</translation>
         </message>
         <message>
             <location line="+7" />
             <source>Send my voice into it</source>
-            <translation>把我的声音接入</translation>
+            <translation>把我的声音送进虚拟麦克风</translation>
         </message>
         <message>
             <location line="+4" />
@@ -972,7 +972,7 @@
         <message>
             <location line="+4" />
             <source>When things happen</source>
-            <translation>发生某些事时</translation>
+            <translation>事件触发</translation>
         </message>
         <message>
             <location line="+5" />
@@ -1341,7 +1341,7 @@
         <message>
             <location line="+1" />
             <source>Your own phrases will be replaced by the starter set.</source>
-            <translation>你自己的短语会被初始短语替换。</translation>
+            <translation>你自己的短语会被替换为初始短语。</translation>
         </message>
         <message>
             <location line="+3" />
@@ -2152,7 +2152,7 @@
         <message>
             <location line="+1" />
             <source>Dismiss</source>
-            <translation>忽略</translation>
+            <translation>关闭</translation>
         </message>
     </context>
     <context>
@@ -2687,7 +2687,7 @@
         <message>
             <location line="+1" />
             <source>If you can whisper, mouth or speak softly, Vocal Ink can write it down for you to check and send. It runs on this computer.</source>
-            <translation>如果你能小声说、做口型或轻声说话，Vocal Ink 可以帮你写成文字，由你检查后再发送。它在这台电脑上运行。</translation>
+            <translation>如果你能耳语、做口型或轻声说话，Vocal Ink 可以帮你写成文字，由你检查后再发送。它在这台电脑上运行。</translation>
         </message>
         <message>
             <location line="+7" />
@@ -2881,7 +2881,7 @@
         <message>
             <location line="+1" />
             <source>Type anything and press Enter. Watch it fill with ink as it's spoken.</source>
-            <translation>随便输入点什么，然后按 Enter。看着文字在被说出时被墨色填满。</translation>
+            <translation>随便输入点什么，然后按 Enter。看着文字随着声音被墨色填满。</translation>
         </message>
         <message>
             <location line="+11" />
@@ -2998,7 +2998,7 @@
         <message>
             <location line="+8" />
             <source>Send my voice into it</source>
-            <translation>把我的声音接入</translation>
+            <translation>把我的声音送进虚拟麦克风</translation>
         </message>
         <message>
             <location line="+6" />
@@ -3168,7 +3168,7 @@
         <message>
             <location line="+1" />
             <source>Pick all that apply. It decides which steps come next; nothing is locked in.</source>
-            <translation>选择所有适用的选项。它决定接下来有哪些步骤，之后随时可以改。</translation>
+            <translation>选择所有适用的选项。你的选择决定接下来有哪些步骤，之后随时可以更改。</translation>
         </message>
         <message>
             <location line="+18" />
@@ -3218,7 +3218,7 @@
         <message>
             <location line="+0" />
             <source>Out loud, and text people can read</source>
-            <translation>说出声，并显示给别人看的文字</translation>
+            <translation>说出声音，也可以显示文字给人看</translation>
         </message>
         <message>
             <location line="+1" />
@@ -3228,7 +3228,7 @@
         <message>
             <location line="+0" />
             <source>Presentations, classes, desks</source>
-            <translation>演示、课堂、办公桌前</translation>
+            <translation>演示、课堂、工位</translation>
         </message>
         <message>
             <location line="+1" />
@@ -3315,7 +3315,7 @@
         <message>
             <location line="+22" />
             <source>Type or dictate, and Vocal Ink speaks for you: in calls, in games, on stream, or across the table. Setup takes about two minutes, and you can change everything later.</source>
-            <translation>打字或听写，Vocal Ink 替你说出来：在通话中、游戏里、直播时，或者和对面的人面对面。设置大约只需两分钟，之后一切都可以更改。</translation>
+            <translation>打字或听写，Vocal Ink 替你说出来：通话、游戏、直播，或者和坐在对面的人交流。设置大约只需两分钟，之后一切都可以更改。</translation>
         </message>
         <message>
             <location line="+7" />
@@ -3355,7 +3355,7 @@
         <message>
             <location line="+20" />
             <source>Make it comfortable</source>
-            <translation>调整到舒适的状态</translation>
+            <translation>调到你觉得舒适</translation>
         </message>
         <message>
             <location line="+1" />
@@ -3437,7 +3437,7 @@
         <message>
             <location line="+6" />
             <source>More in Settings → Accessibility: letter and line spacing, typing echo, repeat-press protection and more.</source>
-            <translation>更多选项在“设置 → 无障碍”中：字母和行间距、打字回显、防重复按键等。</translation>
+            <translation>更多选项在“设置 → 无障碍”中：字间距和行间距、打字回显、防重复按键等。</translation>
         </message>
     </context>
     <context>
@@ -4266,7 +4266,7 @@
         <message>
             <location line="+1" />
             <source>Blinking, mouth open</source>
-            <translation>眨眼、张嘴</translation>
+            <translation>眨眼 + 张嘴</translation>
         </message>
         <message>
             <location line="+1" />
@@ -5179,7 +5179,7 @@
             <location line="+11" />
             <location line="+3" />
             <source>Lower my mic while the voice speaks</source>
-            <translation>声音说话时降低我的麦克风音量</translation>
+            <translation>Vocal Ink 说话时降低我的麦克风音量</translation>
         </message>
         <message>
             <location line="-2" />
@@ -5330,7 +5330,7 @@
         <message>
             <location line="+6" />
             <source>A voice for people who don't use their own: type or dictate, and Vocal Ink speaks for you, in calls, games, streams and in person. Free, open source and private by default.</source>
-            <translation>为不用自己嗓音说话的人提供的声音：打字或听写，Vocal Ink 替你说出来，在通话、游戏、直播和面对面交流中都可以。免费、开源，默认保护隐私。</translation>
+            <translation>给不用自己嗓音说话的人一副声音：打字或听写，Vocal Ink 替你说出来——通话、游戏、直播、面对面都行。免费、开源，默认保护隐私。</translation>
         </message>
         <message>
             <location line="+5" />
@@ -5786,7 +5786,7 @@
         <message>
             <location line="+2" />
             <source>Spoken line size</source>
-            <translation>说出行的大小</translation>
+            <translation>说出的行的大小</translation>
         </message>
         <message>
             <location line="+7" />
@@ -5906,12 +5906,12 @@
             <location line="+3" />
             <location line="+3" />
             <source>Voice drawing</source>
-            <translation>声音图形</translation>
+            <translation>声音可视化</translation>
         </message>
         <message>
             <location line="-2" />
             <source>How your voice is drawn under the message box.</source>
-            <translation>你的声音在消息框下方以什么样子显示。</translation>
+            <translation>你的声音在消息框下方如何显示。</translation>
         </message>
         <message>
             <location line="+4" />
@@ -5997,7 +5997,7 @@
             <location line="+5" />
             <location line="+2" />
             <source>Status in the header</source>
-            <translation>标题栏中的状态</translation>
+            <translation>顶部状态显示</translation>
         </message>
         <message>
             <location line="-1" />
@@ -6214,7 +6214,7 @@
         <message>
             <location line="+4" />
             <source>You have version %1</source>
-            <translation>你的版本是 %1</translation>
+            <translation>当前版本为 %1</translation>
         </message>
         <message>
             <location line="+1" />
@@ -6514,7 +6514,7 @@
         <message>
             <location line="+42" />
             <source>This shortcut puts your real mic on air</source>
-            <translation>这个快捷键会让你的真实麦克风开播</translation>
+            <translation>这个快捷键会打开你的真实麦克风</translation>
         </message>
         <message>
             <location line="+7" />
@@ -6588,7 +6588,7 @@
         <message>
             <location line="+9" />
             <source>How it listens</source>
-            <translation>如何聆听</translation>
+            <translation>聆听方式</translation>
         </message>
         <message>
             <location line="+3" />
@@ -6817,7 +6817,7 @@
         <message>
             <location line="+1" />
             <source>Type less and sound right: word suggestions, shortcuts that expand, and how emoji and links are read.</source>
-            <translation>少打字，说得对：联想词、可展开的缩写，以及表情符号和链接的读法。</translation>
+            <translation>少打点字，说得更准：联想词、可展开的缩写，以及表情符号和链接的读法。</translation>
         </message>
         <message>
             <location line="+4" />
@@ -6855,7 +6855,7 @@
         <message>
             <location line="+1" />
             <source>Forget them</source>
-            <translation>忘掉它们</translation>
+            <translation>清除</translation>
         </message>
         <message>
             <location line="+6" />
@@ -6926,7 +6926,7 @@
             <location line="+4" />
             <location line="+2" />
             <source>Start speaking after the first sentence</source>
-            <translation>第一句打完就开始说</translation>
+            <translation>第一句准备好就开始说</translation>
         </message>
         <message>
             <location line="-1" />
@@ -7017,7 +7017,7 @@
         <message>
             <location line="+7" />
             <source>Forget learned words?</source>
-            <translation>忘掉学到的词？</translation>
+            <translation>清除学到的词？</translation>
         </message>
         <message>
             <location line="+1" />
@@ -7027,7 +7027,7 @@
         <message>
             <location line="+3" />
             <source>Forget</source>
-            <translation>忘掉</translation>
+            <translation>清除</translation>
         </message>
         <message>
             <location line="+1" />
@@ -7424,7 +7424,7 @@
         <message>
             <location line="+12" />
             <source>Nothing connected yet. Copy an overlay's address below into a Browser source in OBS (1920 × 1080).</source>
-            <translation>还没有任何连接。把下方叠加层的地址复制到 OBS 的浏览器源中（1920 × 1080）。</translation>
+            <translation>还没有叠加层连接。把下方叠加层的地址复制到 OBS 的浏览器源中（1920 × 1080）。</translation>
         </message>
         <message>
             <location line="+5" />
@@ -7450,7 +7450,7 @@
         <message>
             <location line="-2" />
             <source>IP addresses and this computer's name always work. Add any other name the streaming PC uses, separated by commas.</source>
-            <translation>IP 地址和这台电脑的名称总是可以用的。请添加推流电脑使用的其他名称，用逗号分隔。</translation>
+            <translation>IP 地址和这台电脑的名称总是可以用的。请添加推流电脑使用的其他名称，用英文逗号分隔。</translation>
         </message>
         <message>
             <location line="+74" />
@@ -7460,7 +7460,7 @@
         <message>
             <location line="+6" />
             <source>Chat read aloud</source>
-            <translation>朗读的聊天</translation>
+            <translation>聊天朗读</translation>
         </message>
         <message>
             <location line="+17" />
@@ -7645,7 +7645,7 @@
         <message>
             <location line="+6" />
             <source>Reading chat</source>
-            <translation>朗读聊天</translation>
+            <translation>正在朗读聊天</translation>
         </message>
         <message>
             <location line="+4" />
@@ -7710,7 +7710,7 @@
         <message>
             <location line="+0" />
             <source>Comma separated, e.g. nightbot, streamelements</source>
-            <translation>用逗号分隔，例如 nightbot, streamelements</translation>
+            <translation>用英文逗号分隔，例如 nightbot, streamelements</translation>
         </message>
         <message>
             <location line="+5" />
@@ -7725,7 +7725,7 @@
         <message>
             <location line="+0" />
             <source>Comma separated words</source>
-            <translation>用逗号分隔的词</translation>
+            <translation>用英文逗号（,）分隔的词</translation>
         </message>
     </context>
     <context>
@@ -7849,7 +7849,7 @@
         <message>
             <location line="+1" />
             <source>Your real microphone is not being sent.</source>
-            <translation>你的真实麦克风没有传送声音。</translation>
+            <translation>当前没有传送你的真实麦克风。</translation>
         </message>
         <message>
             <location line="+7" />
@@ -8690,7 +8690,7 @@
         <message>
             <location line="+20" />
             <source>Voices, %1 shown</source>
-            <translation>声音，显示了 %1 个</translation>
+            <translation>声音列表，显示 %1 个</translation>
         </message>
         <message>
             <location line="+15" />
@@ -8728,7 +8728,7 @@
         <message>
             <location filename="../src/stt/WhisperEngine.h" line="+24" />
             <source>Whisper (on this device)</source>
-            <translation>Whisper（在此设备上）</translation>
+            <translation>Whisper（本机）</translation>
         </message>
     </context>
     <context>
