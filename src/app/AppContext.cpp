@@ -29,10 +29,12 @@
 #include "tts/Engines.h"
 #include "tts/TtsRegistry.h"
 
+#include <QBuffer>
 #include <QClipboard>
 #include <QCryptographicHash>
 #include <QDateTime>
 #include <QGuiApplication>
+#include <QImage>
 #include <QJsonArray>
 #include <QJsonObject>
 #include <QKeySequence>
@@ -107,6 +109,16 @@ AppContext::AppContext(QObject *parent)
     m_obs = new ObsIntegration(this);
     m_overlay = new OverlayServer(this);
     m_avatar = new AvatarController(m_settings, m_secrets, this);
+    {
+        // Shown in VTube Studio's "Allow Vocal Ink?" popup (must be 128x128).
+        QByteArray icon;
+        QBuffer buffer(&icon);
+        buffer.open(QIODevice::WriteOnly);
+        QImage(QStringLiteral(":/icons/app-256.png"))
+            .scaled(128, 128, Qt::IgnoreAspectRatio, Qt::SmoothTransformation)
+            .save(&buffer, "PNG");
+        m_avatar->setPluginIcon(icon);
+    }
     m_hotkeys = new GlobalHotkeys(this);
     m_actions = new ActionRegistry(m_settings, this);
     m_mic = new MicPassthrough(m_player, this);
@@ -310,6 +322,7 @@ void AppContext::wireSpeech()
 
     // Avatars: one smoothed mouth value drives VTS/VMC/veadotube and the PNGtuber overlay.
     connect(m_player, &AudioPlayer::levelChanged, m_avatar, &AvatarController::onOutputLevel);
+    connect(m_player, &AudioPlayer::speechLevelChanged, m_avatar, &AvatarController::onSpeechLevel);
     connect(m_avatar, &AvatarController::frame, this, [this] {
         m_overlay->sendLevel(m_avatar->mouth(), m_avatar->viseme());
     });
