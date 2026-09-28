@@ -66,6 +66,12 @@ private:
     void setStatus(Status status, const QString &text);
     void setSubtitleText(const QString &text);
     void setIndicator(bool visible);
+    void startConnecting();
+    void sendSubtitle(const QString &source, const QString &text, DoneCallback done = {});
+    void finishLater(const DoneCallback &callback, bool ok, const QString &message);
+    QString connectedText() const;
+    void reportProblem(const QString &problem); // shown in the status text while connected
+    void clearProblem();
 
     Config m_config;
     ObsWebSocketClient *m_client = nullptr;
@@ -74,4 +80,6 @@ private:
     class QTimer *m_clearTimer = nullptr;
     QString m_indicatorScene;
     int m_indicatorItemId = -1;
+    quint64 m_indicatorRequest = 0; // bumped on every show/hide so stale lookups are dropped
+    bool m_subtitleShown = false;   // OBS shows subtitle text we set and haven't cleared yet
 };

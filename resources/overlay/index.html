@@ -1,1 +1,24 @@
-<!doctype html><title>Vocal Ink overlay</title>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vocal Ink captions</title>
+<link rel="stylesheet" href="/overlay.css">
+</head>
+<body>
+<main id="stage" class="stage" aria-live="polite">
+  <div id="box" class="box">
+    <div class="meta">
+      <span class="signal" aria-hidden="true">
+        <span class="dot"></span>
+        <svg class="mic" viewBox="0 0 24 24"><path d="M12 14.5a3.5 3.5 0 0 0 3.5-3.5V5a3.5 3.5 0 0 0-7 0v6a3.5 3.5 0 0 0 3.5 3.5zm6-3.5a6 6 0 0 1-12 0H4a8 8 0 0 0 7 7.94V21h2v-2.06A8 8 0 0 0 20 11h-2z"/></svg>
+      </span>
+      <span id="label" class="label"></span>
+    </div>
+    <div id="viewport" class="viewport"><div id="scroller" class="scroller"></div></div>
+  </div>
+</main>
+<script src="/overlay.js"></script>
+</body>
+</html>

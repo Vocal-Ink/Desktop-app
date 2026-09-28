@@ -44,13 +44,22 @@ signals:
 
 private:
     void onNewConnection();
+    void onWebSocketConnection();
     void handleHttp(QTcpSocket *socket);
+    void respond(QTcpSocket *socket, int status, const QByteArray &contentType, const QByteArray &body,
+                 bool headOnly = false);
     void broadcast(const QByteArray &json);
+    bool isAllowedHost(const QByteArray &host) const;
+    bool isAllowedOrigin(const QByteArray &origin, const QByteArray &host) const;
+    QByteArray stateJson() const;
 
     QTcpServer *m_http = nullptr;
     QWebSocketServer *m_ws = nullptr;
     QList<QPointer<QWebSocket>> m_clients;
     QString m_error;
     QByteArray m_lastCaption; // replayed to pages that connect mid-sentence
+    quint64 m_lastCaptionId = 0;
     bool m_allowLan = false;
+    bool m_speaking = false;
+    bool m_listening = false;
 };
