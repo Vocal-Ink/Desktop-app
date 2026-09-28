@@ -17,10 +17,6 @@ Abstract:
 #include <limits.h>
 #include "LoopbackBuffer.h"
 
-#ifndef WAVE_FORMAT_IEEE_FLOAT
-#define WAVE_FORMAT_IEEE_FLOAT      0x0003
-#endif
-
 #define LOOPBACK_POOLTAG    'BLnV'
 
 namespace

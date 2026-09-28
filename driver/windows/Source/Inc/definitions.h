@@ -23,6 +23,12 @@ Abstract:
 #include <Ntstrsafe.h>
 #include "NewDelete.h"
 
+// Used by STATIC_KSDATAFORMAT_SUBTYPE_IEEE_FLOAT in the float formats (mmreg.h
+// defines the same value when it is included).
+#ifndef WAVE_FORMAT_IEEE_FLOAT
+#define WAVE_FORMAT_IEEE_FLOAT      0x0003
+#endif
+
 //=============================================================================
 // Defines
 //=============================================================================
