@@ -46,6 +46,9 @@ public:
     virtual float takeOutputPeak() = 0;
     virtual qint64 speechQueuedUs() const = 0;
     virtual qint64 speechHeardUs() const = 0;
+    // Like takeOutputPeak(), but only the synthesized speech (no sounds, no live
+    // input). -1 when nothing new has been heard or the lane can't tell.
+    virtual float takeSpeechPeak() { return -1.0f; }
 
 signals:
     void drained();
@@ -76,6 +79,7 @@ public:
     void clearLive() override;
     void setLiveDucking(float gain) override;
     float takeOutputPeak() override;
+    float takeSpeechPeak() override;
     qint64 speechQueuedUs() const override;
     qint64 speechHeardUs() const override;
 

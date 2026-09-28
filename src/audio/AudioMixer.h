@@ -60,6 +60,9 @@ public:
     qint64 speechFramesQueued() const;             // rendered + pending speech
     qint64 speechFramesBefore(qint64 frame) const; // speech among output frames [0, frame)
     float peakBetween(qint64 from, qint64 to) const;
+    // Like peakBetween(), but only the synthesized speech (before sounds and
+    // live input are mixed in).
+    float speechPeakBetween(qint64 from, qint64 to) const;
 
 private:
     struct Voice
@@ -110,8 +113,10 @@ private:
     struct Bucket
     {
         float peak = 0.0f;
+        float speechPeak = 0.0f; // speech alone
         qint64 speechBefore = 0; // speech frames rendered before the bucket started
     };
+    float historyPeak(qint64 from, qint64 to, float Bucket::*field) const; // m_mutex held
     std::array<Bucket, kBuckets> m_history{};
     qint64 m_rendered = 0;
     qint64 m_speechRendered = 0;

@@ -1,14 +1,17 @@
 #pragma once
 
 #include <QByteArray>
+#include <QElapsedTimer>
 #include <QHostAddress>
 #include <QObject>
 #include <QString>
 #include <QVariantList>
+#include <array>
 
 #include "avatar/AvatarController.h"
 
 class QUdpSocket;
+class QTimer;
 
 // Sends mouth blendshapes with the VMC protocol (OSC over UDP) to VSeeFace,
 // Warudo, VNyan, VirtualMotionCapture and anything else with a VMC receiver.
@@ -32,6 +35,7 @@ public:
     Q_INVOKABLE QVariantList presetList() const; // [{id, name, port}]
 
     explicit VmcSender(QObject *parent = nullptr);
+    ~VmcSender() override;
 
     void setEnabled(bool enabled);
     void setTarget(const QString &host, quint16 port);
@@ -45,8 +49,16 @@ public:
     bool isSending() const { return m_sending; }
 
     // One frame; open 0..1 spread over the viseme (and its neighbours).
+    // Identical frames are sent at most every half second (receivers keep the
+    // last values), so this can be called at the controller's frame rate.
     void sendMouth(float open, AvatarController::Viseme viseme, bool talking);
     void release(); // all mouth shapes and the expression back to 0
+
+    // The five mouth shape names for a blendset, in A I U E O order.
+    static QStringList mouthShapeNames(const QString &blendset);
+    // The weights (A I U E O) sendMouth() sends for a mouth opening and shape,
+    // before the gain. Rest while open counts as A. Pure; for tests.
+    static std::array<float, 5> mouthWeights(float open, AvatarController::Viseme viseme);
 
     // OSC encoding (public for tests). Args: QString -> s, float/double -> f,
     // int -> i, bool -> T/F. Strings are NUL-terminated and padded to 4 bytes,
@@ -59,7 +71,13 @@ signals:
     void statusChanged();
 
 private:
+    void rebuildFrame();
+    void writeFrame(const std::array<float, 5> &mouth, float expression, bool force);
+    void resolveHost();
+    void markSent();
+
     QUdpSocket *m_socket = nullptr;
+    QTimer *m_sendingTimer = nullptr;
     bool m_enabled = false;
     QString m_host = QStringLiteral("127.0.0.1");
     int m_port = 39539;
@@ -67,4 +85,13 @@ private:
     float m_gain = 1.0f;
     QString m_expression;
     bool m_sending = false;
+
+    QHostAddress m_address;      // resolved m_host (null while unknown)
+    int m_lookupId = -1;
+    QByteArray m_frame;          // prebuilt bundle; the float values are patched in place
+    std::array<int, 5> m_mouthOffsets{};
+    int m_expressionOffset = -1; // -1 without an expression
+    std::array<float, 6> m_last{}; // last values sent (5 mouth + expression)
+    bool m_haveLast = false;
+    QElapsedTimer m_lastSend;
 };

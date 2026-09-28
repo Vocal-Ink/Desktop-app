@@ -170,14 +170,27 @@ void AudioPlayer::onLevelTick()
 {
     AudioOutputLane *main = m_lanes.isEmpty() ? nullptr : m_lanes.at(0).data();
     float peak = main ? std::min(1.0f, main->takeOutputPeak()) : 0.0f;
+    float speech = main ? std::min(1.0f, main->takeSpeechPeak()) : 0.0f;
     if (peak < 0.0f) {
         // Nothing new reached the speakers since the last tick (devices pull in bursts).
         if (++m_staleTicks < kLevelStaleTicks)
             return;
         peak = 0.0f;
+        speech = 0.0f;
     } else {
         m_staleTicks = 0;
     }
+
+    // Speech alone. -1: nothing new for it yet (or a lane that can't tell,
+    // which then never reports speech).
+    if (speech >= kAudiblePeak) {
+        m_speechAudible = true;
+        emit speechLevelChanged(speech);
+    } else if (speech >= 0.0f && m_speechAudible) {
+        m_speechAudible = false;
+        emit speechLevelChanged(0.0f);
+    }
+
     if (peak >= kAudiblePeak) {
         m_quietTicks = 0;
         m_levelAudible = true;
