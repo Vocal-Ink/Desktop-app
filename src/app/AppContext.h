@@ -138,6 +138,7 @@ private:
     void applySttOptions();
     void resolveVoiceWhenReady();
     bool debounced(const QString &id);
+    void notifyThrottled(const QString &topic, const QString &message, int level);
     void adjustSetting(const char *key, int delta, int min, int max, const QString &label);
 
     Settings *m_settings = nullptr;
@@ -167,6 +168,7 @@ private:
     QTimer *m_applyTimer = nullptr;
     QSet<QString> m_pendingAreas;
     QHash<QString, qint64> m_lastPress;
+    QHash<QString, qint64> m_lastNotice;
     QElapsedTimer m_clock;
     bool m_voiceResolved = false;
     bool m_initialized = false;

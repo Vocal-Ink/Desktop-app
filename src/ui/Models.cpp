@@ -505,6 +505,11 @@ void KeybindModel::resetAll()
     m_registry->resetAll();
 }
 
+QStringList KeybindModel::categories() const
+{
+    return m_registry->categories();
+}
+
 QString KeybindModel::shortcutFor(const QString &id) const
 {
     return QKeySequence::fromString(m_registry->shortcut(id), QKeySequence::PortableText)

@@ -79,6 +79,8 @@ to the URL. Sample captions then loop. Remove it when you're done.
 
 - **`style=subtitles`** (default): white text on a translucent dark box,
   centred near the bottom, like TV subtitles.
+- **`style=ink`**: the whole line appears pale and fills with ink word by word
+  as it's spoken, the newest word in violet, just like the app.
 - **`style=bubble`**: a white speech bubble with a tail. Place it next to your
   PNGtuber or avatar with `align=left` or `align=right`.
 - **`style=plain`**: outlined text with no box, for custom scenes and frames.
@@ -97,6 +99,7 @@ Add parameters to the overlay URL after `?`, separated by `&`. For example:
 | `font` | a font installed on the OBS computer, e.g. `Comic Sans MS` | system UI font | Font family. A comma-separated list works too. |
 | `size` | pixels | `42` | Text size. |
 | `color` | CSS colour, or hex without `#` (`ffcc00`) | white; dark ink for `bubble` | Text colour. |
+| `ink` | CSS colour, or hex without `#` | `b18cff` | `style=ink` only: colour of the word being spoken. |
 | `bg` | CSS colour including alpha, e.g. `rgba(0,0,0,0.6)` or `000000aa`; `none` | translucent dark; white for `bubble`; none for `plain` | Box or bubble background. |
 | `outline` | pixels | `0`; `3` for `plain` | Outline around the letters. |
 | `outlinecolor` | colour | `000000` | Colour of the outline. |

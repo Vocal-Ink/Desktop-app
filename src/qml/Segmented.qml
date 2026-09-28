@@ -9,6 +9,8 @@ Rectangle {
     property var value
     property string label: ""
     signal activated(var value)
+    // Set by the option that is selected; the ink pill follows it.
+    property Item selectedItem: null
 
     implicitHeight: Theme.control
     implicitWidth: row.implicitWidth + 8
@@ -29,8 +31,8 @@ Rectangle {
     // The sliding ink behind the selected option.
     Rectangle {
         id: pill
-        readonly property Item target: currentIndex >= 0 && rep.count > currentIndex ? rep.itemAt(currentIndex) : null
-        visible: target !== null
+        readonly property Item target: root.selectedItem
+        visible: target !== null && root.currentIndex >= 0
         x: target ? row.x + target.x : 0
         y: 4
         width: target ? target.width : 0
@@ -54,8 +56,11 @@ Rectangle {
                 required property var modelData
                 required property int index
                 readonly property bool selected: root.currentIndex === index
+                onSelectedChanged: if (selected) root.selectedItem = opt
+                Component.onCompleted: if (selected) root.selectedItem = opt
+                Component.onDestruction: if (root.selectedItem === opt) root.selectedItem = null
                 height: row.height
-                width: Math.max(implicitContentWidth + Theme.s4 * 2, height * 1.4)
+                width: Math.max(optRow.implicitWidth + Theme.s4 * 2, height * 1.4)
                 hoverEnabled: true
                 focusPolicy: Qt.StrongFocus
                 checkable: true
@@ -64,25 +69,30 @@ Rectangle {
                 Accessible.name: modelData.label || modelData.tip || ""
                 Accessible.checked: selected
                 onClicked: { root.value = modelData.value; root.activated(modelData.value) }
-                contentItem: Row {
-                    spacing: Theme.s1 + 2
-                    anchors.centerIn: parent
-                    Icon {
-                        anchors.verticalCenter: parent.verticalCenter
-                        visible: !!opt.modelData.icon
-                        name: opt.modelData.icon || ""
-                        size: Math.round(16 * Theme.scale)
-                        color: opt.selected ? Theme.accentInk : opt.hovered ? Theme.text : Theme.muted
-                    }
-                    Text {
-                        anchors.verticalCenter: parent.verticalCenter
-                        visible: !!opt.modelData.label
-                        text: opt.modelData.label || ""
-                        font.family: Theme.uiFont
-                        font.pixelSize: Theme.fsSm
-                        font.weight: Font.DemiBold
-                        color: opt.selected ? Theme.accentInk : opt.hovered ? Theme.text : Theme.muted
-                        Behavior on color { ColorAnimation { duration: Theme.fast } }
+                contentItem: Item {
+                    implicitWidth: optRow.implicitWidth
+                    implicitHeight: optRow.implicitHeight
+                    Row {
+                        id: optRow
+                        spacing: Theme.s1 + 2
+                        anchors.centerIn: parent
+                        Icon {
+                            anchors.verticalCenter: parent.verticalCenter
+                            visible: !!opt.modelData.icon
+                            name: opt.modelData.icon || ""
+                            size: Math.round(16 * Theme.scale)
+                            color: opt.selected ? Theme.accentInk : opt.hovered ? Theme.text : Theme.muted
+                        }
+                        Text {
+                            anchors.verticalCenter: parent.verticalCenter
+                            visible: !!opt.modelData.label
+                            text: opt.modelData.label || ""
+                            font.family: Theme.uiFont
+                            font.pixelSize: Theme.fsSm
+                            font.weight: Font.DemiBold
+                            color: opt.selected ? Theme.accentInk : opt.hovered ? Theme.text : Theme.muted
+                            Behavior on color { ColorAnimation { duration: Theme.fast } }
+                        }
                     }
                 }
                 background: Item {

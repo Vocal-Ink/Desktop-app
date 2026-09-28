@@ -35,7 +35,7 @@
     return window.CSS && CSS.supports && CSS.supports('color', v) ? v : fallback;
   }
 
-  var style = choice('style', ['subtitles', 'bubble', 'plain'], 'subtitles');
+  var style = choice('style', ['subtitles', 'ink', 'bubble', 'plain'], 'subtitles');
   var align = choice('align', ['center', 'left', 'right'], 'center');
   var cfg = {
     style: style,
@@ -44,8 +44,9 @@
     tail: choice('tail', ['left', 'center', 'right', 'none'], align),
     font: text('font', ''),
     size: number('size', 42, 10, 300),
-    color: color('color', style === 'bubble' ? '#1c1838' : '#ffffff'),
-    bg: color('bg', style === 'bubble' ? '#ffffff' : style === 'plain' ? 'transparent' : 'rgba(12, 11, 22, 0.74)'),
+    color: color('color', style === 'bubble' ? '#1c1838' : style === 'ink' ? '#f1ecff' : '#ffffff'),
+    bg: color('bg', style === 'bubble' ? '#ffffff' : style === 'plain' ? 'transparent' : style === 'ink' ? 'rgba(17, 12, 31, 0.8)' : 'rgba(12, 11, 22, 0.74)'),
+    ink: color('ink', '#b18cff'),
     outline: number('outline', style === 'plain' ? 3 : 0, 0, 24),
     outlineColor: color('outlinecolor', '#000000'),
     reveal: choice('reveal', ['word', 'instant'], 'word'),
@@ -102,6 +103,7 @@
     root.style.setProperty('--lh', lineHeight + 'px');
     root.style.setProperty('--color', cfg.color);
     root.style.setProperty('--bg', cfg.bg);
+    root.style.setProperty('--ink', cfg.ink);
     root.style.setProperty('--maxw', cfg.width + 'vw');
     root.style.setProperty('--outline-shadow', outlineShadow(cfg.outline, cfg.outlineColor));
     if (cfg.font) root.style.setProperty('--font', fontFamily(cfg.font));
@@ -185,15 +187,20 @@
   }
 
   function step(msg) {
-    if (msg !== current || msg.index >= msg.words.length) return;
+    if (msg !== current || msg.index >= msg.words.length) {
+      if (msg.words.length) msg.words[msg.words.length - 1].classList.remove('wet');
+      return;
+    }
+    if (msg.index > 0) msg.words[msg.index - 1].classList.remove('wet');
     var word = msg.words[msg.index++];
-    word.classList.add('on');
+    word.classList.add('on', 'wet');
     layout();
     msg.timer = setTimeout(function () { step(msg); }, wordDelay(word.textContent));
   }
 
   function revealAll(msg) {
     clearTimeout(msg.timer);
+    msg.words.forEach(function (w) { w.classList.remove('wet'); });
     for (; msg.index < msg.words.length; msg.index++) msg.words[msg.index].classList.add('on');
     layout();
   }

@@ -216,6 +216,43 @@ body {
 
 [data-style="subtitles"] .box.meta-only { padding: 0.32em 0.6em; }
 
+/* ---- style=ink: words are there from the start, pale, and fill with ink
+   as they are spoken (the newest word in wet violet), like the app -------- */
+
+[data-style="ink"] {
+  --accent: #8c52ff;
+  --accent-2: #ff7ad9;
+  --enter: translateY(0.25em);
+}
+
+[data-style="ink"] .box {
+  background: var(--bg);
+  border-radius: 0.34em;
+  padding: 0.3em 0.72em 0.36em;
+  font-weight: 700;
+  box-shadow: 0 0.35em 1.2em rgba(0, 0, 0, 0.3);
+}
+
+[data-style="ink"] .w {
+  opacity: 1;
+  transform: none;
+  color: transparent;
+  background-image: linear-gradient(90deg, var(--color) 50%, rgba(255, 255, 255, 0.26) 50%);
+  background-size: 200% 100%;
+  background-position: 100% 0;
+  -webkit-background-clip: text;
+  background-clip: text;
+  transition: background-position 0.32s var(--ease-out);
+}
+
+[data-style="ink"] .w.on { background-position: 0 0; }
+
+[data-style="ink"] .w.wet {
+  background-image: linear-gradient(90deg, var(--ink) 50%, rgba(255, 255, 255, 0.26) 50%);
+}
+
+[data-style="ink"] .meta { color: var(--ink); opacity: 1; }
+
 /* ---- style=bubble: a speech bubble, e.g. next to a PNGtuber avatar ------ */
 
 [data-style="bubble"] {

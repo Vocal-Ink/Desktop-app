@@ -28,6 +28,7 @@
 #include "tts/TtsRegistry.h"
 
 #include <QClipboard>
+#include <QCryptographicHash>
 #include <QDateTime>
 #include <QGuiApplication>
 #include <QKeySequence>
@@ -136,7 +137,7 @@ AppContext::AppContext(QObject *parent)
     connect(m_secrets, &SecretStore::errorOccurred, this, [this](const QString &msg) {
         // The keychain fallback is a lasting condition: say it once, not every launch.
         const QStringList seen = m_settings->value(QStringLiteral("app/seenNotices"), QStringList()).toStringList();
-        const QString id = QString::number(qHash(msg));
+        const QString id = QString::fromLatin1(QCryptographicHash::hash(msg.toUtf8(), QCryptographicHash::Sha1).toHex().left(16));
         if (seen.contains(id))
             return;
         m_settings->setValue(QStringLiteral("app/seenNotices"), QStringList(seen) << id);
@@ -149,8 +150,9 @@ AppContext::AppContext(QObject *parent)
     connect(m_soundboard, &Soundboard::changed, this, &AppContext::applyHotkeys);
     connect(m_actions, &ActionRegistry::shortcutsReset, this, &AppContext::applyHotkeys);
     connect(m_obs, &ObsIntegration::statusChanged, this, [this](ObsIntegration::Status status, const QString &text) {
+        // Reconnect attempts repeat the same problem; the Stream page shows it live.
         if (status == ObsIntegration::Status::AuthFailed || status == ObsIntegration::Status::Error)
-            emit notify(tr("OBS: %1").arg(text), 1);
+            notifyThrottled(QStringLiteral("obs"), tr("OBS: %1").arg(text), 1);
     });
 
     // Keep engines' voice lists and the installed-model state in sync.
@@ -318,8 +320,10 @@ void AppContext::wireExtras()
         m_speech->say(t, voice);
     });
     connect(m_twitch, &TwitchChat::statusChanged, this, [this](bool connected, const QString &status) {
-        if (!connected && m_settings->flag(Keys::TwitchEnabled) && !status.isEmpty())
-            emit notify(tr("Twitch: %1").arg(status), 1);
+        if (connected)
+            m_lastNotice.remove(QStringLiteral("twitch"));
+        else if (m_settings->flag(Keys::TwitchEnabled) && !status.isEmpty())
+            notifyThrottled(QStringLiteral("twitch"), tr("Twitch: %1").arg(status), 1);
     });
 
     connect(m_driver, &VirtualDriver::finished, this, [this](bool ok, const QString &message) {
@@ -781,6 +785,18 @@ void AppContext::applyAll()
     applyCueSettings();
     applyTwitchSettings();
     applyHotkeys();
+}
+
+void AppContext::notifyThrottled(const QString &topic, const QString &message, int level)
+{
+    // One notice per topic every few minutes; the relevant page shows live status.
+    constexpr qint64 kQuietMs = 5 * 60 * 1000;
+    const qint64 now = m_clock.elapsed();
+    const auto it = m_lastNotice.constFind(topic);
+    if (it != m_lastNotice.cend() && now - it.value() < kQuietMs)
+        return;
+    m_lastNotice.insert(topic, now);
+    emit notify(message, level);
 }
 
 bool AppContext::debounced(const QString &id)

@@ -30,27 +30,33 @@ Button {
                               : kind === "ghost" ? (hovered ? Theme.text : Theme.muted)
                               : Theme.text
 
-    contentItem: Row {
-        spacing: Theme.s2
-        Icon {
-            anchors.verticalCenter: parent.verticalCenter
-            name: root.iconName
-            visible: root.iconName !== ""
-            color: root.fg
-            size: Math.round((root.small ? 16 : 18) * Theme.scale)
-        }
-        Text {
-            anchors.verticalCenter: parent.verticalCenter
-            text: root.text
-            visible: root.text !== ""
-            font: root.font
-            color: root.fg
-        }
-        KeyCombo {
-            anchors.verticalCenter: parent.verticalCenter
-            sequence: root.shortcut
-            visible: root.shortcut !== ""
-            dim: root.kind === "primary"
+    contentItem: Item {
+        implicitWidth: content.implicitWidth
+        implicitHeight: content.implicitHeight
+        Row {
+            id: content
+            anchors.centerIn: parent
+            spacing: Theme.s2
+            Icon {
+                anchors.verticalCenter: parent.verticalCenter
+                name: root.iconName
+                visible: root.iconName !== ""
+                color: root.fg
+                size: Math.round((root.small ? 16 : 18) * Theme.scale)
+            }
+            Text {
+                anchors.verticalCenter: parent.verticalCenter
+                text: root.text
+                visible: root.text !== ""
+                font: root.font
+                color: root.fg
+            }
+            KeyCombo {
+                anchors.verticalCenter: parent.verticalCenter
+                sequence: root.shortcut
+                visible: root.shortcut !== ""
+                dim: root.kind === "primary"
+            }
         }
     }
 

@@ -16,8 +16,11 @@ QVariant coerce(const QVariant &input, const QVariant &like)
         return input.toBool();
     case QMetaType::QString:
         return input.toString();
+    case QMetaType::Double:
+        return input.toDouble();
     case QMetaType::QStringList:
-        return input.toStringList();
+        // A one-item list comes back from INI as a plain string.
+        return input.typeId() == QMetaType::QString && input.toString().isEmpty() ? QStringList() : input.toStringList();
     case QMetaType::QByteArray:
         return input.typeId() == QMetaType::QString ? QByteArray::fromHex(input.toString().toLatin1())
                                                    : input.toByteArray();
@@ -43,7 +46,7 @@ PrefsMap::PrefsMap(Settings *settings, QObject *parent)
 {
     const QStringList keys = Settings::knownKeys();
     for (const QString &key : keys)
-        insert(key, exposed(m_settings->value(key, Settings::defaultValue(key))));
+        refresh(key);
     connect(m_settings, &Settings::changed, this, [this](const QString &key) {
         if (!m_writing)
             refresh(key);
@@ -52,8 +55,10 @@ PrefsMap::PrefsMap(Settings *settings, QObject *parent)
 
 void PrefsMap::refresh(const QString &key)
 {
+    // INI files hand everything back as strings ("true", "4455"); restore the
+    // type of the default so QML sees real booleans and numbers.
     const QVariant fallback = Settings::defaultValue(key);
-    insert(key, exposed(m_settings->value(key, fallback)));
+    insert(key, exposed(coerce(m_settings->value(key, fallback), fallback)));
 }
 
 QVariant PrefsMap::updateValue(const QString &key, const QVariant &input)
@@ -68,7 +73,7 @@ QVariant PrefsMap::updateValue(const QString &key, const QVariant &input)
 QVariant PrefsMap::get(const QString &key, const QVariant &fallback) const
 {
     const QVariant def = Settings::defaultValue(key);
-    return exposed(m_settings->value(key, def.isValid() ? def : fallback));
+    return exposed(coerce(m_settings->value(key, def.isValid() ? def : fallback), def));
 }
 
 void PrefsMap::set(const QString &key, const QVariant &value)

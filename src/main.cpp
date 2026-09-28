@@ -6,6 +6,7 @@
 #include "platform/VirtualDriver.h"
 #include "ui/Bridge.h"
 #include "ui/InkWave.h"
+#include "ui/RoleFilter.h"
 
 #include <QAction>
 #include <QApplication>
@@ -132,6 +133,7 @@ int main(int argc, char *argv[])
 
     qmlRegisterSingletonInstance("Ink.Core", 1, 0, "App", &bridge);
     qmlRegisterType<InkWave>("Ink.Core", 1, 0, "InkWave");
+    qmlRegisterType<RoleFilter>("Ink.Core", 1, 0, "RoleFilter");
     qmlRegisterUncreatableType<VirtualDriver>("Ink.Core", 1, 0, "VirtualDriver", QStringLiteral("Use App.virtualMic"));
     qmlRegisterUncreatableType<HistoryModel>("Ink.Core", 1, 0, "HistoryModel", QStringLiteral("Use App.history"));
 

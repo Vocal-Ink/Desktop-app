@@ -129,6 +129,7 @@ private:
 class KeybindModel : public QAbstractListModel
 {
     Q_OBJECT
+    Q_PROPERTY(QStringList categories READ categories CONSTANT)
 public:
     enum Roles {
         IdRole = Qt::UserRole + 1, CategoryRole, TitleRole, DescriptionRole, ShortcutRole, ShortcutTextRole,
@@ -147,6 +148,7 @@ public:
     Q_INVOKABLE void reset(const QString &id);
     Q_INVOKABLE void resetAll();
     Q_INVOKABLE QString shortcutFor(const QString &id) const;
+    QStringList categories() const;
 
 private:
     ActionRegistry *m_registry;
