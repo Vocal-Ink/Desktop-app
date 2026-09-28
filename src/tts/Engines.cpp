@@ -1,9 +1,22 @@
 #include "tts/Engines.h"
 
-// Placeholder: the real engines are added by the TTS work package.
+#include "tts/AzureTtsEngine.h"
+#include "tts/ElevenLabsTtsEngine.h"
+#include "tts/EspeakTtsEngine.h"
+#include "tts/FishAudioTtsEngine.h"
+#include "tts/OpenAiTtsEngine.h"
+#include "tts/PiperTtsEngine.h"
+#include "tts/SystemTtsEngine.h"
+
 QList<TtsEngine *> createTtsEngines(const EngineContext &context, QObject *parent)
 {
-    Q_UNUSED(context)
-    Q_UNUSED(parent)
-    return {};
+    return {
+        new PiperTtsEngine(context, parent),
+        new SystemTtsEngine(context, parent),
+        new EspeakTtsEngine(context, parent),
+        new AzureTtsEngine(context, parent),
+        new ElevenLabsTtsEngine(context, parent),
+        new FishAudioTtsEngine(context, parent),
+        new OpenAiTtsEngine(context, parent),
+    };
 }
