@@ -191,7 +191,9 @@ private slots:
 
         // State ids are escaped.
         QCOMPARE(VeadotubeClient::setStateMessage(QStringLiteral("a\"b")),
-                 QStringLiteral(R"(nodes:{"event":"payload","type":"stateEvents","id":"mini","payload":{"event":"set","state":"a\"b"}})"));
+                 // Not a raw string: moc can't parse raw strings that contain \".
+                 QStringLiteral("nodes:{\"event\":\"payload\",\"type\":\"stateEvents\",\"id\":\"mini\","
+                                "\"payload\":{\"event\":\"set\",\"state\":\"a\\\"b\"}}"));
     }
 
     void parsesStateListsLeniently()
