@@ -50,6 +50,12 @@ protected:
     QSGNode *updatePaintNode(QSGNode *oldNode, UpdatePaintNodeData *) override;
 
 private:
+    struct StrokePoint
+    {
+        float x, top, bottom, amp, t;
+    };
+    QVector<StrokePoint> strokePoints() const;
+    QSGNode *updateSoftwareNode(QSGNode *oldNode);
     void tick();
     bool idle() const;
 

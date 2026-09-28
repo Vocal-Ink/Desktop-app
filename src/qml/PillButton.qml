@@ -55,7 +55,7 @@ Button {
                 anchors.verticalCenter: parent.verticalCenter
                 sequence: root.shortcut
                 visible: root.shortcut !== ""
-                dim: root.kind === "primary"
+                dim: root.kind === "primary" && root.enabled
             }
         }
     }

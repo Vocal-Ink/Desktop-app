@@ -109,10 +109,15 @@ int main(int argc, char *argv[])
                                       QStringLiteral("Open a page at start, e.g. voices, settings:shortcuts, onboarding:3."),
                                       QStringLiteral("what"));
     const QCommandLineOption demo(QStringLiteral("demo"), QStringLiteral("Fill the screen with sample content (screenshots)."));
+    const QCommandLineOption windowSize(QStringLiteral("size"), QStringLiteral("Main window size, e.g. 1200x1600."),
+                                        QStringLiteral("WxH"));
+    const QCommandLineOption noOnboarding(QStringLiteral("no-onboarding"), QStringLiteral("Don't show the first-run setup."));
     parser.addOption(screenshot);
     parser.addOption(showWhat);
     parser.addOption(minimized);
     parser.addOption(demo);
+    parser.addOption(noOnboarding);
+    parser.addOption(windowSize);
     parser.process(app);
 
     const bool smokeTest = parser.isSet(screenshot);
@@ -142,6 +147,7 @@ int main(int argc, char *argv[])
     engine.rootContext()->setContextProperty(QStringLiteral("launchMinimized"), parser.isSet(minimized));
     engine.rootContext()->setContextProperty(QStringLiteral("demoMode"), parser.isSet(demo));
     engine.rootContext()->setContextProperty(QStringLiteral("smokeTest"), smokeTest);
+    engine.rootContext()->setContextProperty(QStringLiteral("skipOnboarding"), parser.isSet(noOnboarding));
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreationFailed, &app, [] { QCoreApplication::exit(1); },
                      Qt::QueuedConnection);
 #if QT_VERSION >= QT_VERSION_CHECK(6, 5, 0)
@@ -155,6 +161,11 @@ int main(int argc, char *argv[])
 
     auto *window = qobject_cast<QQuickWindow *>(engine.rootObjects().constFirst());
     bridge.setMainWindow(window);
+    if (window && parser.isSet(windowSize)) {
+        const QStringList wh = parser.value(windowSize).split(QLatin1Char('x'));
+        if (wh.size() == 2)
+            window->resize(wh.at(0).toInt(), wh.at(1).toInt());
+    }
     if (parser.isSet(demo))
         QTimer::singleShot(200, &bridge, &Bridge::startDemo);
 

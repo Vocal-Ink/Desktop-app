@@ -23,8 +23,10 @@ $Exe = Get-ChildItem -Path $BuildDir -Recurse -Filter VocalInk.exe | Select-Obje
 if (-not $Exe) { throw "VocalInk.exe not found under $BuildDir" }
 Copy-Item $Exe.FullName $Stage
 
-# Qt libraries and plugins (multimedia + FFmpeg, texttospeech, tls, platforms...).
-windeployqt --release --no-translations --no-system-d3d-compiler --no-opengl-sw (Join-Path $Stage "VocalInk.exe")
+# Qt libraries and plugins (multimedia + FFmpeg, texttospeech, tls, platforms...)
+# and the Qt Quick modules the interface imports (scanned from src/qml).
+windeployqt --release --no-translations --no-system-d3d-compiler --no-opengl-sw `
+    --qmldir (Join-Path $Root "src\qml") (Join-Path $Stage "VocalInk.exe")
 if ($LASTEXITCODE -ne 0) { throw "windeployqt failed" }
 
 # App-local MSVC runtime so users don't need to install the redistributable.

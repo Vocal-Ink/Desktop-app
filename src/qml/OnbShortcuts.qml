@@ -34,5 +34,5 @@ OnbStep {
             }
         }
     }
-    Txt { Layout.fillWidth: true; role: "caption"; text: qsTr("Phrases and sounds can have shortcuts too. There are 30 more actions in Settings → Shortcuts.") }
+    Txt { Layout.fillWidth: true; role: "caption"; text: qsTr("Phrases and sounds can have shortcuts too. There are 26 more actions in Settings → Shortcuts.") }
 }

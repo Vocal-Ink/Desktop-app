@@ -28,7 +28,7 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y ninja-build libsecret-1-dev libx11-dev libxkbcommon-x11-0 libxcb-cursor0 \
             libspeechd2 libpulse0 libgstreamer1.0-0 libgstreamer-plugins-base1.0-0 gstreamer1.0-plugins-base \
-            espeak-ng xvfb fuse libfuse2
+            espeak-ng xvfb fuse libfuse2 libgl1-mesa-dri libegl1
 
       - uses: jurplel/install-qt-action@v4
         with:
@@ -62,8 +62,12 @@ jobs:
       - name: Smoke test (launch and screenshot)
         run: |
           mkdir -p screenshots
-          xvfb-run -a -s "-screen 0 1400x900x24" build/src/VocalInk --screenshot screenshots/linux-main.png
-          xvfb-run -a -s "-screen 0 1400x900x24" build/src/VocalInk --show settings:voices --screenshot screenshots/linux-settings.png
+          run() { xvfb-run -a -s "-screen 0 1400x900x24" build/src/VocalInk "$@"; }
+          run --screenshot screenshots/linux-onboarding.png
+          run --no-onboarding --show talk --demo --screenshot screenshots/linux-talk.png
+          run --no-onboarding --show voices --screenshot screenshots/linux-voices.png
+          run --no-onboarding --show audio --screenshot screenshots/linux-audio.png
+          run --no-onboarding --show settings:appearance --screenshot screenshots/linux-settings.png
 
       - name: Package AppImage
         run: |
@@ -113,6 +117,8 @@ jobs:
         shell: pwsh
         env:
           QT_QPA_PLATFORM: offscreen
+          # No GPU on the runner: draw Qt Quick in software for the screenshot.
+          QT_QUICK_BACKEND: software
         run: |
           New-Item -ItemType Directory -Force screenshots | Out-Null
           $p = Start-Process -FilePath build\src\VocalInk.exe -ArgumentList "--screenshot","screenshots\windows-main.png" -PassThru -Wait
@@ -181,6 +187,7 @@ jobs:
       - name: Smoke test (launch and screenshot)
         env:
           QT_QPA_PLATFORM: offscreen
+          QT_QUICK_BACKEND: software
         run: |
           mkdir -p screenshots
           build/src/VocalInk.app/Contents/MacOS/VocalInk --screenshot screenshots/macos-${{ matrix.arch }}-main.png

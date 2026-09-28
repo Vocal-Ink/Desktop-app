@@ -43,6 +43,8 @@ fi
 # for HTTPS are loaded as plugins, so name them explicitly.
 export EXTRA_QT_MODULES="multimedia;texttospeech;network"
 export EXTRA_PLATFORM_PLUGINS="libqwayland-egl.so;libqwayland-generic.so"
+# The interface is Qt Quick: scan its sources for the QML modules to bundle.
+export QML_SOURCES_PATHS="$ROOT/src/qml"
 export LDAI_OUTPUT="VocalInk-$VERSION-$ARCH.AppImage"
 export LINUXDEPLOY_OUTPUT_VERSION="$VERSION"
 

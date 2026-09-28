@@ -26,7 +26,8 @@ cp -R "$APP_SRC" "$STAGE/Vocal Ink.app"
 APP="$STAGE/Vocal Ink.app"
 
 MACDEPLOYQT=$(command -v macdeployqt || echo "${QT_ROOT_DIR:-}/bin/macdeployqt")
-"$MACDEPLOYQT" "$APP" -always-overwrite
+# -qmldir: bundle the Qt Quick modules the interface imports.
+"$MACDEPLOYQT" "$APP" -always-overwrite -qmldir="$ROOT/src/qml"
 
 IDENTITY=${CODESIGN_IDENTITY:--}
 

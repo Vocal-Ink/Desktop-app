@@ -214,7 +214,7 @@ ApplicationWindow {
         property bool forced: false
         anchors.fill: parent
         z: 100
-        active: win.onboarding || forced
+        active: (win.onboarding && !skipOnboarding) || forced
         sourceComponent: Onboarding {
             step: onboardingLoader.startStep
             onFinished: {
