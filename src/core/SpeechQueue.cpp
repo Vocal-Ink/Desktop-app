@@ -2,18 +2,28 @@
 
 #include "audio/AudioConvert.h"
 #include "audio/AudioPlayer.h"
+#include "audio/VoiceEffects.h"
 #include "core/TextProcessor.h"
 #include "tts/TtsEngine.h"
 #include "tts/TtsRegistry.h"
 
 #include <QTimer>
+#include <algorithm>
+
+namespace {
+constexpr int kProgressIntervalMs = 55;
+}
 
 SpeechQueue::SpeechQueue(TtsRegistry *registry, AudioPlayer *player, QObject *parent)
     : QObject(parent)
     , m_registry(registry)
     , m_player(player)
+    , m_effects(std::make_unique<VoiceEffects::Chain>())
+    , m_progressTimer(new QTimer(this))
 {
     connect(m_player, &AudioPlayer::drained, this, &SpeechQueue::onDrained);
+    m_progressTimer->setInterval(kProgressIntervalMs);
+    connect(m_progressTimer, &QTimer::timeout, this, [this] { emitProgress(false); });
 }
 
 SpeechQueue::~SpeechQueue()
@@ -23,7 +33,7 @@ SpeechQueue::~SpeechQueue()
 
 void SpeechQueue::setEffect(const QString &effectId, float intensity)
 {
-    // Stored here; the audio work package applies it to the stream in feed().
+    // Takes effect from the next message on.
     m_effectId = effectId;
     m_effectIntensity = intensity;
 }
@@ -83,6 +93,12 @@ void SpeechQueue::startNext()
         m_announced = false;
         m_feedingDone = false;
         m_error.clear();
+        m_messageEffectId = m_effectId;
+        m_messageEffectIntensity = m_effectIntensity;
+        m_effectRate = 0;
+        m_effects->reset();
+        m_synthUs = 0;
+        m_progressMs = 0;
         setSpeaking(true);
 
         startChunk(0);
@@ -147,6 +163,8 @@ void SpeechQueue::onAudio(int index, const QAudioFormat &format, const QByteArra
     const QVector<float> mono = AudioConvert::toMonoFloat(pcm, format);
     if (mono.isEmpty())
         return;
+    if (format.sampleRate() > 0)
+        m_synthUs += qint64(mono.size()) * 1000000 / format.sampleRate();
     if (index == m_playIndex) {
         feed(mono, format.sampleRate());
     } else {
@@ -162,11 +180,51 @@ void SpeechQueue::feed(const QVector<float> &mono, int rate)
         m_player->setSourceRate(rate);
         m_playerRate = rate;
     }
-    m_player->write(mono);
+    if (rate != m_effectRate) {
+        m_effects->configure(VoiceEffects::fromId(m_messageEffectId), m_messageEffectIntensity, rate);
+        m_effectRate = rate;
+    }
+    if (m_effects->isActive()) {
+        QVector<float> processed = mono;
+        m_effects->process(processed.data(), processed.size());
+        m_player->write(processed);
+    } else {
+        m_player->write(mono);
+    }
     if (!m_announced && m_current) {
         m_announced = true;
         emit started(m_current->id, m_current->text, m_current->voice);
+        m_progressTimer->start();
     }
+}
+
+void SpeechQueue::finishPlayback()
+{
+    m_feedingDone = true;
+    // Let echoes and reverb ring out instead of stopping dead.
+    if (m_effectRate > 0 && m_effects->isActive()) {
+        const QVector<float> tail = m_effects->flushTail();
+        if (!tail.isEmpty())
+            m_player->write(tail);
+    }
+    m_player->finish();
+}
+
+void SpeechQueue::emitProgress(bool final)
+{
+    if (!m_current || !m_announced)
+        return;
+    const qint64 total = m_synthUs / 1000;
+    const bool known = final || m_feedingDone
+        || std::all_of(m_chunks.cbegin(), m_chunks.cend(), [](const Chunk &c) { return c.done; });
+    const qint64 played = final ? total : std::min(m_player->playedMs(), total);
+    m_progressMs = std::max(m_progressMs, played);
+    emit progress(m_current->id, m_progressMs, total, known);
+}
+
+void SpeechQueue::stopProgress()
+{
+    m_progressTimer->stop();
 }
 
 void SpeechQueue::onChunkFinished(int index)
@@ -182,8 +240,7 @@ void SpeechQueue::advance()
     while (true) {
         ++m_playIndex;
         if (m_playIndex >= m_chunks.size()) {
-            m_feedingDone = true;
-            m_player->finish();
+            finishPlayback();
             return;
         }
         startChunk(m_playIndex);
@@ -206,8 +263,7 @@ void SpeechQueue::onChunkFailed(int index, const QString &error)
         return;
     m_error = error;
     cancelStreams();
-    m_feedingDone = true;
-    m_player->finish(); // let whatever already arrived play out
+    finishPlayback(); // let whatever already arrived play out
 }
 
 void SpeechQueue::onDrained()
@@ -219,6 +275,8 @@ void SpeechQueue::onDrained()
 
 void SpeechQueue::endCurrent()
 {
+    emitProgress(true);
+    stopProgress();
     const Job job = *m_current;
     m_current.reset();
     m_chunks.clear();
@@ -252,6 +310,7 @@ void SpeechQueue::skip()
         return;
     cancelStreams();
     m_player->stop();
+    stopProgress();
     const Job job = *m_current;
     m_current.reset();
     m_chunks.clear();
@@ -267,6 +326,7 @@ void SpeechQueue::stop()
     if (m_current) {
         cancelStreams();
         m_player->stop();
+        stopProgress();
         const Job job = *m_current;
         m_current.reset();
         m_chunks.clear();

@@ -7,11 +7,16 @@
 #include <QPointer>
 #include <QQueue>
 #include <QVector>
+#include <memory>
 #include <optional>
 
 class AudioPlayer;
+class QTimer;
 class TtsRegistry;
 class TtsStream;
+namespace VoiceEffects {
+class Chain;
+}
 
 // Turns messages into speech one after another. Long messages are split into
 // sentence-sized chunks: chunk N+1 is synthesised while chunk N plays, so the
@@ -50,6 +55,10 @@ signals:
     void failed(quint64 id, const QString &text, const QString &error);
     void speakingChanged(bool speaking);
     void queueChanged(int queued);
+    // ~18 Hz while a message plays. playedMs: audio of it heard so far (never
+    // goes back); totalMs: audio synthesized so far for the whole message;
+    // totalKnown once every chunk is synthesized. Ends with playedMs == totalMs.
+    void progress(quint64 id, qint64 playedMs, qint64 totalMs, bool totalKnown);
 
 private:
     struct Job
@@ -75,11 +84,14 @@ private:
     void onChunkFinished(int index);
     void onChunkFailed(int index, const QString &error);
     void feed(const QVector<float> &mono, int rate);
+    void finishPlayback();
     void advance();
     void onDrained();
     void cancelStreams();
     void endCurrent();
     void setSpeaking(bool speaking);
+    void emitProgress(bool final);
+    void stopProgress();
 
     TtsRegistry *m_registry;
     AudioPlayer *m_player;
@@ -99,5 +111,12 @@ private:
     bool m_interrupt = false;
     QString m_effectId;
     float m_effectIntensity = 0.0f;
+    std::unique_ptr<VoiceEffects::Chain> m_effects; // configured per message
+    QString m_messageEffectId;
+    float m_messageEffectIntensity = 0.0f;
+    int m_effectRate = 0;
     QString m_error;
+    QTimer *m_progressTimer = nullptr;
+    qint64 m_synthUs = 0;    // audio synthesized for the current message
+    qint64 m_progressMs = 0; // last playedMs reported
 };

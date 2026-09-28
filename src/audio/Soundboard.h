@@ -4,6 +4,7 @@
 #include <QList>
 #include <QObject>
 #include <QString>
+#include <QVector>
 
 class AudioPlayer;
 
@@ -18,8 +19,10 @@ struct Sound
 };
 
 // Sound effects the user can fire into the voice output (applause, a laugh,
-// "bruh"...). Files are copied into the app's data folder, decoded once and
-// played through AudioPlayer::playSound so they mix with speech.
+// "bruh"...). Files are copied into the app's data folder (listed in
+// sounds.json), decoded once and played through AudioPlayer::playSound so they
+// mix with speech. WAV files are decoded directly; other formats go through
+// QAudioDecoder in the background.
 class Soundboard : public QObject
 {
     Q_OBJECT
@@ -45,12 +48,22 @@ public:
 
     static QStringList supportedExtensions();
 
+    // Provides decoded audio for a sound, skipping the decoder (tests, previews).
+    void setDecodedAudio(const QString &id, const QVector<float> &mono, int sampleRate);
+    // RIFF/WAVE bytes -> mono float. On failure `error` gets a short reason.
+    static bool decodeWav(const QByteArray &bytes, QVector<float> *mono, int *sampleRate, QString *error = nullptr);
+
 signals:
     void changed();
     void playingChanged(const QString &id, bool playing);
     void errorOccurred(const QString &message);
 
 private:
+    void startPlayback(const QString &id);
+    void startDecoder(const QString &id, const QString &file);
+    void cancelDecoder(const QString &id);
+    bool isInsideStore(const QString &file) const;
+
     class Private;
     Private *d;
     AudioPlayer *m_player;

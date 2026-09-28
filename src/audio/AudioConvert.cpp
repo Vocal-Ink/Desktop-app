@@ -85,14 +85,13 @@ QVector<float> toMonoFloat(const QByteArray &pcm, const QAudioFormat &format)
     return toMonoFloat(pcm.constData(), pcm.size(), format);
 }
 
-QByteArray fromMonoFloat(const float *samples, qsizetype count, const QAudioFormat &format, float gain)
+void writeMonoFloat(const float *samples, qsizetype count, const QAudioFormat &format, char *dst, float gain)
 {
     const int channels = std::max(1, format.channelCount());
     const int bps = format.bytesPerSample();
-    if (bps <= 0 || count <= 0)
-        return {};
-    QByteArray out(count * channels * bps, Qt::Uninitialized);
-    auto *p = reinterpret_cast<uchar *>(out.data());
+    if (bps <= 0 || count <= 0 || !dst)
+        return;
+    auto *p = reinterpret_cast<uchar *>(dst);
     const auto sf = format.sampleFormat();
     for (qsizetype i = 0; i < count; ++i) {
         const float v = samples[i] * gain;
@@ -101,7 +100,30 @@ QByteArray fromMonoFloat(const float *samples, qsizetype count, const QAudioForm
             p += bps;
         }
     }
+}
+
+QByteArray fromMonoFloat(const float *samples, qsizetype count, const QAudioFormat &format, float gain)
+{
+    const int channels = std::max(1, format.channelCount());
+    const int bps = format.bytesPerSample();
+    if (bps <= 0 || count <= 0)
+        return {};
+    QByteArray out(count * channels * bps, Qt::Uninitialized);
+    writeMonoFloat(samples, count, format, out.data(), gain);
     return out;
+}
+
+float softClip(float v)
+{
+    constexpr float knee = 0.85f;
+    constexpr float range = 1.0f - knee;
+    if (!std::isfinite(v))
+        return 0.0f;
+    const float a = std::fabs(v);
+    if (a <= knee)
+        return v;
+    const float c = knee + range * std::tanh((a - knee) / range);
+    return v < 0.0f ? -c : c;
 }
 
 QAudioFormat int16Mono(int rate)
