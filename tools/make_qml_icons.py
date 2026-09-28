@@ -32,6 +32,7 @@ ICONS = [
     "clock", "smile", "layers", "undo-2", "lightbulb", "gauge", "waves", "circle-stop", "flag", "feather",
     "pen-tool", "keyboard-off", "volume-1", "mic-vocal", "mouse-pointer-click", "house", "list-music",
     "sparkle", "ellipsis", "ellipsis-vertical", "circle-plus", "minus", "bot", "app-window", "captions",
+    "image", "image-plus", "move",
 ]
 
 

@@ -21,7 +21,7 @@ endforeach()
 # warning. Each run gets a throwaway profile so your own settings are untouched.
 if(TARGET VocalInk)
     set(VOCALINK_UI_SCREENS
-        "talk" "board" "voices" "audio" "stream"
+        "talk" "board" "voices" "audio" "stream" "avatar"
         "settings:appearance" "settings:access" "settings:shortcuts" "settings:speech"
         "settings:typing" "settings:providers" "settings:backup" "settings:about"
         "onboarding:welcome" "onboarding:uses" "onboarding:voice" "onboarding:routing" "onboarding:hear"

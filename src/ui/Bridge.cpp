@@ -20,6 +20,7 @@
 #include "core/WordPredictor.h"
 #include "obs/ObsIntegration.h"
 #include "obs/OverlayServer.h"
+#include "obs/OverlayStyle.h"
 #include "obs/TwitchChat.h"
 #include "platform/GlobalHotkeys.h"
 #include "platform/VirtualAudio.h"
@@ -35,13 +36,16 @@
 #include <QClipboard>
 #include <QCoreApplication>
 #include <QDesktopServices>
+#include <QElapsedTimer>
 #include <QGuiApplication>
+#include <QJsonObject>
 #include <QKeySequence>
 #include <QMediaDevices>
 #include <QQuickWindow>
 #include <QRegularExpression>
 #include <QTimer>
 #include <QtMath>
+#include <cmath>
 
 namespace {
 // Reading speed used to pace the ink fill when the engine can't tell us
@@ -200,8 +204,11 @@ Bridge::Bridge(AppContext *context, QObject *parent)
     connect(m_ctx->settings(), &Settings::changed, this, [this](const QString &key) {
         if (key == QLatin1String(Keys::OutputDevice))
             emit routeChanged();
-        else if (key.startsWith(QLatin1String("overlay/")))
-            QTimer::singleShot(300, this, &Bridge::overlayChanged);
+        else if (key == QLatin1String(Keys::OverlayProfiles))
+            emit overlayProfilesChanged();
+        else if (key == QLatin1String(Keys::OverlayEnabled) || key == QLatin1String(Keys::OverlayPort)
+                 || key == QLatin1String(Keys::OverlayAllowLan))
+            QTimer::singleShot(300, this, &Bridge::overlayChanged); // after the server restarted
     });
     auto *devices = new QMediaDevices(this);
     connect(devices, &QMediaDevices::audioOutputsChanged, this, [this] {
@@ -850,6 +857,242 @@ void Bridge::obsCreateTextSource(const QString &name)
 QString Bridge::overlayUrlFor(const QString &query) const
 {
     return m_ctx->overlay()->overlayUrl(query).toString();
+}
+
+// --- Overlay profiles --------------------------------------------------------------
+
+namespace {
+
+QJsonObject setPath(QJsonObject object, const QStringList &path, const QJsonValue &value)
+{
+    if (path.isEmpty())
+        return object;
+    const QString head = path.first();
+    if (path.size() == 1) {
+        if (value.isUndefined() || value.isNull())
+            object.remove(head);
+        else
+            object.insert(head, value);
+        return object;
+    }
+    QJsonObject child = setPath(object.value(head).toObject(), path.mid(1), value);
+    if (child.isEmpty())
+        object.remove(head);
+    else
+        object.insert(head, child);
+    return object;
+}
+
+// Removes from `style` every field `preset` sets, so the preset's look shows.
+QJsonObject withoutPresetFields(QJsonObject style, const QJsonObject &preset)
+{
+    for (auto it = preset.begin(); it != preset.end(); ++it) {
+        if (it.value().isObject() && style.value(it.key()).isObject()) {
+            const QJsonObject inner = withoutPresetFields(style.value(it.key()).toObject(), it.value().toObject());
+            if (inner.isEmpty())
+                style.remove(it.key());
+            else
+                style.insert(it.key(), inner);
+        } else {
+            style.remove(it.key());
+        }
+    }
+    return style;
+}
+
+} // namespace
+
+QVariantList Bridge::overlayProfiles() const
+{
+    QVariantList out;
+    const QList<OverlayProfile> profiles = OverlayStyle::loadProfiles(m_ctx->settings());
+    for (const OverlayProfile &p : profiles) {
+        out.append(QVariantMap{{QStringLiteral("id"), p.id},
+                               {QStringLiteral("name"), p.name},
+                               {QStringLiteral("kind"), p.kind},
+                               {QStringLiteral("style"), p.style.toVariantMap()},
+                               {QStringLiteral("url"), m_ctx->overlay()->profileUrl(p.id).toString()}});
+    }
+    return out;
+}
+
+QStringList Bridge::overlayPresetNames() const
+{
+    return OverlayStyle::presetNames();
+}
+
+QString Bridge::addOverlayProfile(const QString &kind, const QString &name)
+{
+    QList<OverlayProfile> profiles = OverlayStyle::loadProfiles(m_ctx->settings());
+    OverlayProfile p;
+    p.kind = OverlayStyle::kinds().contains(kind) ? kind : QStringLiteral("captions");
+    p.name = name.trimmed().isEmpty() ? tr("New overlay") : name.trimmed();
+    p.id = OverlayStyle::makeId(p.name, profiles);
+    profiles.append(p);
+    OverlayStyle::saveProfiles(m_ctx->settings(), profiles);
+    return p.id;
+}
+
+QString Bridge::duplicateOverlayProfile(const QString &id)
+{
+    QList<OverlayProfile> profiles = OverlayStyle::loadProfiles(m_ctx->settings());
+    for (const OverlayProfile &p : std::as_const(profiles)) {
+        if (p.id != id)
+            continue;
+        OverlayProfile copy = p;
+        //: Name of a duplicated overlay, e.g. "Captions (copy)"
+        copy.name = tr("%1 (copy)").arg(p.name);
+        copy.id = OverlayStyle::makeId(copy.name, profiles);
+        profiles.append(copy);
+        OverlayStyle::saveProfiles(m_ctx->settings(), profiles);
+        return copy.id;
+    }
+    return {};
+}
+
+void Bridge::renameOverlayProfile(const QString &id, const QString &name)
+{
+    if (name.trimmed().isEmpty())
+        return;
+    QList<OverlayProfile> profiles = OverlayStyle::loadProfiles(m_ctx->settings());
+    for (OverlayProfile &p : profiles) {
+        if (p.id == id)
+            p.name = name.trimmed(); // the id (and so the OBS link) stays
+    }
+    OverlayStyle::saveProfiles(m_ctx->settings(), profiles);
+}
+
+void Bridge::removeOverlayProfile(const QString &id)
+{
+    if (id == QLatin1String("main"))
+        return;
+    QList<OverlayProfile> profiles = OverlayStyle::loadProfiles(m_ctx->settings());
+    profiles.removeIf([&id](const OverlayProfile &p) { return p.id == id; });
+    OverlayStyle::saveProfiles(m_ctx->settings(), profiles);
+}
+
+void Bridge::setOverlayStyleValue(const QString &id, const QString &path, const QVariant &value)
+{
+    QList<OverlayProfile> profiles = OverlayStyle::loadProfiles(m_ctx->settings());
+    for (OverlayProfile &p : profiles) {
+        if (p.id == id)
+            p.style = setPath(p.style, path.split(QLatin1Char('.'), Qt::SkipEmptyParts),
+                              value.isValid() ? QJsonValue::fromVariant(value) : QJsonValue(QJsonValue::Undefined));
+    }
+    OverlayStyle::saveProfiles(m_ctx->settings(), profiles);
+}
+
+void Bridge::applyOverlayPreset(const QString &id, const QString &preset)
+{
+    QList<OverlayProfile> profiles = OverlayStyle::loadProfiles(m_ctx->settings());
+    for (OverlayProfile &p : profiles) {
+        if (p.id != id)
+            continue;
+        p.style = withoutPresetFields(p.style, OverlayStyle::preset(preset));
+        p.style.insert(QStringLiteral("preset"), preset);
+    }
+    OverlayStyle::saveProfiles(m_ctx->settings(), profiles);
+}
+
+void Bridge::resetOverlayStyle(const QString &id)
+{
+    QList<OverlayProfile> profiles = OverlayStyle::loadProfiles(m_ctx->settings());
+    for (OverlayProfile &p : profiles) {
+        if (p.id == id) {
+            // Keep the avatar images: they're content, not style.
+            const QJsonValue images = p.style.value(QStringLiteral("avatar")).toObject().value(QStringLiteral("images"));
+            p.style = {};
+            if (images.isObject())
+                p.style.insert(QStringLiteral("avatar"), QJsonObject{{QStringLiteral("images"), images}});
+        }
+    }
+    OverlayStyle::saveProfiles(m_ctx->settings(), profiles);
+}
+
+QVariantMap Bridge::overlayEffectiveStyle(const QString &id) const
+{
+    const QList<OverlayProfile> profiles = OverlayStyle::loadProfiles(m_ctx->settings());
+    for (const OverlayProfile &p : profiles) {
+        if (p.id == id)
+            return OverlayStyle::effective(p.style, p.kind).toVariantMap();
+    }
+    return OverlayStyle::effective({}, QStringLiteral("captions")).toVariantMap();
+}
+
+QVariantMap Bridge::overlayPreset(const QString &name) const
+{
+    return OverlayStyle::preset(name).toVariantMap();
+}
+
+QString Bridge::overlayProfileUrl(const QString &id) const
+{
+    return m_ctx->overlay()->isRunning() ? m_ctx->overlayUrl(id) : QString();
+}
+
+void Bridge::obsAddOverlayProfile(const QString &id)
+{
+    if (!m_ctx->overlay()->isRunning()) {
+        emit obsResult(false, tr("Turn on the overlay server first."));
+        return;
+    }
+    QString name = QStringLiteral("Vocal Ink");
+    const QList<OverlayProfile> profiles = OverlayStyle::loadProfiles(m_ctx->settings());
+    for (const OverlayProfile &p : profiles) {
+        if (p.id == id)
+            name = QStringLiteral("Vocal Ink – ") + p.name;
+    }
+    m_ctx->obs()->addBrowserOverlay(name, QUrl(m_ctx->overlayUrl(id)),
+                                    [this](bool ok, const QString &message) { emit obsResult(ok, message); });
+}
+
+QString Bridge::importAvatarImage(const QUrl &file)
+{
+    QString error;
+    const QString id = OverlayStyle::importAsset(file.toLocalFile(), m_ctx->avatarAssetDir(), &error);
+    if (id.isEmpty()) {
+        emit notify(error.isEmpty() ? tr("That image can't be used. Use a PNG, GIF, WebP or JPEG up to 10 MB.") : error, 1);
+        return {};
+    }
+    m_ctx->applyOverlayStyles(); // serve it right away
+    return id;
+}
+
+QUrl Bridge::avatarAssetUrl(const QString &assetId) const
+{
+    if (!OverlayStyle::isAssetId(assetId))
+        return {};
+    return QUrl::fromLocalFile(m_ctx->avatarAssetDir() + QLatin1Char('/') + assetId);
+}
+
+void Bridge::sendTestCaption()
+{
+    // A fake utterance: caption, a few seconds of progress, then the end.
+    static quint64 testId = 1'000'000'000;
+    const quint64 id = ++testId;
+    const QString text = tr("This is how your words will look on stream while they're spoken.");
+    m_ctx->overlay()->setSpeaking(true);
+    m_ctx->overlay()->showCaption(id, text, tr("Test"));
+    auto *clock = new QElapsedTimer;
+    clock->start();
+    auto *timer = new QTimer(this);
+    timer->setInterval(66);
+    connect(timer, &QTimer::timeout, this, [this, timer, clock, id] {
+        constexpr qint64 kTotalMs = 3200;
+        const qint64 played = qMin(clock->elapsed(), kTotalMs);
+        m_ctx->overlay()->sendProgress(id, double(played) / kTotalMs, played, kTotalMs, true);
+        const double t = played / 140.0;
+        m_ctx->overlay()->sendLevel(0.35 + 0.3 * std::abs(std::sin(t)) * std::abs(std::sin(t * 0.37)),
+                                    QStringLiteral("A"));
+        if (played >= kTotalMs) {
+            timer->stop();
+            m_ctx->overlay()->sendLevel(0.0);
+            m_ctx->overlay()->endCaption(id);
+            m_ctx->overlay()->setSpeaking(false);
+            timer->deleteLater();
+            delete clock;
+        }
+    });
+    timer->start();
 }
 
 void Bridge::clearCaptions()

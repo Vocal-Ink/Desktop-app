@@ -39,6 +39,7 @@ Popup {
         { kind: "page", id: "voices", title: qsTr("Go to Voices"), icon: "audio-lines", detail: "" },
         { kind: "page", id: "audio", title: qsTr("Go to Audio & mic"), icon: "cable", detail: qsTr("Virtual mic, output, real microphone") },
         { kind: "page", id: "stream", title: qsTr("Go to Stream"), icon: "radio", detail: qsTr("Captions, OBS, Twitch") },
+        { kind: "page", id: "avatar", title: qsTr("Go to Avatar"), icon: "smile", detail: qsTr("VTube Studio, VSeeFace, veadotube, PNGtuber") },
         { kind: "page", id: "settings:appearance", title: qsTr("Appearance settings"), icon: "palette", detail: qsTr("Theme, ink colour, fonts, sizes") },
         // "Language" stays findable in English whatever the interface language is.
         { kind: "page", id: "settings:appearance", title: qsTr("Change language"), icon: "languages", detail: "Language" },

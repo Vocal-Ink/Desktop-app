@@ -302,7 +302,7 @@
 <context>
     <name>AppContext</name>
     <message>
-        <location filename="../src/app/AppContext.cpp" line="+171"/>
+        <location filename="../src/app/AppContext.cpp" line="+183"/>
         <source>OBS: %1</source>
         <translation type="unfinished"></translation>
     </message>
@@ -312,7 +312,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+161"/>
+        <location line="+162"/>
         <source>Twitch: %1</source>
         <translation type="unfinished"></translation>
     </message>
@@ -589,6 +589,534 @@
     </message>
 </context>
 <context>
+    <name>AvatarController</name>
+    <message>
+        <location filename="../src/avatar/AvatarController.cpp" line="+191"/>
+        <source>VTube Studio did not give Vocal Ink access to your model. You can ask again on the Avatar page.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>AvatarPage</name>
+    <message>
+        <location filename="../src/qml/AvatarPage.qml" line="+12"/>
+        <source>Avatar</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Make your VTuber or PNGtuber move its mouth with your voice, and react when you talk.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+11"/>
+        <source>Test the mouth</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Moves the mouth like a short sentence on everything that&apos;s connected</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+11"/>
+        <source>Nothing</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+16"/>
+        <location line="+23"/>
+        <location line="+179"/>
+        <source>Off</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="-201"/>
+        <source>Looking for VTube Studio…</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Connecting…</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>VTube Studio isn&apos;t running</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Turn on “Allow Plugin API access” in VTube Studio</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Click “Allow” in VTube Studio</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>VTube Studio didn&apos;t allow Vocal Ink</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <location line="+19"/>
+        <source>Connected · %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="-19"/>
+        <location line="+19"/>
+        <source>Connected</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="-17"/>
+        <location line="+19"/>
+        <source>Something went wrong</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="-4"/>
+        <source>Looking for veadotube…</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>veadotube isn&apos;t running, or its WebSocket server is off</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+9"/>
+        <source>Mouth</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>One mouth movement, sent to everything you connect below.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+29"/>
+        <source>talking</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+0"/>
+        <source>quiet</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+8"/>
+        <location line="+2"/>
+        <source>What moves the mouth</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Voice</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Voice + sounds</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Also my real mic</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+5"/>
+        <location line="+3"/>
+        <source>Sensitivity</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="-2"/>
+        <source>Higher opens the mouth wider for quiet voices.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+9"/>
+        <location line="+3"/>
+        <source>Smoothing</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="-2"/>
+        <source>Less is snappier, more is calmer.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+9"/>
+        <location line="+2"/>
+        <source>Mouth shapes from the words</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="-1"/>
+        <source>A, I, U, E and O shapes follow what&apos;s being said, for models that have them.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+10"/>
+        <source>Works with any avatar app</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>No setup here: pick Vocal Ink&apos;s microphone in your app.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+4"/>
+        <source>In your avatar app&apos;s lip-sync or microphone settings, choose “Vocal Ink Mic”. The mouth follows what Vocal Ink says, like it would follow your voice. This works with VTube Studio, VSeeFace, Warudo, VNyan, veadotube, PNGTuber Plus, Animaze and most others.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+4"/>
+        <source>Setup guides</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Virtual mic settings</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+8"/>
+        <source>Mouth, expressions and hotkeys through VTube Studio&apos;s plugin API.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>Connect to VTube Studio</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+19"/>
+        <source>Ask again</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+8"/>
+        <source>Retry</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+7"/>
+        <source>Forget access</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>VTube Studio will ask to allow Vocal Ink again next time</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+8"/>
+        <source>In VTube Studio: Settings → “Allow Plugin API access”. The first time, VTube Studio asks you to allow Vocal Ink.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+9"/>
+        <location line="+3"/>
+        <source>Mouth parameter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="-2"/>
+        <source>The input parameter the mouth drives. Almost every model uses MouthOpen.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+9"/>
+        <location line="+3"/>
+        <source>Smile parameter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="-2"/>
+        <source>A little smile while talking. Leave empty to keep your own.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+10"/>
+        <location line="+2"/>
+        <source>No face tracking</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="-1"/>
+        <source>Tell VTube Studio your face is found while you talk, so the model doesn&apos;t play its “tracking lost” pose.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+4"/>
+        <location line="+2"/>
+        <source>Extra parameters for riggers</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="-1"/>
+        <source>Also send VocalInkVolume and VocalInkSpeaking, to map to anything in your model.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+4"/>
+        <source>When things happen</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+5"/>
+        <source>Connect to see your model&apos;s expressions and hotkeys.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <location line="+3"/>
+        <location line="+96"/>
+        <location line="+3"/>
+        <source>Expression while speaking</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="-93"/>
+        <source>Hotkey when you start speaking</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Hotkey when you finish</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Hotkey when your real mic goes live</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Hotkey when your real mic is muted</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+18"/>
+        <source>VSeeFace, Warudo, VNyan</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Mouth shapes over the VMC protocol, for 3D models.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>Send mouth shapes over VMC</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+7"/>
+        <source>Turn on the VMC receiver in your app, with the port shown here.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+8"/>
+        <source>Sending to %1:%2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Ready; nothing sent yet</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>App</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>VMC app</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+4"/>
+        <source>Other</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+9"/>
+        <location line="+160"/>
+        <source>Address</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="-159"/>
+        <source>This computer is 127.0.0.1. Use another PC&apos;s address if the app runs there.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+4"/>
+        <location line="+159"/>
+        <source>Host</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="-153"/>
+        <location line="+159"/>
+        <source>Port</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="-149"/>
+        <location line="+3"/>
+        <source>Model format</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="-2"/>
+        <source>VRM 0.x models use A I U E O; VRM 1.0 models use aa ih ou ee oh.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+10"/>
+        <source>A blendshape held while you talk, like Joy or Fun. Leave empty for none.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+4"/>
+        <source>None</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+6"/>
+        <location line="+2"/>
+        <source>Mouth size</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+13"/>
+        <source>Opens the mouth only while Vocal Ink speaks, and switches states.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>Connect to veadotube mini</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+7"/>
+        <source>In veadotube mini: turn on the WebSocket server in its program settings, pick “Vocal Ink Mic” as the microphone, and turn on “use websocket” for push-to-talk.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+13"/>
+        <source>Refresh</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <location line="+2"/>
+        <source>Mouth only while speaking</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="-1"/>
+        <source>Uses veadotube&apos;s push-to-talk, so the room around you doesn&apos;t move the mouth.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+5"/>
+        <source>State while speaking</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>State when quiet</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>State while your real mic is live</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+19"/>
+        <source>Built-in PNGtuber</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>No avatar app? Show your own pictures on stream, talking and blinking.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+11"/>
+        <source>An OBS browser source with a mouth-closed and a mouth-open picture (plus blinking, if you like). Without pictures it shows Vocal Ink&apos;s ink drop.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+7"/>
+        <source>Edit PNGtuber</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+0"/>
+        <source>Create PNGtuber overlay</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>PNGtuber</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+11"/>
+        <source>Run your own actions when you start or stop speaking: lights, scenes, T.I.T.S., anything Streamer.bot controls.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>Run Streamer.bot actions</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+7"/>
+        <source>Turn on Streamer.bot&apos;s UDP server (Servers/Clients → UDP Server) and create actions with these names.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+27"/>
+        <source>When you start speaking</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>When you finish</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>When your real mic goes live</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>When your real mic is muted</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+8"/>
+        <source>Action name (empty = nothing)</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>AzureTtsEngine</name>
     <message>
         <location filename="../src/tts/AzureTtsEngine.cpp" line="+67"/>
@@ -726,7 +1254,7 @@
 <context>
     <name>Bridge</name>
     <message>
-        <location filename="../src/ui/Bridge.cpp" line="+327"/>
+        <location filename="../src/ui/Bridge.cpp" line="+334"/>
         <source>Hey! Sorry, I don&apos;t talk out loud, so I type.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -796,7 +1324,38 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+64"/>
+        <location line="+97"/>
+        <source>New overlay</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+15"/>
+        <source>%1 (copy)</source>
+        <extracomment>Name of a duplicated overlay, e.g. &quot;Captions (copy)&quot;</extracomment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+91"/>
+        <source>Turn on the overlay server first.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+18"/>
+        <source>That image can&apos;t be used. Use a PNG, GIF, WebP or JPEG up to 10 MB.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+19"/>
+        <source>This is how your words will look on stream while they&apos;re spoken.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Test</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+58"/>
         <source>Could not save the file.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -856,6 +1415,16 @@
     <message>
         <location line="+0"/>
         <source>Captions, OBS, Twitch</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Go to Avatar</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+0"/>
+        <source>VTube Studio, VSeeFace, veadotube, PNGtuber</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1397,6 +1966,14 @@
     </message>
 </context>
 <context>
+    <name>InkBlob</name>
+    <message>
+        <location filename="../src/qml/InkBlob.qml" line="+18"/>
+        <source>Mouth preview</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>JourneyHeader</name>
     <message>
         <location filename="../src/qml/JourneyHeader.qml" line="+38"/>
@@ -1453,7 +2030,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+90"/>
+        <location line="+92"/>
         <source>Another app already uses these shortcuts, so they won&apos;t work here: %1</source>
         <translation type="unfinished"></translation>
     </message>
@@ -3413,7 +3990,7 @@
 <context>
     <name>QtAudioLane</name>
     <message>
-        <location filename="../src/audio/AudioOutputLane.cpp" line="+146"/>
+        <location filename="../src/audio/AudioOutputLane.cpp" line="+147"/>
         <source>Audio output &quot;%1&quot; failed (error %2). Check the device in Settings → Audio.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5301,6 +5878,11 @@
     <message>
         <location line="+1"/>
         <source>Stream</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Avatar</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

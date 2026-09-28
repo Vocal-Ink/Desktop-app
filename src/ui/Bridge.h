@@ -88,6 +88,9 @@ class Bridge : public QObject
     Q_PROPERTY(bool overlayRunning READ overlayRunning NOTIFY overlayChanged)
     Q_PROPERTY(QString overlayUrl READ overlayUrl NOTIFY overlayChanged)
     Q_PROPERTY(int overlayClients READ overlayClients NOTIFY overlayChanged)
+    // Overlay profiles: [{id, name, kind, style, url}] (style: only what the user set).
+    Q_PROPERTY(QVariantList overlayProfiles READ overlayProfiles NOTIFY overlayProfilesChanged)
+    Q_PROPERTY(QStringList overlayPresetNames READ overlayPresetNames CONSTANT)
     Q_PROPERTY(bool twitchConnected READ twitchConnected NOTIFY twitchChanged)
     Q_PROPERTY(QString twitchStatus READ twitchStatus NOTIFY twitchChanged)
 
@@ -167,6 +170,8 @@ public:
     int obsStatus() const;
     QString obsStatusText() const;
     bool overlayRunning() const;
+    QVariantList overlayProfiles() const;
+    QStringList overlayPresetNames() const;
     QString overlayUrl() const;
     int overlayClients() const;
     bool twitchConnected() const;
@@ -247,6 +252,26 @@ public:
     Q_INVOKABLE void obsFetchSources(const QString &kind); // "text" | "all"
     Q_INVOKABLE void obsCreateTextSource(const QString &name);
     Q_INVOKABLE QString overlayUrlFor(const QString &query) const;
+
+    // --- Overlay profiles (docs/overlay-style.md) -------------------------------
+    Q_INVOKABLE QString addOverlayProfile(const QString &kind, const QString &name);
+    Q_INVOKABLE QString duplicateOverlayProfile(const QString &id);
+    Q_INVOKABLE void renameOverlayProfile(const QString &id, const QString &name);
+    Q_INVOKABLE void removeOverlayProfile(const QString &id); // "main" can't be removed
+    // Sets one style field by path ("font.size", "colors.ink"); undefined removes it.
+    Q_INVOKABLE void setOverlayStyleValue(const QString &id, const QString &path, const QVariant &value);
+    // Applies a preset look: drops the fields the preset sets, then sets "preset".
+    Q_INVOKABLE void applyOverlayPreset(const QString &id, const QString &preset);
+    Q_INVOKABLE void resetOverlayStyle(const QString &id);
+    Q_INVOKABLE QVariantMap overlayEffectiveStyle(const QString &id) const; // defaults <- preset <- style
+    Q_INVOKABLE QVariantMap overlayPreset(const QString &name) const;
+    Q_INVOKABLE QString overlayProfileUrl(const QString &id) const;
+    Q_INVOKABLE void obsAddOverlayProfile(const QString &id);
+    // Copies an image into the avatar folder; returns its asset id ("" + a toast on failure).
+    Q_INVOKABLE QString importAvatarImage(const QUrl &file);
+    Q_INVOKABLE QUrl avatarAssetUrl(const QString &assetId) const; // for previews in the app
+    // Shows a sample caption (with ink progress) on every overlay without speaking.
+    Q_INVOKABLE void sendTestCaption();
     Q_INVOKABLE void clearCaptions();
     Q_INVOKABLE void setCaptionsPaused(bool paused);
 
@@ -289,6 +314,7 @@ signals:
     void routingCheckRunningChanged();
     void obsChanged();
     void overlayChanged();
+    void overlayProfilesChanged();
     void twitchChanged();
     void updateChanged();
     void secretsChanged();

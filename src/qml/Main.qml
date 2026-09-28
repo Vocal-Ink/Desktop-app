@@ -105,7 +105,8 @@ ApplicationWindow {
     Shortcut { sequence: "Ctrl+3"; onActivated: win.go("voices") }
     Shortcut { sequence: "Ctrl+4"; onActivated: win.go("audio") }
     Shortcut { sequence: "Ctrl+5"; onActivated: win.go("stream") }
-    Shortcut { sequences: ["Ctrl+,", "Ctrl+6"]; onActivated: win.go("settings") }
+    Shortcut { sequence: "Ctrl+6"; onActivated: win.go("avatar") }
+    Shortcut { sequences: ["Ctrl+,", "Ctrl+7"]; onActivated: win.go("settings") }
     Shortcut { sequence: "F11"; onActivated: showText.open() }
     Shortcut { sequence: "Esc"; enabled: App.speaking && win.page !== "talk"; onActivated: App.stop() }
     Shortcut { sequence: "Ctrl+Q"; onActivated: App.quit() }
@@ -151,6 +152,7 @@ ApplicationWindow {
             PageLoader { name: "voices"; sourceComponent: VoicesPage {} }
             PageLoader { name: "audio"; sourceComponent: AudioPage { onNavigate: (p) => win.go(p) } }
             PageLoader { name: "stream"; sourceComponent: StreamPage {} }
+            PageLoader { name: "avatar"; sourceComponent: AvatarPage { onNavigate: (p) => win.go(p) } }
             PageLoader {
                 name: "settings"
                 sourceComponent: SettingsPage {

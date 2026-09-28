@@ -16,6 +16,7 @@ Rectangle {
         { id: "voices", title: qsTr("Voices"), icon: "audio-lines", key: "Ctrl+3" },
         { id: "audio", title: qsTr("Audio & mic"), icon: "cable", key: "Ctrl+4" },
         { id: "stream", title: qsTr("Stream"), icon: "radio", key: "Ctrl+5" },
+        { id: "avatar", title: qsTr("Avatar"), icon: "smile", key: "Ctrl+6" },
         { id: "settings", title: qsTr("Settings"), icon: "settings", key: "Ctrl+," }
     ]
 
