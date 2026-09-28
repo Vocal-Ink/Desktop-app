@@ -9,7 +9,6 @@
 #include <QScopeGuard>
 #include <QSignalSpy>
 #include <QStandardPaths>
-#include <QTemporaryDir>
 #include <QTest>
 
 using namespace VirtualDriverDetail;
@@ -539,17 +538,14 @@ private slots:
 #else
         if (!pulseServerRunning())
             QSKIP("no PulseAudio/PipeWire server");
-        QTemporaryDir home;
-        QVERIFY(home.isValid());
-        const QByteArray oldConfigHome = qgetenv("XDG_CONFIG_HOME");
-        qputenv("XDG_CONFIG_HOME", QFile::encodeName(home.path()));
-        const auto restore = qScopeGuard([&] {
-            if (oldConfigHome.isNull())
-                qunsetenv("XDG_CONFIG_HOME");
-            else
-                qputenv("XDG_CONFIG_HOME", oldConfigHome);
-        });
-
+        // Keep the real ~/.config out of it. (Changing XDG_CONFIG_HOME instead would also
+        // move where pactl looks for the server.)
+        QStandardPaths::setTestModeEnabled(true);
+        const auto restore = qScopeGuard([] { QStandardPaths::setTestModeEnabled(false); });
+        const QString configHome = QStandardPaths::writableLocation(QStandardPaths::GenericConfigLocation);
+        QVERIFY(configHome.contains(QLatin1String("qttest")));
+        QFile::remove(pipeWireConfPath(configHome));
+        QFile::remove(pulseDefaultPaPath(configHome));
         VirtualDriver driver;
         QSignalSpy finished(&driver, &VirtualDriver::finished);
         driver.install();
@@ -557,8 +553,8 @@ private slots:
         QVERIFY(finished.wait(30000));
         QVERIFY2(finished.at(0).at(0).toBool(), qPrintable(finished.at(0).at(1).toString()));
         QVERIFY(!driver.busy());
-        const bool pipeWire = QFile::exists(pipeWireConfPath(home.path()));
-        const bool pulse = QFile::exists(pulseDefaultPaPath(home.path()));
+        const bool pipeWire = QFile::exists(pipeWireConfPath(configHome));
+        const bool pulse = QFile::exists(pulseDefaultPaPath(configHome));
         QVERIFY(pipeWire || pulse);
         QCOMPARE(driver.state(), State::Installed);
         QVERIFY(!driver.outputDeviceId().isEmpty());
@@ -567,8 +563,8 @@ private slots:
         driver.uninstall();
         QVERIFY(finished.wait(30000));
         QVERIFY2(finished.at(0).at(0).toBool(), qPrintable(finished.at(0).at(1).toString()));
-        QVERIFY(!QFile::exists(pipeWireConfPath(home.path())));
-        QVERIFY(!QFile::exists(pulseDefaultPaPath(home.path()))); // we created it, so it goes away
+        QVERIFY(!QFile::exists(pipeWireConfPath(configHome)));
+        QVERIFY(!QFile::exists(pulseDefaultPaPath(configHome))); // we created it, so it goes away
         QCOMPARE(driver.state(), State::NotInstalled);
 #endif
     }
