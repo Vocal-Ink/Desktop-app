@@ -87,7 +87,7 @@ void SpeechQueue::startNext()
         TtsEngine *engine = m_registry->engine(job.voice.engineId);
         if (!job.voice.isValid() || !engine) {
             emit failed(job.id, job.text,
-                        tr("No voice is selected. Pick a voice in the toolbar, or install one in Settings → Voices."));
+                        tr("No voice is selected. Pick a voice in the toolbar, or download one in Voices → Download."));
             continue;
         }
         if (!engine->isAvailable()) {

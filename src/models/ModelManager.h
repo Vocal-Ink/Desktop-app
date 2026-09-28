@@ -17,7 +17,6 @@ struct WhisperModelInfo
     QString description; // one line: speed/accuracy trade-off
     qint64 approxBytes = 0;
     bool multilingual = false;
-    bool recommended = false;
 };
 
 struct PiperVoiceInfo
@@ -70,6 +69,13 @@ public:
     void downloadPiperVoice(const QString &key);
     bool removePiperVoice(const QString &key);
     static QString recommendedPiperVoice();     // "en_US-lessac-medium"
+    // The voice to suggest for a language ("de", "pt_BR", "es_MX"...): a
+    // hand-picked one when the catalog has it, else the language's best
+    // medium-quality voice, else the English default.
+    static QString recommendedPiperVoice(const QList<PiperVoiceInfo> &catalog, const QString &locale);
+    // English-only models are more accurate for English; everyone else needs
+    // a multilingual one. `language` is an ISO code like "en", "de" or "pt_BR".
+    static QString recommendedWhisperModel(const QString &language);
 
     // --- Download control ---
     bool isDownloading(const QString &taskId) const;

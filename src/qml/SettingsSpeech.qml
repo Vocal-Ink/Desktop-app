@@ -77,7 +77,8 @@ ScrollPage {
             Segmented {
                 label: qsTr("Dictation mode")
                 value: App.prefs["stt/mode"] || "ptt"
-                options: [{ value: "ptt", label: qsTr("Hold to talk") }, { value: "toggle", label: qsTr("Tap on/off") }, { value: "vad", label: qsTr("Hands-free") }]
+                //: Dictation modes: hold a key while speaking / press once to start and again to stop / listens on its own
+                options: [{ value: "ptt", label: qsTr("Hold to dictate") }, { value: "toggle", label: qsTr("Tap on/off") }, { value: "vad", label: qsTr("Hands-free") }]
                 onActivated: (v) => App.prefs["stt/mode"] = v
             }
         }

@@ -290,7 +290,11 @@ QObject *Bridge::language() const { return m_languages; }
 void Bridge::setLanguageManager(LanguageManager *languages)
 {
     m_languages = languages;
+    m_whisper->setLanguage(languages->current());
+    m_piper->setLanguage(languages->current());
     connect(languages, &LanguageManager::languageChanged, this, [this] {
+        m_whisper->setLanguage(m_languages->current());
+        m_piper->setLanguage(m_languages->current());
         m_ctx->actions()->retranslate();
         m_ctx->phrases()->retranslateDefaults();
         m_ctx->applyOverlayStyles(); // the overlay pages' own words
@@ -1091,6 +1095,7 @@ void Bridge::sendTestCaption()
     const quint64 id = ++testId;
     const QString text = tr("This is how your words will look on stream while they're spoken.");
     m_ctx->overlay()->setSpeaking(true);
+    //: Shown on stream overlays as the voice name of a test caption
     m_ctx->overlay()->showCaption(id, text, tr("Test"));
     auto *clock = new QElapsedTimer;
     clock->start();

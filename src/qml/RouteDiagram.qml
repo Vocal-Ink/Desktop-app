@@ -16,7 +16,8 @@ Item {
     readonly property real slot: width / nodes.length
     readonly property real disc: Math.round(44 * Math.min(1.3, Theme.scale))
     Accessible.role: Accessible.StaticText
-    Accessible.name: nodes.map(n => n.title + (n.ok ? "" : qsTr(" (not connected)"))).join(", then ")
+    Accessible.name: nodes.map(n => n.ok ? n.title : qsTr("%1 (not connected)").arg(n.title))
+                          .reduce((path, next) => qsTr("%1, then %2").arg(path).arg(next))
 
     // Hops between nodes.
     Repeater {

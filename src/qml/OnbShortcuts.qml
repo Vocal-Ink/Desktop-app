@@ -12,6 +12,7 @@ OnbStep {
         Layout.fillWidth: true
         pad: Theme.s4
         Repeater {
+            id: shortcutList
             model: [
                 { id: "window.quickType", text: qsTr("Pop up a box to type over any app") },
                 { id: "listen.ptt", text: qsTr("Hold to dictate") },
@@ -34,5 +35,10 @@ OnbStep {
             }
         }
     }
-    Txt { Layout.fillWidth: true; role: "caption"; text: qsTr("Phrases and sounds can have shortcuts too. There are 26 more actions in Settings → Shortcuts.") }
+    Txt {
+        Layout.fillWidth: true
+        role: "caption"
+        text: qsTr("Phrases and sounds can have shortcuts too. There are %n more action(s) in Settings → Shortcuts.", "",
+                   Math.max(0, App.keybinds.rowCount() - shortcutList.count))
+    }
 }

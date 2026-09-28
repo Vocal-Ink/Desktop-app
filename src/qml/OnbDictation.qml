@@ -6,7 +6,7 @@ import Ink.Core
 OnbStep {
     id: step
     title: qsTr("Dictate instead of typing?")
-    lead: qsTr("If you can whisper, mouth or speak softly, Vocal Ink can write it down for you to check and send. It runs on this computer.")
+    lead: qsTr("If you can whisper or speak softly, Vocal Ink can write it down for you to check and send. It runs on this computer.")
 
     property string heard: ""
     Connections { target: App; function onTranscriptReady(text) { step.heard = text } }

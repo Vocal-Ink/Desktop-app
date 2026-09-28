@@ -645,6 +645,8 @@ DownloadModel::DownloadModel(Kind kind, ModelManager *manager, Settings *setting
         connect(m_settings, &Settings::changed, this, [this](const QString &key) {
             if (key == QLatin1String(Keys::WhisperModel) && !m_rows.isEmpty())
                 emit dataChanged(index(0), index(int(m_rows.size()) - 1), {InUseRole});
+            else if (key == QLatin1String(Keys::SttLanguage))
+                rebuild();
         });
     }
     rebuild();
@@ -670,18 +672,41 @@ int DownloadModel::rowOfTask(const QString &task) const
     return -1;
 }
 
+void DownloadModel::setLanguage(const QString &language)
+{
+    if (language == m_language)
+        return;
+    m_language = language;
+    rebuild();
+}
+
+QString DownloadModel::locale() const
+{
+    const QString system = QLocale::system().name();
+    if (m_language.isEmpty())
+        return system == QLatin1String("C") ? QStringLiteral("en_US") : system;
+    if (!m_language.contains(QLatin1Char('_')) && system.section(QLatin1Char('_'), 0, 0) == m_language)
+        return system; // "es" on a Mexican system: es_MX
+    return m_language;
+}
+
+QString DownloadModel::dictationLanguage() const
+{
+    const QString chosen = m_settings ? m_settings->string(Keys::SttLanguage) : QString();
+    return chosen.isEmpty() || chosen == QLatin1String("auto") ? locale() : chosen;
+}
+
 void DownloadModel::rebuild()
 {
     m_all.clear();
     if (m_kind == Kind::Whisper) {
+        const QString rec = ModelManager::recommendedWhisperModel(dictationLanguage());
         const QList<WhisperModelInfo> catalog = ModelManager::whisperCatalog();
         for (const WhisperModelInfo &m : catalog)
-            m_all << Row{m.file, m.title, m.description, m.approxBytes, m.recommended};
+            m_all << Row{m.file, m.title, m.description, m.approxBytes, m.file == rec};
     } else {
         QList<PiperVoiceInfo> voices = m_manager->piperCatalog();
-        QString myLang = QLocale().name();
-        if (myLang == QLatin1String("C"))
-            myLang = QStringLiteral("en_US");
+        const QString myLang = locale();
         const QString myShort = myLang.section(QLatin1Char('_'), 0, 0);
         std::stable_sort(voices.begin(), voices.end(), [&](const PiperVoiceInfo &a, const PiperVoiceInfo &b) {
             auto rank = [&](const PiperVoiceInfo &v) {
@@ -689,7 +714,7 @@ void DownloadModel::rebuild()
             };
             return rank(a) != rank(b) ? rank(a) < rank(b) : a.key < b.key;
         });
-        const QString rec = ModelManager::recommendedPiperVoice();
+        const QString rec = ModelManager::recommendedPiperVoice(voices, myLang);
         for (const PiperVoiceInfo &v : std::as_const(voices)) {
             QString details = QStringLiteral("%1 · %2").arg(v.languageName, v.quality);
             if (v.numSpeakers > 1)
@@ -814,7 +839,8 @@ QString DownloadModel::recommended() const
         if (r.recommended)
             return r.name;
     }
-    return m_kind == Kind::Piper ? ModelManager::recommendedPiperVoice() : QStringLiteral("ggml-base.en-q5_1.bin");
+    return m_kind == Kind::Piper ? ModelManager::recommendedPiperVoice()
+                                 : ModelManager::recommendedWhisperModel(dictationLanguage());
 }
 
 void DownloadModel::downloadRecommended()

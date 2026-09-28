@@ -580,7 +580,7 @@ void AppContext::triggerAction(const QString &id, bool pressed)
     } else if (id == QLatin1String("mic.hold") || id == QLatin1String("mic.toggle")) {
         if (m_mic->mode() == MicPassthrough::Mode::Off) {
             if (pressed)
-                emit notify(tr("Real-mic passthrough is off. Turn it on in Audio → Your real microphone."), 1);
+                emit notify(tr("Real-mic passthrough is off. Turn it on in Audio & mic → Your real microphone."), 1);
             return;
         }
         m_micFromShortcut = true;
@@ -630,7 +630,7 @@ void AppContext::triggerAction(const QString &id, bool pressed)
         if (n >= 0 && n < list.size())
             applyPreset(list.at(n).id);
         else
-            emit notify(tr("No preset #%1 yet. Save one in Voices → Presets.").arg(n + 1), 1);
+            emit notify(tr("No preset #%1 yet. Save one in Voices → Tune & presets.").arg(n + 1), 1);
     } else if (id == QLatin1String("window.quickType")) {
         emit quickTypeRequested();
         emit uiActionRequested(id);
@@ -777,6 +777,7 @@ void AppContext::applyOverlayStyles()
                                             tr("Give me one second, I'm going to try this jump again."),
                                             tr("Okay… that was not my finest moment. Clip it anyway!")}},
         {QStringLiteral("badges"), QJsonObject{{QStringLiteral("broadcaster"), tr("Streamer")},
+                                               //: Short Twitch chat badges: moderator, VIP, subscriber
                                                {QStringLiteral("mod"), tr("Mod")},
                                                {QStringLiteral("vip"), tr("VIP")},
                                                {QStringLiteral("sub"), tr("Sub")},

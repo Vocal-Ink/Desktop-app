@@ -5,7 +5,7 @@ import Ink.Core
 
 ScrollPage {
     title: qsTr("Typing & text")
-    subtitle: qsTr("Type less and sound right: word suggestions, shortcuts that expand, and how emoji and links are read.")
+    subtitle: qsTr("Type less and sound right: word suggestions, abbreviations that expand, and how emoji and links are read.")
 
     Card {
         Layout.fillWidth: true

@@ -312,6 +312,7 @@ ScrollPage {
             Segmented {
                 label: qsTr("Font of the spoken lines")
                 value: App.prefs["ui/stageFont"] || "display"
+                //: Fonts for the big spoken words: the decorative display font / the plain reading font / a serif font
                 options: [{ value: "display", label: qsTr("Display") }, { value: "reading", label: qsTr("Reading font") }, { value: "serif", label: qsTr("Serif") }]
                 onActivated: (v) => App.prefs["ui/stageFont"] = v
             }

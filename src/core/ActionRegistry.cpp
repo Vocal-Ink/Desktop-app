@@ -35,10 +35,10 @@ QList<ActionDef> ActionRegistry::builtInActions()
          tr("Turns your real microphone on or off on the voice output."), QString(), true, false, micWarning},
         {QStringLiteral("panic.mute"), mic, tr("Mute everything"),
          tr("Instantly silences the voice, sounds and your real microphone."), QStringLiteral("Ctrl+Alt+M"), true, false, {}},
-        {QStringLiteral("voice.next"), voices, tr("Next favorite voice"),
-         tr("Cycles forward through your favorite voices."), QString(), true, false, {}},
-        {QStringLiteral("voice.prev"), voices, tr("Previous favorite voice"),
-         tr("Cycles back through your favorite voices."), QString(), true, false, {}},
+        {QStringLiteral("voice.next"), voices, tr("Next favourite voice"),
+         tr("Cycles forward through your favourite voices."), QString(), true, false, {}},
+        {QStringLiteral("voice.prev"), voices, tr("Previous favourite voice"),
+         tr("Cycles back through your favourite voices."), QString(), true, false, {}},
         {QStringLiteral("rate.up"), voices, tr("Speak faster"), tr("Raises the speed by 10%."), QString(), true, false, {}},
         {QStringLiteral("rate.down"), voices, tr("Speak slower"), tr("Lowers the speed by 10%."), QString(), true, false, {}},
         {QStringLiteral("volume.up"), voices, tr("Louder"), tr("Raises the voice volume by 10%."), QString(), true, false, {}},
@@ -61,8 +61,8 @@ QList<ActionDef> ActionRegistry::builtInActions()
          tr("Stops (or resumes) sending what you say to the stream."), QString(), true, false, {}},
     };
     for (int i = 1; i <= 5; ++i) {
-        list.append({QStringLiteral("voice.fav%1").arg(i), voices, tr("Favorite voice %1").arg(i),
-                     tr("Switches to favorite voice number %1.").arg(i), QString(), true, false, {}});
+        list.append({QStringLiteral("voice.fav%1").arg(i), voices, tr("Favourite voice %1").arg(i),
+                     tr("Switches to favourite voice number %1.").arg(i), QString(), true, false, {}});
     }
     for (int i = 1; i <= 3; ++i) {
         list.append({QStringLiteral("preset.%1").arg(i), voices, tr("Voice preset %1").arg(i),

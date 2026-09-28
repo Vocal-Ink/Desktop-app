@@ -31,7 +31,7 @@ bool ElevenLabsTtsEngine::isAvailable() const
 
 QString ElevenLabsTtsEngine::unavailableReason() const
 {
-    return isAvailable() ? QString() : tr("Add your ElevenLabs API key in Settings → Voices.");
+    return isAvailable() ? QString() : tr("Add your ElevenLabs API key in Settings → Voice providers.");
 }
 
 QNetworkRequest ElevenLabsTtsEngine::request(const QString &pathAndQuery) const

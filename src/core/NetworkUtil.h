@@ -16,7 +16,10 @@ QNetworkRequest jsonRequest(const QUrl &url, int timeoutMs = 30000);
 // Best-effort human-readable error for a failed provider call. Understands the
 // common JSON error shapes ({"error":{"message"}}, {"detail":{"message"}},
 // {"detail": "..."}, {"message": "..."}) and adds hints for 401/402/429.
-QString describeError(QNetworkReply *reply, const QByteArray &body, const QString &provider);
+// `keys` says where the user manages the key the request used, if any.
+enum class KeyPlace { VoiceProviders, SpeechInput, NoKey };
+QString describeError(QNetworkReply *reply, const QByteArray &body, const QString &provider,
+                      KeyPlace keys = KeyPlace::VoiceProviders);
 
 int httpStatus(QNetworkReply *reply);
 

@@ -30,7 +30,7 @@ bool FishAudioTtsEngine::isAvailable() const
 
 QString FishAudioTtsEngine::unavailableReason() const
 {
-    return isAvailable() ? QString() : tr("Add your Fish Audio API key in Settings → Voices.");
+    return isAvailable() ? QString() : tr("Add your Fish Audio API key in Settings → Voice providers.");
 }
 
 QNetworkRequest FishAudioTtsEngine::request(const QString &pathAndQuery) const

@@ -157,7 +157,7 @@ void OpenAiSttEngine::onFinished(quint64 requestId, QNetworkReply *reply)
     reply->deleteLater();
     const QByteArray body = reply->readAll();
     if (reply->error() != QNetworkReply::NoError || NetworkUtil::httpStatus(reply) >= 300) {
-        emit failed(requestId, NetworkUtil::describeError(reply, body, providerName()));
+        emit failed(requestId, NetworkUtil::describeError(reply, body, providerName(), NetworkUtil::KeyPlace::SpeechInput));
         return;
     }
 
@@ -168,7 +168,7 @@ void OpenAiSttEngine::onFinished(quint64 requestId, QNetworkReply *reply)
     } else if (doc.isNull() && reply->header(QNetworkRequest::ContentTypeHeader).toString().startsWith(QLatin1String("text/plain"))) {
         text = QString::fromUtf8(body); // servers that ignore response_format
     } else if (doc.isObject() && doc.object().contains(QLatin1String("error"))) {
-        emit failed(requestId, NetworkUtil::describeError(reply, body, providerName()));
+        emit failed(requestId, NetworkUtil::describeError(reply, body, providerName(), NetworkUtil::KeyPlace::SpeechInput));
         return;
     } else {
         emit failed(requestId, tr("%1 sent an answer Vocal Ink does not understand.").arg(providerName()));

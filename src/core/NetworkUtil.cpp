@@ -54,7 +54,7 @@ static QString messageFromJson(const QByteArray &body)
     return {};
 }
 
-QString describeError(QNetworkReply *reply, const QByteArray &body, const QString &provider)
+QString describeError(QNetworkReply *reply, const QByteArray &body, const QString &provider, KeyPlace keys)
 {
     const int status = httpStatus(reply);
     QString detail = messageFromJson(body);
@@ -68,7 +68,17 @@ QString describeError(QNetworkReply *reply, const QByteArray &body, const QStrin
         break;
     case 401:
     case 403:
-        base = QObject::tr("%1 did not accept the API key. Check it in Settings → Voices").arg(provider);
+        switch (keys) {
+        case KeyPlace::VoiceProviders:
+            base = QObject::tr("%1 did not accept the API key. Check it in Settings → Voice providers").arg(provider);
+            break;
+        case KeyPlace::SpeechInput:
+            base = QObject::tr("%1 did not accept the API key. Check it in Settings → Speech input").arg(provider);
+            break;
+        case KeyPlace::NoKey:
+            base = QObject::tr("%1 refused the request (HTTP %2)").arg(provider).arg(status);
+            break;
+        }
         break;
     case 402:
         base = QObject::tr("%1 says the account is out of credit or needs a paid plan").arg(provider);

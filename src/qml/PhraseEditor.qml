@@ -46,7 +46,7 @@ Sheet {
         placeholderText: qsTr("e.g. Be right back, grabbing water!")
         onAccepted: sheet.save()
     }
-    Txt { text: qsTr("You can use {time}, {date}, {clipboard} and your own {variables}."); role: "caption"; Layout.fillWidth: true }
+    Txt { text: qsTr("You can use {time}, {date}, {clipboard} and your own variables, like {name}."); role: "caption"; Layout.fillWidth: true }
 
     RowLayout {
         Layout.fillWidth: true

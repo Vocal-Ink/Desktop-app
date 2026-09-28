@@ -8,9 +8,6 @@
 // input and Discord/OBS/games use the cable's output as their microphone.
 namespace VirtualAudio {
 
-// Rich-text setup instructions for this OS (with download links).
-QString setupInstructions();
-
 // Linux (PulseAudio/PipeWire) can create a virtual microphone on the fly.
 bool canCreateVirtualMic();
 bool virtualMicExists();

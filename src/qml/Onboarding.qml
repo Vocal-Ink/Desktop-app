@@ -47,6 +47,7 @@ Rectangle {
         case "realmic": return qsTr("Real mic")
         case "avatar": return qsTr("Avatar")
         case "shortcuts": return qsTr("Shortcuts")
+        //: Setup step about the app's appearance (theme, colours)
         case "look": return qsTr("Look")
         case "stream": return qsTr("Stream")
         case "practice": return qsTr("First words")

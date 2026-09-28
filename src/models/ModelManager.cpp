@@ -329,7 +329,7 @@ void ModelManager::Private::onItemFinished(Task *task)
     const Item &item = task->items.at(task->current);
 
     if (reply->error() != QNetworkReply::NoError || NetworkUtil::httpStatus(reply) >= 300) {
-        fail(task, NetworkUtil::describeError(reply, task->errorBody, item.url.host()));
+        fail(task, NetworkUtil::describeError(reply, task->errorBody, item.url.host(), NetworkUtil::KeyPlace::NoKey));
         return;
     }
     if (item.ggmlMagic && task->head != kGgmlMagic) {
@@ -494,7 +494,7 @@ void ModelManager::Private::onCatalogFinished(QNetworkReply *reply)
     const QByteArray body = reply->readAll();
     const bool haveList = !q->m_piperCatalog.isEmpty();
     if (reply->error() != QNetworkReply::NoError || NetworkUtil::httpStatus(reply) >= 300) {
-        const QString error = NetworkUtil::describeError(reply, body, reply->url().host());
+        const QString error = NetworkUtil::describeError(reply, body, reply->url().host(), NetworkUtil::KeyPlace::NoKey);
         emit q->piperCatalogError(haveList ? ModelManager::tr("Could not update the Piper voice list (%1). Showing the saved list.").arg(error)
                                            : ModelManager::tr("Could not download the Piper voice list: %1").arg(error));
         return;
@@ -531,21 +531,20 @@ ModelManager::~ModelManager()
 QList<WhisperModelInfo> ModelManager::whisperCatalog()
 {
     const auto model = [](const char *file, const QString &title, const QString &description, qint64 bytes,
-                          bool multilingual, bool recommended = false) {
+                          bool multilingual) {
         WhisperModelInfo m;
         m.file = QString::fromLatin1(file);
         m.title = title;
         m.description = description;
         m.approxBytes = bytes;
         m.multilingual = multilingual;
-        m.recommended = recommended;
         return m;
     };
     return {
         model("ggml-tiny.en-q5_1.bin", tr("Tiny (English)"),
               tr("Fastest and smallest; less accurate. Good for older computers."), 32'200'000, false),
         model("ggml-base.en-q5_1.bin", tr("Base (English)"),
-              tr("Recommended: fast and accurate for English."), 59'700'000, false, true),
+              tr("Fast and accurate for English."), 59'700'000, false),
         model("ggml-small.en-q5_1.bin", tr("Small (English)"),
               tr("Most accurate English model; slower."), 190'000'000, false),
         model("ggml-base-q5_1.bin", tr("Base (multilingual)"),
@@ -742,6 +741,65 @@ bool ModelManager::removePiperVoice(const QString &key)
 QString ModelManager::recommendedPiperVoice()
 {
     return QStringLiteral("en_US-lessac-medium");
+}
+
+QString ModelManager::recommendedPiperVoice(const QList<PiperVoiceInfo> &catalog, const QString &locale)
+{
+    // Clear, natural voices picked by ear, per language (first one wins
+    // when only the language matches).
+    static const QList<std::pair<QString, QString>> picks{
+        {QStringLiteral("en_US"), QStringLiteral("en_US-lessac-medium")},
+        {QStringLiteral("en_GB"), QStringLiteral("en_GB-alba-medium")},
+        {QStringLiteral("es_ES"), QStringLiteral("es_ES-davefx-medium")},
+        {QStringLiteral("fr_FR"), QStringLiteral("fr_FR-siwis-medium")},
+        {QStringLiteral("de_DE"), QStringLiteral("de_DE-thorsten-medium")},
+        {QStringLiteral("pt_BR"), QStringLiteral("pt_BR-faber-medium")},
+        {QStringLiteral("it_IT"), QStringLiteral("it_IT-paola-medium")},
+        {QStringLiteral("pl_PL"), QStringLiteral("pl_PL-darkman-medium")},
+        {QStringLiteral("tr_TR"), QStringLiteral("tr_TR-dfki-medium")},
+        {QStringLiteral("zh_CN"), QStringLiteral("zh_CN-huayan-medium")},
+    };
+    const QString language = locale.section(QLatin1Char('_'), 0, 0).section(QLatin1Char('-'), 0, 0).toLower();
+    const QString exact = QString(locale).replace(QLatin1Char('-'), QLatin1Char('_'));
+    const auto has = [&catalog](const QString &key) {
+        return std::any_of(catalog.cbegin(), catalog.cend(), [&key](const PiperVoiceInfo &v) { return v.key == key; });
+    };
+    if (language.isEmpty() || language == QLatin1String("c"))
+        return recommendedPiperVoice();
+
+    // The exact region first ("pt_BR" is not "pt_PT"), then any region.
+    for (const bool sameRegion : {true, false}) {
+        const auto matches = [&](const PiperVoiceInfo &v) {
+            return sameRegion ? v.languageCode == exact
+                              : v.languageCode.section(QLatin1Char('_'), 0, 0) == language;
+        };
+        for (const auto &[region, key] : picks) {
+            const bool fits = sameRegion ? region == exact : region.section(QLatin1Char('_'), 0, 0) == language;
+            if (fits && has(key))
+                return key;
+        }
+        const auto rank = [](const PiperVoiceInfo &v) {
+            static const QStringList order{QStringLiteral("medium"), QStringLiteral("high"), QStringLiteral("low"),
+                                           QStringLiteral("x_low")};
+            const qsizetype q = order.indexOf(v.quality);
+            return int(q < 0 ? order.size() : q) * 2 + (v.numSpeakers > 1 ? 1 : 0);
+        };
+        const PiperVoiceInfo *best = nullptr;
+        for (const PiperVoiceInfo &v : catalog) {
+            if (matches(v) && (!best || rank(v) < rank(*best) || (rank(v) == rank(*best) && v.key < best->key)))
+                best = &v;
+        }
+        if (best)
+            return best->key;
+    }
+    return recommendedPiperVoice();
+}
+
+QString ModelManager::recommendedWhisperModel(const QString &language)
+{
+    const QString code = language.section(QLatin1Char('_'), 0, 0).section(QLatin1Char('-'), 0, 0).toLower();
+    const bool english = code.isEmpty() || code == QLatin1String("en") || code == QLatin1String("c");
+    return english ? QStringLiteral("ggml-base.en-q5_1.bin") : QStringLiteral("ggml-base-q5_1.bin");
 }
 
 bool ModelManager::isDownloading(const QString &taskId) const

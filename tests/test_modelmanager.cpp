@@ -154,19 +154,56 @@ private slots:
     {
         const QList<WhisperModelInfo> catalog = ModelManager::whisperCatalog();
         QCOMPARE(catalog.size(), 6);
-        int recommended = 0;
+        QStringList files;
         for (const WhisperModelInfo &m : catalog) {
             QVERIFY(m.file.startsWith(QLatin1String("ggml-")) && m.file.endsWith(QLatin1String(".bin")));
             QVERIFY(!m.title.isEmpty() && !m.description.isEmpty());
             QVERIFY(m.approxBytes > 0);
             QCOMPARE(m.multilingual, !m.file.contains(QLatin1String(".en")));
-            if (m.recommended) {
-                ++recommended;
-                QCOMPARE(m.file, QStringLiteral("ggml-base.en-q5_1.bin"));
-            }
+            files << m.file;
         }
-        QCOMPARE(recommended, 1);
         QCOMPARE(catalog.last().file, QStringLiteral("ggml-large-v3-turbo-q5_0.bin"));
+
+        // English speakers get the English-only model, everyone else one that understands them.
+        for (const char *english : {"", "C", "en", "en_GB", "en-US"})
+            QCOMPARE(ModelManager::recommendedWhisperModel(QString::fromLatin1(english)), QStringLiteral("ggml-base.en-q5_1.bin"));
+        for (const char *other : {"de", "pt_BR", "zh_CN", "ja", "es-MX"})
+            QCOMPARE(ModelManager::recommendedWhisperModel(QString::fromLatin1(other)), QStringLiteral("ggml-base-q5_1.bin"));
+        QVERIFY(files.contains(ModelManager::recommendedWhisperModel(QStringLiteral("en"))));
+        QVERIFY(files.contains(ModelManager::recommendedWhisperModel(QStringLiteral("de"))));
+    }
+
+    void recommendsAPiperVoiceInTheUsersLanguage()
+    {
+        const auto voice = [](const char *key, const char *quality, int speakers = 1) {
+            PiperVoiceInfo v;
+            v.key = QString::fromLatin1(key);
+            v.languageCode = v.key.section(QLatin1Char('-'), 0, 0);
+            v.quality = QString::fromLatin1(quality);
+            v.numSpeakers = speakers;
+            return v;
+        };
+        const QList<PiperVoiceInfo> catalog{
+            voice("de_DE-eva_k-x_low", "x_low"),          voice("de_DE-thorsten-medium", "medium"),
+            voice("en_GB-alba-medium", "medium"),         voice("en_US-lessac-medium", "medium"),
+            voice("es_MX-ald-medium", "medium"),          voice("es_ES-davefx-medium", "medium"),
+            voice("nl_BE-nathalie-x_low", "x_low"),       voice("nl_NL-mls-medium", "medium", 52),
+            voice("nl_NL-ronnie-medium", "medium"),       voice("pt_PT-tugao-medium", "medium"),
+        };
+        const auto pick = [&catalog](const char *locale) {
+            return ModelManager::recommendedPiperVoice(catalog, QString::fromLatin1(locale));
+        };
+        QCOMPARE(pick("de"), QStringLiteral("de_DE-thorsten-medium"));        // hand-picked
+        QCOMPARE(pick("de_AT"), QStringLiteral("de_DE-thorsten-medium"));     // same language, other region
+        QCOMPARE(pick("en_GB"), QStringLiteral("en_GB-alba-medium"));
+        QCOMPARE(pick("en_AU"), QStringLiteral("en_US-lessac-medium"));       // first pick for the language
+        QCOMPARE(pick("es_MX"), QStringLiteral("es_MX-ald-medium"));          // the region's own voice
+        QCOMPARE(pick("es"), QStringLiteral("es_ES-davefx-medium"));
+        QCOMPARE(pick("nl"), QStringLiteral("nl_NL-ronnie-medium"));          // medium, one speaker
+        QCOMPARE(pick("pt_BR"), QStringLiteral("pt_PT-tugao-medium"));        // no Brazilian voice here
+        QCOMPARE(pick("ja"), QStringLiteral("en_US-lessac-medium"));          // no voice at all: English
+        QCOMPARE(pick(""), QStringLiteral("en_US-lessac-medium"));
+        QCOMPARE(ModelManager::recommendedPiperVoice({}, QStringLiteral("de")), QStringLiteral("en_US-lessac-medium"));
     }
 
     void downloadsWhisperModel()

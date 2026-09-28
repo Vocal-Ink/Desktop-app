@@ -332,7 +332,7 @@ void RoutingCheck::start(const QByteArray &outputDevice, const QByteArray &input
         }
     }
     if (output.isNull()) {
-        finishLater(tr("The voice output device isn't connected. Pick it again in Settings → Audio."));
+        finishLater(tr("The voice output device isn't connected. Pick it again in Audio & mic."));
         return;
     }
     d->outputName = output.description();

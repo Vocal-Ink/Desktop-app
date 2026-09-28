@@ -78,7 +78,7 @@ bool OpenAiTtsEngine::isAvailable() const
 
 QString OpenAiTtsEngine::unavailableReason() const
 {
-    return isAvailable() ? QString() : tr("Add your OpenAI API key in Settings → Voices.");
+    return isAvailable() ? QString() : tr("Add your OpenAI API key in Settings → Voice providers.");
 }
 
 void OpenAiTtsEngine::refreshVoices()

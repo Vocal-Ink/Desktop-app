@@ -55,9 +55,9 @@ ScrollPage {
             Toggle { tip: qsTr("Bigger buttons"); checked: App.prefs["a11y/largeTargets"] === true; onToggled: App.prefs["a11y/largeTargets"] = checked }
         }
         SettingRow {
-            title: qsTr("Tap to talk instead of holding")
+            title: qsTr("Tap to dictate instead of holding")
             description: qsTr("Press the dictation key once to start and again to stop.")
-            Toggle { tip: qsTr("Tap to talk instead of holding"); checked: App.prefs["a11y/latchPtt"] === true; onToggled: App.prefs["a11y/latchPtt"] = checked }
+            Toggle { tip: qsTr("Tap to dictate instead of holding"); checked: App.prefs["a11y/latchPtt"] === true; onToggled: App.prefs["a11y/latchPtt"] = checked }
         }
         SettingRow {
             title: qsTr("Ignore repeated key presses")
@@ -124,6 +124,7 @@ ScrollPage {
             Segmented {
                 label: qsTr("Read back what I type")
                 value: App.prefs["a11y/echoTyping"] || "off"
+                //: Typing echo: read back nothing / each word as it is typed / each sentence as it is finished
                 options: [{ value: "off", label: qsTr("Off") }, { value: "words", label: qsTr("Words") }, { value: "sentences", label: qsTr("Sentences") }]
                 onActivated: (v) => App.prefs["a11y/echoTyping"] = v
             }

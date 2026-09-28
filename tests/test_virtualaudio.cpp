@@ -18,12 +18,6 @@ class TestVirtualAudio : public QObject
 {
     Q_OBJECT
 private slots:
-    void instructionsMentionACable()
-    {
-        const QString html = VirtualAudio::setupInstructions();
-        QVERIFY(html.contains(QLatin1String("Vocal Ink")));
-    }
-
     void recognisesCommonCables()
     {
         QVERIFY(VirtualAudio::looksLikeVirtualCable(QStringLiteral("CABLE Input (VB-Audio Virtual Cable)")));

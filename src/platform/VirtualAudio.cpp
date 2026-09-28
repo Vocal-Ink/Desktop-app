@@ -42,32 +42,6 @@ bool runPactl(const QStringList &args, QString *output, QString *error)
 
 } // namespace
 
-QString setupInstructions()
-{
-#if defined(Q_OS_WIN)
-    return VirtualAudioTr::tr("<p>Install the free <b>VB-CABLE</b> virtual audio device from "
-              "<a href=\"https://vb-audio.com/Cable/\">vb-audio.com/Cable</a> and restart Vocal Ink.</p>"
-              "<ol><li>Choose <b>CABLE Input (VB-Audio Virtual Cable)</b> as Vocal Ink's <i>voice output</i>.</li>"
-              "<li>In Discord, games or OBS choose <b>CABLE Output (VB-Audio Virtual Cable)</b> as the microphone.</li>"
-              "<li>Keep <i>Also play on my speakers</i> on to hear yourself.</li></ol>");
-#elif defined(Q_OS_MACOS)
-    return VirtualAudioTr::tr("<p>Install the free <b>BlackHole 2ch</b> virtual audio driver from "
-              "<a href=\"https://existential.audio/blackhole/\">existential.audio/blackhole</a> "
-              "(or <code>brew install blackhole-2ch</code>) and restart Vocal Ink.</p>"
-              "<ol><li>Choose <b>BlackHole 2ch</b> as Vocal Ink's <i>voice output</i>.</li>"
-              "<li>In Discord, games or OBS choose <b>BlackHole 2ch</b> as the microphone.</li>"
-              "<li>Keep <i>Also play on my speakers</i> on to hear yourself.</li></ol>");
-#else
-    return VirtualAudioTr::tr("<p>Vocal Ink can create a virtual microphone for you (PulseAudio or PipeWire). "
-              "Click <b>Create virtual microphone</b>, then:</p>"
-              "<ol><li>Choose <b>Vocal Ink Voice</b> as Vocal Ink's <i>voice output</i>.</li>"
-              "<li>In Discord, games or OBS choose <b>Vocal Ink Mic</b> as the microphone "
-              "(OBS can also capture <i>Monitor of Vocal Ink Voice</i>).</li>"
-              "<li>Keep <i>Also play on my speakers</i> on to hear yourself.</li></ol>"
-              "<p>The virtual devices last until you log out; Vocal Ink recreates them on request.</p>");
-#endif
-}
-
 bool canCreateVirtualMic()
 {
 #if defined(Q_OS_LINUX)

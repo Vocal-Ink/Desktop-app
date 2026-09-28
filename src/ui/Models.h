@@ -215,6 +215,9 @@ public:
     Q_INVOKABLE void downloadRecommended();
     Q_INVOKABLE QString recommended() const;
     void retranslate() { rebuild(); } // details are built in the current language
+    // The interface language ("de", "pt_BR"...): picks the recommended model
+    // or voice and sorts voices in that language first.
+    void setLanguage(const QString &language);
 
 signals:
     void filterChanged();
@@ -232,6 +235,8 @@ private:
     QString taskId(const QString &name) const;
     int rowOfTask(const QString &task) const;
     void setStatus(const QString &s);
+    QString locale() const;          // m_language with the system's region when it matches
+    QString dictationLanguage() const;
 
     Kind m_kind;
     ModelManager *m_manager;
@@ -242,6 +247,7 @@ private:
     double m_runtimeProgress = 0.0;
     QString m_filter;
     QString m_status;
+    QString m_language;
 };
 
 class PresetModel : public QAbstractListModel

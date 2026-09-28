@@ -76,9 +76,9 @@ bool PiperTtsEngine::isAvailable() const
 QString PiperTtsEngine::unavailableReason() const
 {
     if (executablePath().isEmpty())
-        return tr("Download the Piper voice engine in Settings → Voices.");
+        return tr("Download the Piper voice engine in Voices → Download.");
     if (!isAvailable())
-        return tr("Download a Piper voice in Settings → Voices.");
+        return tr("Download a Piper voice in Voices → Download.");
     return {};
 }
 
@@ -202,7 +202,7 @@ TtsStream *PiperTtsEngine::synthesize(const QString &text, const Voice &voice, c
     }
     const auto it = m_models.constFind(key);
     if (it == m_models.constEnd())
-        return failedStream(tr("The Piper voice \"%1\" is not installed. Download it in Settings → Voices.").arg(key));
+        return failedStream(tr("The Piper voice \"%1\" is not installed. Download it in Voices → Download.").arg(key));
     const Model &model = it.value();
 
     int speaker = voice.speaker;

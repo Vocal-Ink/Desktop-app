@@ -64,7 +64,7 @@ bool AzureTtsEngine::isAvailable() const
 
 QString AzureTtsEngine::unavailableReason() const
 {
-    return isAvailable() ? QString() : tr("Add your Microsoft Azure Speech key in Settings → Voices.");
+    return isAvailable() ? QString() : tr("Add your Microsoft Azure Speech key in Settings → Voice providers.");
 }
 
 QString AzureTtsEngine::region() const

@@ -74,7 +74,8 @@ Card {
         description: App.hotkeysSupported ? qsTr("Works in any app, even while a game has focus.") : App.hotkeysUnsupportedReason
         ShortcutField {
             readonly property string actionId: card.mode === "hold" ? "mic.hold" : "mic.toggle"
-            label: card.mode === "hold" ? qsTr("Hold to talk") : qsTr("Toggle real mic")
+            //: Shortcut name: hold the key to open your real microphone
+            label: card.mode === "hold" ? qsTr("Hold to talk on your real mic") : qsTr("Toggle real mic")
             sequence: App.shortcuts[actionId] || ""
             onRecorded: (seq) => {
                 const clash = App.keybinds.bind(actionId, seq, false)
@@ -114,20 +115,20 @@ Card {
     }
     SettingRow {
         visible: card.mode !== "off"
-        title: qsTr("Lower my mic while the voice speaks")
+        title: qsTr("Lower my mic while Vocal Ink speaks")
         description: qsTr("Keeps your typed messages clear over background sound.")
         Toggle {
-            tip: qsTr("Lower my mic while the voice speaks")
+            tip: qsTr("Lower my mic while Vocal Ink speaks")
             checked: App.prefs["mic/duck"] === true
             onToggled: App.prefs["mic/duck"] = checked
         }
     }
     SettingRow {
         visible: card.mode !== "off"
-        title: qsTr("Show a red LIVE badge on screen")
+        title: qsTr("Show a red MIC LIVE badge on screen")
         description: qsTr("Stays on top of games and other apps while your mic is live.")
         Toggle {
-            tip: qsTr("Show a red LIVE badge on screen")
+            tip: qsTr("Show a red MIC LIVE badge on screen")
             checked: App.prefs["mic/warnOverlay"] !== false
             onToggled: App.prefs["mic/warnOverlay"] = checked
         }

@@ -144,7 +144,7 @@ void QtAudioLane::ensureOpen()
             if (d->sink->error() != QAudio::NoError && d->sink->error() != QAudio::UnderrunError
                 && !d->reportedError) {
                 d->reportedError = true;
-                emit errorOccurred(tr("Audio output \"%1\" failed (error %2). Check the device in Settings → Audio.")
+                emit errorOccurred(tr("Audio output \"%1\" failed (error %2). Check the device in Audio & mic.")
                                        .arg(d->device.description())
                                        .arg(int(d->sink->error())));
             }

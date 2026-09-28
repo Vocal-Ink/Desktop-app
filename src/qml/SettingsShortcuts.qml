@@ -83,7 +83,7 @@ ScrollPage {
         Txt {
             Layout.fillWidth: true
             role: "caption"
-            text: qsTr("A red LIVE badge appears on screen and a tone plays whenever it's on. You can change this in Audio & mic.")
+            text: qsTr("A red MIC LIVE badge appears on screen and a tone plays whenever it's on. You can change this in Audio & mic.")
         }
         footer: [
             PillButton {
