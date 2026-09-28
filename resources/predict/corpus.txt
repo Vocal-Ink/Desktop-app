@@ -1,0 +1,1092 @@
+# Everyday conversation used to derive the built-in next-word pairs (en-bigrams.tsv).
+# Written for Vocal Ink and released into the public domain (CC0).
+
+# Greetings and small talk
+Hi, how are you?
+Hello, how are you doing today?
+Hey, what's up?
+Good morning, how did you sleep?
+Good afternoon, everyone.
+Good evening, it's nice to see you.
+Good night, sleep well.
+Nice to meet you.
+It's nice to meet you too.
+It was nice talking to you.
+It's good to see you again.
+Long time no see.
+How have you been?
+I've been good, thanks.
+I'm doing well, thank you.
+I'm fine, thanks for asking.
+I'm good, how about you?
+Not bad, how about you?
+Pretty good, thanks.
+What have you been up to?
+Not much, just relaxing.
+How was your day?
+My day was good.
+My day was long.
+How was your weekend?
+My weekend was great.
+Did you have a good weekend?
+Have a nice day.
+Have a good day.
+Have a great weekend.
+Have a good night.
+See you later.
+See you tomorrow.
+See you soon.
+See you next time.
+Talk to you later.
+Take care.
+Bye for now.
+Goodbye, everyone.
+Welcome back.
+Welcome to the stream.
+Thanks for coming.
+Thanks for stopping by.
+
+# Introducing myself and how I talk
+My name is on the screen.
+I use text to speech to talk.
+I use this app to speak.
+I can't talk right now, so I'm typing.
+I can hear you, but I can't speak.
+I can understand you.
+I'm typing my answer.
+Please give me a moment to type.
+Please be patient with me.
+It takes me a little longer to answer.
+Thank you for waiting.
+Thank you for your patience.
+Sorry for the wait.
+Sorry, I type slowly.
+I'm not able to speak out loud.
+I lost my voice.
+My voice is not working today.
+I have a sore throat.
+I don't speak, but I can hear you.
+This is my voice.
+Do you like my voice?
+I can change my voice.
+Can you hear me?
+Can you hear me okay?
+Is my voice too loud?
+Is my voice too quiet?
+Is this better?
+
+# Yes, no and quick answers
+Yes, please.
+No, thank you.
+Yes, I do.
+No, I don't.
+Yes, I am.
+No, I'm not.
+Yes, I can.
+No, I can't.
+Yes, I will.
+I think so.
+I don't think so.
+Maybe later.
+Maybe next time.
+Of course.
+Sure, no problem.
+That's fine.
+That's okay.
+That's great.
+That's true.
+That's right.
+That's not right.
+That's a good idea.
+That's a great idea.
+That sounds good.
+That sounds great.
+That sounds like fun.
+That makes sense.
+That doesn't make sense.
+I agree with you.
+I don't agree.
+I'm not sure.
+I'm not sure about that.
+I don't know.
+I don't know yet.
+I have no idea.
+I understand.
+I don't understand.
+I get it.
+I see what you mean.
+Exactly.
+Absolutely.
+Definitely.
+Not really.
+Not yet.
+Not now.
+Just a minute.
+Just a second.
+One moment, please.
+Hold on.
+Wait a moment.
+Never mind.
+It doesn't matter.
+It's up to you.
+Whatever you want.
+Either one is fine.
+Both are fine.
+All right.
+Okay, let's do it.
+
+# Asking for help and clarification
+Can you help me?
+Can you help me with this?
+Could you help me, please?
+I need help.
+I need some help with something.
+Please help me.
+Can you repeat that?
+Could you repeat that, please?
+Can you say that again?
+Can you speak up, please?
+Can you speak more slowly?
+Please speak slowly.
+Please wait for me.
+Please don't rush me.
+Please let me finish.
+Let me finish, please.
+Can you write it down?
+Can you show me?
+Can you explain that?
+What do you mean?
+What does that mean?
+What did you say?
+Sorry, I didn't hear you.
+Sorry, I didn't catch that.
+Sorry, I missed that.
+I have a question.
+Can I ask you a question?
+Can I ask you something?
+I want to ask you something.
+Do you have a minute?
+Are you busy?
+Are you free right now?
+Is it okay if I ask?
+Excuse me.
+Excuse me, can I say something?
+I want to say something.
+I have something to say.
+I would like to add something.
+Let me think about it.
+Let me check.
+Let me see.
+Give me a second.
+
+# Needs and wants
+I need a break.
+I need to rest.
+I need some water.
+I need to go to the bathroom.
+I need to use the bathroom.
+I need to take my medicine.
+I need to eat something.
+I need to sleep.
+I need more time.
+I need you to listen.
+I want to go home.
+I want to go outside.
+I want to watch a movie.
+I want to play a game.
+I want to talk to you.
+I want to tell you something.
+I want something to eat.
+I want something to drink.
+I would like some water, please.
+I would like a coffee, please.
+I would like to go.
+I would like to stay.
+I would love to.
+I'd like that.
+I'd love that.
+Can I have some water?
+Can I have a drink?
+Can I have a snack?
+Can I go now?
+Can I come with you?
+Can I sit here?
+Can we go now?
+Can we talk later?
+Can we take a break?
+Can we try again?
+Can you open the door?
+Can you close the window?
+Can you turn on the light?
+Can you turn off the light?
+Can you turn it up?
+Can you turn it down?
+Can you get my phone?
+Can you call my mom?
+Can you call my dad?
+Please call my family.
+Please get the nurse.
+Please call the doctor.
+I'm hungry.
+I'm thirsty.
+I'm tired.
+I'm cold.
+I'm hot.
+I'm too hot.
+I'm too cold.
+I'm in pain.
+I'm not feeling well.
+I don't feel well.
+I feel sick.
+I feel better now.
+I feel much better.
+It hurts here.
+My head hurts.
+My back hurts.
+My stomach hurts.
+I have a headache.
+I'm okay now.
+I'm all right.
+I'm ready.
+I'm not ready yet.
+I'm almost ready.
+I'm done.
+I'm finished.
+I'm busy right now.
+I'm on my way.
+I'm here.
+I'm home.
+I'm back.
+I'll be right back.
+I will be back soon.
+I have to go now.
+I have to leave soon.
+I have to work tomorrow.
+I have a meeting.
+I have an appointment.
+
+# Feelings
+I'm happy.
+I'm so happy for you.
+I'm really happy today.
+I'm sad.
+I'm a little sad today.
+I'm angry.
+I'm upset.
+I'm frustrated.
+I'm scared.
+I'm nervous.
+I'm worried about you.
+I'm worried about it.
+I'm excited.
+I'm so excited.
+I'm bored.
+I'm confused.
+I'm surprised.
+I'm proud of you.
+I'm sorry.
+I'm so sorry.
+I'm sorry to hear that.
+I'm sorry about that.
+I'm glad to hear that.
+I'm glad you're here.
+I'm glad you came.
+I feel happy.
+I feel sad.
+I feel great.
+I feel good today.
+I feel tired today.
+I love you.
+I love you too.
+I love it.
+I love this song.
+I love this game.
+I like it.
+I like that.
+I like you.
+I really like it.
+I don't like it.
+I don't like that.
+I hate it.
+I miss you.
+I miss you too.
+I care about you.
+You make me happy.
+You made my day.
+That makes me happy.
+That makes me sad.
+That was funny.
+That's so funny.
+That was amazing.
+That was awesome.
+That was close.
+That was fun.
+That was great.
+That was scary.
+That's amazing.
+That's awesome.
+That's cool.
+That's so cool.
+That's crazy.
+That's too bad.
+That's sad.
+That's weird.
+Oh no.
+Oh my god.
+Oh wow.
+Wow, that's cool.
+No way.
+Are you serious?
+Really?
+You're kidding.
+I can't believe it.
+I can't believe that happened.
+Good job.
+Great job.
+Well done.
+Nice work.
+Nice one.
+Congratulations.
+Happy birthday.
+Happy birthday to you.
+Merry Christmas.
+Happy new year.
+Good luck.
+Good luck with that.
+Get well soon.
+Bless you.
+
+# Thanks and apologies
+Thank you.
+Thank you so much.
+Thank you very much.
+Thank you for your help.
+Thank you for everything.
+Thank you for listening.
+Thank you for understanding.
+Thank you for coming.
+Thank you for the follow.
+Thank you for the sub.
+Thanks a lot.
+Thanks so much.
+Thanks for the help.
+Thanks for asking.
+Thanks for watching.
+Thanks for being here.
+Thanks for the raid.
+You're welcome.
+No problem.
+No worries.
+Don't worry about it.
+It's all good.
+It's okay.
+It's fine.
+It's no big deal.
+Sorry about that.
+Sorry for the delay.
+Sorry, I'm late.
+Sorry, I forgot.
+Sorry, my bad.
+My mistake.
+I apologize.
+I didn't mean to.
+It was an accident.
+Please forgive me.
+
+# Questions
+What is your name?
+What's your name?
+Where are you from?
+Where do you live?
+How old are you?
+What do you do?
+What do you do for work?
+What do you like to do?
+What are you doing?
+What are you doing today?
+What are you doing tonight?
+What are you doing this weekend?
+What are you up to?
+What do you think?
+What do you think about it?
+What do you want to do?
+What do you want to eat?
+What do you want to watch?
+What do you want to play?
+What time is it?
+What time do we leave?
+What time is the meeting?
+What day is it today?
+What's the plan?
+What's the plan for today?
+What's for dinner?
+What's for lunch?
+What's going on?
+What's happening?
+What's wrong?
+What's the matter?
+What happened?
+What happened to you?
+What happened next?
+What is this?
+What is that?
+What was that?
+What else?
+What about you?
+What about tomorrow?
+Where are you?
+Where are you going?
+Where is it?
+Where is the bathroom?
+Where did you go?
+Where did you put it?
+Where should we go?
+When is it?
+When are you coming?
+When are you leaving?
+When do we leave?
+When will you be back?
+When did that happen?
+Who is that?
+Who is coming?
+Who said that?
+Who are you?
+Who wants to play?
+Why not?
+Why did you do that?
+Why is that?
+Why are you sad?
+How are you feeling?
+How do you feel?
+How do you know?
+How does it work?
+How did you do that?
+How did it go?
+How much is it?
+How much does it cost?
+How long will it take?
+How long have you been here?
+How many do you need?
+How about you?
+How about tomorrow?
+How about this one?
+Do you want to play?
+Do you want to come?
+Do you want to watch a movie?
+Do you want something to eat?
+Do you want some coffee?
+Do you need help?
+Do you need anything?
+Do you know what I mean?
+Do you know where it is?
+Do you have time?
+Do you have a pen?
+Do you like it?
+Do you remember?
+Do you understand?
+Did you eat?
+Did you see that?
+Did you hear that?
+Did you get it?
+Did you have fun?
+Are you okay?
+Are you sure?
+Are you ready?
+Are you coming?
+Are you hungry?
+Are you tired?
+Are you there?
+Are you still there?
+Are you listening?
+Is everything okay?
+Is it okay?
+Is it ready?
+Is that right?
+Is that true?
+Is anyone there?
+Is this seat taken?
+Can you see my screen?
+Can you see it?
+Can you do that?
+Can you tell me more?
+Can you tell me what happened?
+Could you please wait?
+Could you do me a favor?
+Would you like some?
+Would you like to come?
+Would you like to play?
+Would you help me?
+Will you be there?
+Will you come with me?
+Should I wait?
+Should we go?
+Shall we start?
+
+# Plans and time
+Let's go.
+Let's go outside.
+Let's go home.
+Let's eat.
+Let's play.
+Let's play a game.
+Let's watch a movie.
+Let's talk about it.
+Let's talk later.
+Let's try again.
+Let's do this.
+Let's start.
+Let's get started.
+Let's take a break.
+Let's meet tomorrow.
+Let's see what happens.
+I will call you later.
+I will send you a message.
+I will be there soon.
+I will be there in ten minutes.
+I will let you know.
+I'll let you know.
+I'll call you back.
+I'll think about it.
+I'll be there.
+I'll do it later.
+I'll see you tomorrow.
+I'll see you soon.
+I'll be ready in a minute.
+I'm going to the store.
+I'm going to bed.
+I'm going to eat lunch.
+I'm going to take a break.
+I'm going to be late.
+I'm going home.
+We are going to the park.
+We are going to be late.
+We can do it tomorrow.
+We can talk about it later.
+We should go now.
+We should try it.
+We need to talk.
+We need to leave soon.
+We need more time.
+We have to wait.
+We have plenty of time.
+It's time to go.
+It's time for lunch.
+It's time for dinner.
+It's time for bed.
+It's getting late.
+It's too early.
+It's too late.
+It's almost time.
+Today is a good day.
+Today was a long day.
+Tomorrow is another day.
+Maybe tomorrow.
+Right now.
+Later today.
+Later tonight.
+In a few minutes.
+In an hour.
+Next week.
+Last week.
+Last night.
+This morning.
+This afternoon.
+This evening.
+This weekend.
+Every day.
+All day.
+All the time.
+For a while.
+For a long time.
+At the moment.
+In the morning.
+In the afternoon.
+In the evening.
+At night.
+On the weekend.
+On Monday.
+On Friday.
+See you on Monday.
+
+# Home, food and daily life
+I'm making dinner.
+I'm cooking tonight.
+I'm eating right now.
+I'm drinking coffee.
+Can you pass the salt?
+Can I have some more?
+This is delicious.
+This is really good.
+This tastes great.
+I'm full.
+I'm still hungry.
+I would like a sandwich.
+I would like some tea.
+I want pizza for dinner.
+Let's order pizza.
+Let's get some food.
+Do you want to get lunch?
+Do you want to get coffee?
+Can we go to the store?
+We need milk.
+We need to buy some food.
+I need to go shopping.
+I need to clean my room.
+I need to do the laundry.
+I need to take a shower.
+I need to charge my phone.
+My phone is dead.
+My phone is almost dead.
+The battery is low.
+The internet is down.
+The internet is slow.
+The wifi is not working.
+It's not working.
+It's broken.
+Can you fix it?
+Can you check it?
+Turn it off and on again.
+The door is open.
+The door is locked.
+Close the door, please.
+Open the window, please.
+Turn on the fan.
+It's cold in here.
+It's hot in here.
+It's too loud.
+It's too quiet.
+It's too bright.
+It's raining outside.
+It's sunny today.
+It's a beautiful day.
+The weather is nice today.
+The weather is bad today.
+I like the rain.
+I like the snow.
+I want to go for a walk.
+Let's go for a walk.
+Let's go to the park.
+Let's go to the beach.
+I'm walking the dog.
+The dog needs to go out.
+The cat is hungry.
+I'm feeding the cat.
+My family is coming over.
+My friends are coming over.
+My mom is here.
+My dad is at work.
+My brother is at school.
+My sister is at home.
+My friend is coming.
+My best friend is here.
+I live with my family.
+I work from home.
+I go to school.
+I have class tomorrow.
+I have homework.
+I have a test tomorrow.
+I have to study.
+I'm at work.
+I'm at school.
+I'm at home.
+I'm at the doctor.
+I'm in the car.
+I'm on the bus.
+I'm on the train.
+
+# Work, school and meetings
+Good morning, team.
+Can everyone hear me?
+Can you see my screen?
+I'm sharing my screen.
+I have a question about that.
+I have an idea.
+I have a suggestion.
+I think we should try it.
+I think that's a good plan.
+I think you're right.
+I think it's fine.
+I think it will work.
+I don't think it will work.
+I think we need more time.
+I think so too.
+I agree with that.
+I disagree with that.
+Let me share my thoughts.
+Let me explain.
+Let me know if you have questions.
+Let me know what you think.
+Please let me know.
+Please send me the link.
+Please send me an email.
+I will send it to you.
+I sent you an email.
+I sent you a message.
+Did you get my message?
+Did you get my email?
+I will check my email.
+I will look into it.
+I will follow up.
+I'm working on it.
+I'm almost done.
+I finished it.
+It's done.
+It's almost done.
+It's ready to go.
+It will be ready soon.
+Can we schedule a meeting?
+Can we meet tomorrow?
+Can we move the meeting?
+Can we talk about this later?
+Is this a good time?
+Is now a good time?
+Thanks, everyone.
+Thanks for your time.
+That's all for today.
+That's all from me.
+I have nothing to add.
+Any questions?
+
+# Streaming and gaming
+Hello chat.
+Hi chat, how are you?
+Welcome to the stream, everyone.
+Welcome in.
+Thanks for the follow.
+Thanks for the sub.
+Thanks for the raid.
+Thanks for the bits.
+Thanks for the gift subs.
+Thank you for the support.
+Thank you so much for the support.
+I appreciate you.
+I appreciate it.
+Thanks for hanging out.
+Thanks for watching, everyone.
+Let's play some games.
+Let's go, chat.
+Let's get this win.
+Let's try one more time.
+One more game.
+One more round.
+Last game for today.
+I'm going live soon.
+I'm live now.
+The stream is starting soon.
+The stream is ending soon.
+I'll be streaming tomorrow.
+I'll see you next stream.
+See you next stream.
+Good game.
+Good game, everyone.
+Well played.
+Nice shot.
+Nice try.
+Nice play.
+Great play.
+That was a good game.
+That was a close one.
+That was so close.
+We almost had it.
+We got this.
+We did it.
+We won.
+We lost.
+I died.
+I'm dead.
+I'm so bad at this.
+I'm getting better.
+I need to practice.
+This game is hard.
+This game is so much fun.
+This is my favorite game.
+I love this game so much.
+Watch this.
+Look at this.
+Look over there.
+Behind you.
+Watch out.
+Be careful.
+Follow me.
+Stay with me.
+Stay here.
+Wait for me.
+Come here.
+Come with me.
+Go left.
+Go right.
+Go back.
+Go ahead.
+Over here.
+Over there.
+On my way.
+I'm coming.
+I'm going in.
+I need backup.
+I need healing.
+I need ammo.
+I have the key.
+I got it.
+I got this.
+You got this.
+You can do it.
+Don't give up.
+Don't worry.
+Don't go there.
+Don't do that.
+Don't forget.
+Don't be late.
+Help me out.
+Cover me.
+Push forward.
+Fall back.
+Let's regroup.
+Is anyone in voice?
+Can I join your game?
+Do you want to join?
+Invite me, please.
+Send me an invite.
+Add me as a friend.
+I'm muted on purpose.
+I can hear you all.
+My mic is off.
+I'm using text to speech today.
+Chat, what do you think?
+Chat, should I do it?
+Let me know in the chat.
+Type it in the chat.
+Drop a like if you enjoyed.
+Don't forget to follow.
+I'm taking a short break.
+Be right back.
+I'm back, chat.
+Did I miss anything?
+What did I miss?
+That's hilarious.
+I can't stop laughing.
+You're so funny.
+You're the best.
+You're awesome.
+You're amazing.
+You are so kind.
+You are the best.
+Love you all.
+Have a good one.
+Good night, chat.
+
+# Opinions and conversation
+I think it's great.
+I think it's a good idea.
+I think you should go.
+I think I will.
+I think I can.
+I think I need a break.
+I believe you.
+I believe in you.
+I hope so.
+I hope you feel better.
+I hope you have a good day.
+I hope it works.
+I hope everything is okay.
+I wish I could.
+I wish you were here.
+I know what you mean.
+I know that.
+I know.
+I don't know what to say.
+I don't know what to do.
+I don't know how to do it.
+I don't want to go.
+I don't want to talk about it.
+I don't want it.
+I don't need it.
+I don't have time.
+I don't have it.
+I don't remember.
+I don't mind.
+I don't care.
+I didn't know that.
+I didn't see it.
+I didn't do it.
+I can do it.
+I can do that.
+I can help you.
+I can't do it.
+I can't do that.
+I can't wait.
+I can't find it.
+I can't see it.
+I can't hear you.
+I can't remember.
+I could do that.
+I could try.
+I should go.
+I should be there.
+I would like that.
+I would do it.
+I have to go.
+I have to say.
+I have a lot to do.
+I have an idea.
+I have a problem.
+I have a dog.
+I have a cat.
+I had a great time.
+I had fun.
+I had a good day.
+I had a bad day.
+I was there.
+I was going to say that.
+I was thinking about you.
+I was just kidding.
+I was wondering.
+I just wanted to say thank you.
+I just got here.
+I just woke up.
+I just need a minute.
+I really appreciate it.
+I really like this.
+I really want to go.
+I really need help.
+I also think so.
+I also want to go.
+I still need help.
+I still don't know.
+I already did it.
+I already know.
+I already ate.
+I always do.
+I never said that.
+I never knew that.
+I usually do.
+I am so happy.
+I am so tired.
+I am not sure.
+I am ready.
+I am here.
+I am fine.
+I am okay.
+I am sorry.
+You are right.
+You are welcome.
+You are so nice.
+You are my friend.
+You look great.
+You look tired.
+You did a great job.
+You did it.
+You should try it.
+You should come.
+You can do this.
+You can come with me.
+You know what I mean.
+You know what?
+You too.
+You first.
+Me too.
+Me neither.
+Same here.
+It is what it is.
+It was great.
+It was fun.
+It was good.
+It was nice.
+It was okay.
+It was a long day.
+It was my pleasure.
+It will be fine.
+It will be okay.
+It's a good day.
+It's my turn.
+It's your turn.
+It's not fair.
+It's not my fault.
+It's not a problem.
+It's hard to explain.
+It's easy.
+It's hard.
+It's fun.
+It's really good.
+It's so good.
+It's so cute.
+It depends.
+It happens.
+There is a problem.
+There is no time.
+There are a lot of people here.
+Here it is.
+Here you go.
+This is great.
+This is fun.
+This is hard.
+This is easy.
+This is mine.
+This is for you.
+This is my friend.
+This one is better.
+That one is mine.
+That is right.
+That is not true.
+He is my brother.
+He is my friend.
+She is my sister.
+She is my friend.
+They are my friends.
+They are coming soon.
+We are friends.
+We are ready.
+We are almost there.
+We are here.
+We will see.
+We will be there.
+We can do this.
+We should talk.
+We had fun.
+Everyone is here.
+Everything is fine.
+Everything is okay.
+Everything will be okay.
+Nothing is wrong.
+Something is wrong.
+Something happened.
+Somebody help.
+Nobody knows.
+Anyone want to play?
+All of us.
+All of them.
+Some of them.
+A lot of fun.
+A little bit.
+A few more.
+One more time.
+Just one more.
+So much fun.
+So good.
+Very good.
+Very nice.
+Too much.
+Not too bad.
+Not at all.
+Not a problem.
+Kind of.
+Sort of.
+More or less.
+As soon as possible.
+As well.
+At least.
+At all.
+By the way.
+For sure.
+For now.
+For example.
+In fact.
+In general.
+Of course not.
+On the other hand.
+To be honest.
+To be fair.
+Right here.
+Right there.
+Over and over.
+Again and again.
+Once again.

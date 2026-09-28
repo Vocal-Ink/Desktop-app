@@ -162,6 +162,7 @@ public:
     bool contains(const QString &key) const;
     void remove(const QString &key);
     QStringList childKeys(const QString &group) const;
+    QStringList allKeys() const; // everything stored (not the defaults), e.g. for backups
 
     QString string(const char *key) const { return value(key).toString(); }
     int integer(const char *key) const { return value(key).toInt(); }

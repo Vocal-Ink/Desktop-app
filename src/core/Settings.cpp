@@ -225,6 +225,16 @@ QStringList Settings::childKeys(const QString &group) const
     return keys;
 }
 
+QStringList Settings::allKeys() const
+{
+    // Without fallbacks: on macOS these would add system-wide keys (AppleLanguages...).
+    const bool fallbacks = m_settings->fallbacksEnabled();
+    m_settings->setFallbacksEnabled(false);
+    const QStringList keys = m_settings->allKeys();
+    m_settings->setFallbacksEnabled(fallbacks);
+    return keys;
+}
+
 void Settings::sync()
 {
     m_settings->sync();

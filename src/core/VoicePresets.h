@@ -1,5 +1,6 @@
 #pragma once
 
+#include <QByteArray>
 #include <QList>
 #include <QObject>
 #include <QString>
@@ -15,6 +16,12 @@ struct VoicePreset
     int pitch = 0;        // -50..50
     QString effect;       // VoiceEffects::id()
     int effectIntensity = 60; // %
+
+    bool operator==(const VoicePreset &o) const
+    {
+        return id == o.id && name == o.name && voiceKey == o.voiceKey && rate == o.rate && pitch == o.pitch
+               && effect == o.effect && effectIntensity == o.effectIntensity;
+    }
 };
 
 class VoicePresets : public QObject
@@ -23,7 +30,7 @@ class VoicePresets : public QObject
 public:
     explicit VoicePresets(const QString &filePath, QObject *parent = nullptr);
 
-    bool load();
+    bool load(); // an empty list if the file doesn't exist yet
     bool save() const;
 
     const QList<VoicePreset> &presets() const { return m_presets; }
@@ -33,10 +40,16 @@ public:
     void remove(const QString &id);
     void move(int from, int to);
 
+    static QByteArray toJson(const QList<VoicePreset> &presets);
+    static QList<VoicePreset> fromJson(const QByteArray &json, bool *ok = nullptr);
+
 signals:
     void changed();
 
 private:
+    void commit();
+    QString newId() const;
+
     QString m_path;
     QList<VoicePreset> m_presets;
 };

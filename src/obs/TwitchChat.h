@@ -4,6 +4,8 @@
 #include <QString>
 #include <QStringList>
 
+class QWebSocket;
+
 // Reads a Twitch channel's chat anonymously (no login) so it can be read aloud
 // with its own voice. Uses Twitch's IRC-over-WebSocket endpoint.
 class TwitchChat : public QObject
@@ -20,6 +22,7 @@ public:
         bool moderator = false;
         bool subscriber = false;
         bool vip = false;
+        bool action = false; // "/me waves"
     };
 
     struct Filter
@@ -29,9 +32,9 @@ public:
         bool skipLinks = true;
         bool subscribersOnly = false;
         bool moderatorsOnly = false;
-        int maxLength = 200;        // longer messages are cut with "..."
+        int maxLength = 200;        // longer messages are cut with an ellipsis
         QStringList ignoredUsers;   // e.g. bots: nightbot, streamelements
-        QStringList blockedWords;   // messages containing these are skipped
+        QStringList blockedWords;   // messages containing these (whole words) are skipped
     };
 
     explicit TwitchChat(QObject *parent = nullptr);
@@ -49,6 +52,7 @@ public:
     static QString speechFor(const Message &message, const Filter &filter);
 
     void setServerUrl(const QString &url); // tests
+    void setReconnectDelays(int firstMs, int maxMs); // tests
 
 signals:
     void statusChanged(bool connected, const QString &status);
@@ -57,6 +61,10 @@ signals:
     void speakRequested(const QString &text, const TwitchChat::Message &message);
 
 private:
+    void openSocket();
+    void onSocketClosed(QWebSocket *socket);
+    void handleLine(const QString &line);
+
     class Private;
     Private *d;
     QString m_channel;
