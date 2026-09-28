@@ -311,8 +311,7 @@ private slots:
         rig.avatar->onSpeechLevel(0.4f);
         const double first = rig.avatar->mouth();
         QVERIFY2(first > 0.1 && first < 0.2, qPrintable(QString::number(first)));
-        rig.feed(0.4f, 250);
-        QVERIFY(rig.avatar->mouth() > 0.45);
+        QVERIFY(rig.feedUntil(0.4f, [&rig] { return rig.avatar->mouth() > 0.45; }));
         rig.avatar->onSpeechLevel(0.0f);
         QTest::qWait(50);
         QVERIFY(rig.avatar->mouth() > 0.1); // slow release

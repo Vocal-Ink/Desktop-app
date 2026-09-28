@@ -277,7 +277,13 @@ private slots:
         QSignalSpy finished(rig.models.get(), &ModelManager::downloadFinished);
         QSignalSpy failed(rig.models.get(), &ModelManager::downloadFailed);
         rig.models->downloadWhisperModel(QStringLiteral("ggml-small.en-q5_1.bin"));
-        QTRY_VERIFY_WITH_TIMEOUT(!progress.isEmpty() && progress.last().at(1).toLongLong() > 0, 15000);
+        const auto receivedSome = [&progress] { return !progress.isEmpty() && progress.last().at(1).toLongLong() > 0; };
+        QTRY_VERIFY_WITH_TIMEOUT(receivedSome() || !failed.isEmpty() || !finished.isEmpty(), 15000);
+        QVERIFY2(failed.isEmpty(), qPrintable(failed.value(0).value(1).toString()));
+        QVERIFY2(finished.isEmpty(), "finished before it could be cancelled");
+        QVERIFY2(receivedSome(), qPrintable(QStringLiteral("no data after 15 s (%1 request(s), %2 progress signal(s))")
+                                                .arg(rig.server.requests().size())
+                                                .arg(progress.size())));
         QVERIFY(progress.last().at(1).toLongLong() < model.size());
 
         rig.models->cancel(taskId);

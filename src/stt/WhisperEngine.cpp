@@ -110,12 +110,21 @@ void WhisperWorker::load(quint64 serial, const QString &path)
     if (path.isEmpty() || abort)
         return;
 #ifdef VOCALINK_HAVE_WHISPER
+    const QString invalid = tr("\"%1\" is not a valid Whisper model.").arg(QFileInfo(path).fileName());
+    // Reject files that aren't ggml models before whisper.cpp sets up its
+    // GPU backend, which can take many seconds.
+    QFile file(path);
+    if (!file.open(QIODevice::ReadOnly) || file.read(4) != QByteArrayLiteral("lmgg")) {
+        emit loaded(serial, path, false, invalid);
+        return;
+    }
+    file.close();
     whisper_context_params params = whisper_context_default_params();
     m_ctx = whisper_init_from_file_with_params(nativePath(path).constData(), params);
     if (m_ctx)
         emit loaded(serial, path, true, QString());
     else
-        emit loaded(serial, path, false, tr("\"%1\" is not a valid Whisper model.").arg(QFileInfo(path).fileName()));
+        emit loaded(serial, path, false, invalid);
 #else
     emit loaded(serial, path, false, tr("Local speech recognition is not included in this build."));
 #endif
@@ -262,6 +271,7 @@ QString WhisperEngine::notReadyReason() const
     if (m_loading)
         return tr("Loading speech model…");
     if (!m_loadError.isEmpty())
+        //: %1 is a full sentence saying why the speech model could not be loaded
         return tr("%1 Download it again in Settings → Speech input.").arg(m_loadError);
     return tr("Download a speech recognition model in Settings → Speech input");
 #endif
