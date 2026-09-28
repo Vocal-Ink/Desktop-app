@@ -480,6 +480,11 @@ ColumnLayout {
             }
         }
         SettingRow {
+            title: qsTr("Lines per caption")
+            description: qsTr("A longer caption scrolls after this many lines.")
+            ValueSlider { label: qsTr("Lines per caption"); from: 1; to: 10; value: ed.v("history.maxLines", 3); onMoved: ed.set("history.maxLines", Math.round(value)) }
+        }
+        SettingRow {
             title: qsTr("Lines of history")
             description: qsTr("Earlier captions stay above the newest one.")
             ValueSlider { label: qsTr("Lines of history"); from: 1; to: 6; value: ed.v("history.lines", 1); onMoved: ed.set("history.lines", Math.round(value)) }

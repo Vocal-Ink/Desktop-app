@@ -765,6 +765,19 @@ void AppContext::applyOverlayStyles()
     for (OverlayProfile &p : profiles)
         p.style = OverlayStyle::effective(p.style, p.kind);
     m_overlay->setLegacyQuery(m_settings->string(Keys::OverlayLegacyQuery));
+    // Words the overlay pages show themselves, in the interface language.
+    m_overlay->setLabels(QJsonObject{
+        {QStringLiteral("speaking"), tr("speaking…")},
+        {QStringLiteral("listening"), tr("listening…")},
+        {QStringLiteral("micLive"), tr("mic live")},
+        {QStringLiteral("demo"), QJsonArray{tr("Hey chat! Thanks so much for the follow, welcome in."),
+                                            tr("Give me one second, I'm going to try this jump again."),
+                                            tr("Okay… that was not my finest moment. Clip it anyway!")}},
+        {QStringLiteral("badges"), QJsonObject{{QStringLiteral("broadcaster"), tr("Streamer")},
+                                               {QStringLiteral("mod"), tr("Mod")},
+                                               {QStringLiteral("vip"), tr("VIP")},
+                                               {QStringLiteral("sub"), tr("Sub")},
+                                               {QStringLiteral("founder"), tr("Founder")}}}});
     m_overlay->setAllowedHosts(splitList(m_settings->string(Keys::OverlayAllowedHosts)));
     m_overlay->setAssets(OverlayStyle::scanAssets(avatarAssetDir()));
     m_overlay->setProfiles(profiles);

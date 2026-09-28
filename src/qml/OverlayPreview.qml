@@ -59,7 +59,7 @@ Rectangle {
         x: pv.width * 0.58; y: pv.height * 0.18
         width: pv.width * 0.3; height: width
         radius: width / 2
-        color: Qt.rgba(1, 0.8, 0.5, 0.08)
+        color: Qt.rgba(1, 0.8, 0.5, 0.045)
     }
     Rectangle {
         anchors.bottom: parent.bottom

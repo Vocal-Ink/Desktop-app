@@ -291,6 +291,7 @@ void Bridge::setLanguageManager(LanguageManager *languages)
     connect(languages, &LanguageManager::languageChanged, this, [this] {
         m_ctx->actions()->retranslate();
         m_ctx->phrases()->retranslateDefaults();
+        m_ctx->applyOverlayStyles(); // the overlay pages' own words
         m_whisper->retranslate();
         m_piper->retranslate();
         emit translationsChanged();
@@ -988,7 +989,7 @@ void Bridge::applyOverlayPreset(const QString &id, const QString &preset)
     for (OverlayProfile &p : profiles) {
         if (p.id != id)
             continue;
-        p.style = withoutPresetFields(p.style, OverlayStyle::preset(preset));
+        p.style = withoutPresetFields(p.style, OverlayStyle::presetForKind(preset, p.kind));
         p.style.insert(QStringLiteral("preset"), preset);
     }
     OverlayStyle::saveProfiles(m_ctx->settings(), profiles);

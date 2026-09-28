@@ -125,6 +125,7 @@ ScrollPage {
                                 color: tile.on ? Theme.accentInk : Theme.text
                             }
                             Text {
+                                visible: text !== tile.modelData.name
                                 text: page.kindName(tile.modelData.kind)
                                 font.family: Theme.uiFont
                                 font.pixelSize: Theme.fsXs
