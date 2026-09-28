@@ -19,138 +19,155 @@ ScrollPage {
         PillButton { kind: "ghost"; iconName: "x"; text: qsTr("Clear"); onClicked: App.clearCaptions(); tip: qsTr("Remove the caption on screen now") }
     ]
 
-    // Overlay settings live in one query string; edit it as a map.
-    function queryMap() {
-        const out = {}
-        const q = App.prefs["overlay/query"] || ""
-        q.split("&").forEach(p => { if (p) { const kv = p.split("="); out[decodeURIComponent(kv[0])] = decodeURIComponent(kv[1] || "") } })
-        return out
+    // Overlays / OBS / Twitch.
+    property string tab: "overlays"
+    property string selectedId: "main"
+    readonly property var profiles: App.overlayProfiles
+    onProfilesChanged: {
+        if (!profiles.some(p => p.id === selectedId))
+            selectedId = profiles.length > 0 ? profiles[0].id : "main"
     }
-    function setQuery(key, value, fallback) {
-        const m = queryMap()
-        if (value === fallback || value === "" || value === undefined) delete m[key]
-        else m[key] = value
-        App.prefs["overlay/query"] = Object.keys(m).map(k => encodeURIComponent(k) + "=" + encodeURIComponent(m[k])).join("&")
+    function kindName(kind) {
+        return kind === "chat" ? qsTr("Chat") : kind === "avatar" ? qsTr("PNGtuber") : qsTr("Captions")
     }
 
-    // --- Caption overlay --------------------------------------------------------------------
+    Segmented {
+        Layout.alignment: Qt.AlignLeft
+        label: qsTr("Stream sections")
+        value: page.tab
+        options: [{ value: "overlays", label: qsTr("Overlays") }, { value: "obs", label: "OBS" }, { value: "twitch", label: "Twitch" }]
+        onActivated: (t) => page.tab = t
+    }
+
+    // --- Overlays ------------------------------------------------------------------------
     Card {
         Layout.fillWidth: true
-        title: qsTr("Caption overlay")
-        subtitle: qsTr("A browser source for OBS, Streamlabs or any streaming app. No OBS plugin needed.")
+        visible: page.tab === "overlays"
+        title: qsTr("Overlay server")
+        subtitle: qsTr("Browser sources for OBS, Streamlabs or any streaming app. No plugin needed.")
         iconName: "captions"
         headerExtra: Toggle {
-            tip: qsTr("Caption overlay")
+            tip: qsTr("Overlay server")
             checked: App.prefs["overlay/enabled"] === true
             onToggled: App.prefs["overlay/enabled"] = checked
         }
-
-        ColumnLayout {
-            visible: App.prefs["overlay/enabled"] === true
+        Txt {
             Layout.fillWidth: true
-            spacing: Theme.s4
+            visible: App.prefs["overlay/enabled"] === true
+            role: "caption"
+            text: App.overlayClients > 0 ? qsTr("%n overlay(s) connected.", "", App.overlayClients)
+                                         : qsTr("Nothing connected yet. Copy an overlay's address below into a Browser source in OBS (1920 × 1080).")
+            color: App.overlayClients > 0 ? Theme.ok : Theme.muted
+        }
+        SettingRow {
+            visible: App.prefs["overlay/enabled"] === true
+            title: qsTr("Let other computers on my network load them")
+            description: qsTr("For a separate streaming PC. Leave off otherwise.")
+            Toggle {
+                tip: qsTr("Allow other computers on my network")
+                checked: App.prefs["overlay/allowLan"] === true
+                onToggled: App.prefs["overlay/allowLan"] = checked
+            }
+        }
+        SettingRow {
+            visible: App.prefs["overlay/enabled"] === true && App.prefs["overlay/allowLan"] === true
+            title: qsTr("Other names for this computer")
+            description: qsTr("IP addresses and this computer's name always work. Add any other name the streaming PC uses, separated by commas.")
+            Field {
+                label: qsTr("Other names for this computer")
+                implicitWidth: Math.round(240 * Theme.scale)
+                placeholderText: "gaming-pc.lan"
+                text: App.prefs["overlay/allowedHosts"] || ""
+                onEditingFinished: App.prefs["overlay/allowedHosts"] = text.trim()
+            }
+        }
+    }
 
-            RowLayout {
-                Layout.fillWidth: true
-                spacing: Theme.s2
-                Field {
-                    Layout.fillWidth: true
-                    readOnly: true
-                    iconName: "link"
-                    label: qsTr("Overlay address")
-                    text: App.overlayUrl !== "" ? App.overlayUrl : qsTr("Starting…")
-                    font.family: Theme.monoFont
+    // The overlays: pick one to edit, or add another.
+    Flow {
+        Layout.fillWidth: true
+        visible: page.tab === "overlays"
+        spacing: Theme.s2
+        Repeater {
+            model: page.profiles
+            AbstractButton {
+                id: tile
+                required property var modelData
+                readonly property bool on: page.selectedId === modelData.id
+                height: Theme.control + Theme.s2
+                width: Math.max(Math.round(150 * Theme.scale), tileRow.implicitWidth + Theme.s4 * 2)
+                hoverEnabled: true
+                focusPolicy: Qt.StrongFocus
+                checkable: true
+                checked: on
+                Accessible.role: Accessible.RadioButton
+                Accessible.name: modelData.name + ", " + page.kindName(modelData.kind)
+                Accessible.checked: on
+                onClicked: page.selectedId = modelData.id
+                contentItem: Item {
+                    Row {
+                        id: tileRow
+                        anchors.centerIn: parent
+                        spacing: Theme.s2
+                        Icon {
+                            anchors.verticalCenter: parent.verticalCenter
+                            name: tile.modelData.kind === "chat" ? "message-circle" : tile.modelData.kind === "avatar" ? "smile" : "captions"
+                            color: tile.on ? Theme.accentInk : Theme.accentText
+                            size: Math.round(18 * Theme.scale)
+                        }
+                        Column {
+                            anchors.verticalCenter: parent.verticalCenter
+                            Text {
+                                text: tile.modelData.name
+                                font.family: Theme.uiFont
+                                font.pixelSize: Theme.fsMd
+                                font.weight: Font.DemiBold
+                                color: tile.on ? Theme.accentInk : Theme.text
+                            }
+                            Text {
+                                text: page.kindName(tile.modelData.kind)
+                                font.family: Theme.uiFont
+                                font.pixelSize: Theme.fsXs
+                                color: tile.on ? Theme.alpha(Theme.accentInk, 0.8) : Theme.muted
+                            }
+                        }
+                    }
                 }
-                PillButton { text: qsTr("Copy"); iconName: "copy"; enabled: App.overlayUrl !== ""; onClicked: { App.copy(App.overlayUrl); App.notifyUser(qsTr("Overlay address copied. Add it as a Browser source in OBS."), 0) } }
-                IconButton { iconName: "external-link"; tip: qsTr("Open in your browser"); enabled: App.overlayUrl !== ""; onClicked: App.openUrl(App.overlayUrl + (App.overlayUrl.indexOf("?") >= 0 ? "&" : "?") + "demo=1") }
-            }
-            Txt {
-                Layout.fillWidth: true
-                role: "caption"
-                text: App.overlayClients > 0 ? qsTr("%n overlay(s) connected.", "", App.overlayClients)
-                                             : qsTr("Nothing connected yet. In OBS: Sources → + → Browser, paste the address, width 1920, height 1080.")
-                color: App.overlayClients > 0 ? Theme.ok : Theme.muted
-            }
-
-            SettingRow {
-                title: qsTr("Style")
-                Segmented {
-                    label: qsTr("Caption style")
-                    value: page.queryMap()["style"] || "subtitles"
-                    options: [
-                        { value: "subtitles", label: qsTr("Subtitles") },
-                        { value: "ink", label: qsTr("Ink") },
-                        { value: "bubble", label: qsTr("Bubble") },
-                        { value: "plain", label: qsTr("Outline") }
-                    ]
-                    onActivated: (v) => page.setQuery("style", v, "subtitles")
-                }
-            }
-            SettingRow {
-                title: qsTr("Position")
-                Segmented {
-                    label: qsTr("Caption position")
-                    value: page.queryMap()["position"] || "bottom"
-                    options: [
-                        { value: "top", label: qsTr("Top") },
-                        { value: "middle", label: qsTr("Middle") },
-                        { value: "bottom", label: qsTr("Bottom") }
-                    ]
-                    onActivated: (v) => page.setQuery("position", v, "bottom")
-                }
-            }
-            SettingRow {
-                title: qsTr("Text size")
-                ValueSlider {
-                    label: qsTr("Caption text size")
-                    from: 20; to: 120; suffix: " px"
-                    value: parseInt(page.queryMap()["size"] || "42")
-                    onMoved: page.setQuery("size", String(Math.round(value)), "42")
-                }
-            }
-            SettingRow {
-                title: qsTr("Stay on screen")
-                description: qsTr("How long a caption stays after you finish speaking.")
-                ValueSlider {
-                    label: qsTr("Caption hold time")
-                    from: 1; to: 30
-                    format: (v) => qsTr("%1 s", "seconds").arg(Number(Math.round(v)).toLocaleString(Qt.locale(), "f", 0))
-                    value: parseFloat(page.queryMap()["hold"] || "4")
-                    onMoved: page.setQuery("hold", String(Math.round(value)), "4")
-                }
-            }
-            SettingRow {
-                title: qsTr("Reveal word by word")
-                description: qsTr("Words appear in time with the voice.")
-                Toggle {
-                    tip: qsTr("Reveal word by word")
-                    checked: (page.queryMap()["reveal"] || "word") === "word"
-                    onToggled: page.setQuery("reveal", checked ? "word" : "instant", "word")
-                }
-            }
-            SettingRow {
-                title: qsTr("Show the voice's name")
-                Toggle {
-                    tip: qsTr("Show the voice's name")
-                    checked: page.queryMap()["name"] === "1"
-                    onToggled: page.setQuery("name", checked ? "1" : "", "")
-                }
-            }
-            SettingRow {
-                title: qsTr("Let other computers on my network load it")
-                description: qsTr("For a separate streaming PC. Leave off otherwise.")
-                Toggle {
-                    tip: qsTr("Allow other computers on my network")
-                    checked: App.prefs["overlay/allowLan"] === true
-                    onToggled: App.prefs["overlay/allowLan"] = checked
+                background: Rectangle {
+                    radius: Theme.radius
+                    color: tile.on ? Theme.accent : tile.hovered ? Theme.mix(Theme.surface, Theme.text, 0.05) : Theme.surface
+                    border.color: tile.on ? Theme.accent : Theme.line
+                    border.width: Theme.hairline
+                    FocusFrame { shown: tile.visualFocus; baseRadius: parent.radius }
                 }
             }
         }
+        PillButton {
+            height: Theme.control + Theme.s2
+            iconName: "plus"
+            text: qsTr("Add overlay")
+            onClicked: addMenu.open()
+            Menu {
+                id: addMenu
+                y: parent.height + 4
+                MenuItem { text: qsTr("Captions"); onTriggered: page.selectedId = App.addOverlayProfile("captions", qsTr("Captions")) }
+                MenuItem { text: qsTr("Chat read aloud"); onTriggered: page.selectedId = App.addOverlayProfile("chat", qsTr("Chat")) }
+                MenuItem { text: qsTr("PNGtuber"); onTriggered: page.selectedId = App.addOverlayProfile("avatar", qsTr("PNGtuber")) }
+            }
+        }
+    }
+
+    OverlayEditor {
+        Layout.fillWidth: true
+        visible: page.tab === "overlays"
+        profileId: page.selectedId
+        onRemoved: page.selectedId = "main"
     }
 
     // --- OBS ---------------------------------------------------------------------------------
     Card {
         Layout.fillWidth: true
+        visible: page.tab === "obs"
         title: qsTr("OBS")
         subtitle: qsTr("Connects to OBS 28+ (Tools → WebSocket Server Settings) to write subtitles, send closed captions and show a “talking” source.")
         iconName: "tv"
@@ -303,6 +320,7 @@ ScrollPage {
     // --- Twitch --------------------------------------------------------------------------------
     Card {
         Layout.fillWidth: true
+        visible: page.tab === "twitch"
         title: qsTr("Read Twitch chat aloud")
         subtitle: qsTr("Chat messages are spoken in a voice of your choice. No login needed: Vocal Ink only reads.")
         iconName: "message-circle"
