@@ -312,9 +312,16 @@ private slots:
         const double first = rig.avatar->mouth();
         QVERIFY2(first > 0.1 && first < 0.2, qPrintable(QString::number(first)));
         QVERIFY(rig.feedUntil(0.4f, [&rig] { return rig.avatar->mouth() > 0.45; }));
+        // Slow release: one frame after the voice stops, the mouth has closed
+        // only a little (counted in frames, not milliseconds: busy CI machines
+        // can stretch any wait).
+        const double open = rig.avatar->mouth();
+        QSignalSpy nextFrame(rig.avatar.get(), &AvatarController::frame);
         rig.avatar->onSpeechLevel(0.0f);
-        QTest::qWait(50);
-        QVERIFY(rig.avatar->mouth() > 0.1); // slow release
+        QVERIFY(nextFrame.wait(2000));
+        const double released = rig.avatar->mouth();
+        QVERIFY2(released < open && released > 0.8 * open,
+                 qPrintable(QStringLiteral("%1 -> %2").arg(open).arg(released)));
     }
 
     void talkingHasHysteresis()
@@ -355,13 +362,17 @@ private slots:
         QSignalSpy frames(rig.avatar.get(), &AvatarController::frame);
         QElapsedTimer t;
         t.start();
-        for (int i = 0; t.elapsed() < 500; ++i) {
-            rig.avatar->onSpeechLevel(i % 2 ? 0.3f : 0.6f);
+        // A frame goes out only when the mouth moves, so every frame must see a
+        // new level. Seven levels in turn: even when macOS lines the waits up
+        // with the frame timer, two frames in a row don't see the same one.
+        // Slow machines get more time to reach five frames.
+        for (int i = 0; t.elapsed() < 500 || (frames.size() < 5 && t.elapsed() < 5000); ++i) {
+            rig.avatar->onSpeechLevel(0.1f + 0.08f * float(i % 7)); // mouth 0.15 … 0.87, never clamped
             QTest::qWait(10);
         }
         const qint64 elapsed = t.elapsed();
         QVERIFY2(frames.size() <= elapsed / 33 + 2, qPrintable(QStringLiteral("%1 frames in %2 ms").arg(frames.size()).arg(elapsed)));
-        QVERIFY(frames.size() >= 5);
+        QVERIFY2(frames.size() >= 5, qPrintable(QStringLiteral("%1 frames in %2 ms").arg(frames.size()).arg(elapsed)));
 
         rig.avatar->onSpeechLevel(0.0f);
         QTRY_VERIFY_WITH_TIMEOUT(!rig.avatar->isRunning(), 2000);
@@ -641,9 +652,9 @@ private slots:
             if (!shapes.contains(rig.avatar->viseme()))
                 shapes << rig.avatar->viseme();
         });
-        rig.avatar->test(450);
+        rig.avatar->test(1500); // long enough for several shapes even on a busy machine
         QVERIFY(rig.avatar->isRunning());
-        QTRY_VERIFY_WITH_TIMEOUT(!rig.avatar->isRunning(), 3000);
+        QTRY_VERIFY_WITH_TIMEOUT(!rig.avatar->isRunning(), 5000);
         QVERIFY(widest > 0.4);
         QVERIFY(shapes.size() >= 3);
         QVERIFY(talking.size() >= 2);

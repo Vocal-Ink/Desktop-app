@@ -222,10 +222,15 @@ private slots:
         client.setInstancesDirForTesting(dir.path());
         client.setEnabled(true);
         QTRY_COMPARE_WITH_TIMEOUT(client.status(), Status::Connected, 3000);
+        // The server may not have received anything yet: never read last() of an empty list.
+        const auto lastSays = [&server](const char *text) {
+            const QStringList messages = server.messages();
+            return !messages.isEmpty() && messages.last().contains(QLatin1String(text));
+        };
         client.setTalking(true);
-        QTRY_VERIFY(server.messages().last().contains(QStringLiteral("\"value\":true")));
+        QTRY_VERIFY(lastSays("\"value\":true"));
         client.setEnabled(false);
-        QTRY_VERIFY(server.messages().last().contains(QStringLiteral("\"value\":false")));
+        QTRY_VERIFY(lastSays("\"value\":false"));
         QCOMPARE(client.status(), Status::Off);
     }
 };
