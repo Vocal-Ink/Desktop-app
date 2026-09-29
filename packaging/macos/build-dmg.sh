@@ -69,5 +69,18 @@ ln -s /Applications "$STAGE/Applications"
 ARCH=$(uname -m)
 DMG="$DIST/VocalInk-$VERSION-macos-$ARCH.dmg"
 rm -f "$DMG"
-hdiutil create -volname "Vocal Ink" -srcfolder "$STAGE" -ov -format UDZO "$DMG"
+# hdiutil sometimes fails with "Resource busy" while something else (often
+# XProtect or Spotlight) still has the fresh files open: wait and try again.
+for attempt in 1 2 3 4 5; do
+    if hdiutil create -volname "Vocal Ink" -srcfolder "$STAGE" -ov -format UDZO "$DMG"; then
+        break
+    fi
+    if [ "$attempt" -eq 5 ]; then
+        echo "hdiutil failed 5 times" >&2
+        exit 1
+    fi
+    echo "hdiutil failed (attempt $attempt), trying again in $((attempt * 5)) s" >&2
+    rm -f "$DMG"
+    sleep $((attempt * 5))
+done
 echo "Created $DMG"
