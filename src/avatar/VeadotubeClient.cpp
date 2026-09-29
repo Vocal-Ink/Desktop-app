@@ -286,11 +286,19 @@ void VeadotubeClient::discardSocket()
     QWebSocket *socket = m_socket;
     m_socket = nullptr;
     socket->disconnect(this);
-    if (socket->state() == QAbstractSocket::ConnectedState)
+    if (socket->state() == QAbstractSocket::ConnectedState) {
+        // Let the last messages (releasing push-to-talk) and the close frame go
+        // out: deleting a connected socket drops what it hasn't written yet.
+        // The socket outlives this client for a moment if necessary.
+        socket->setParent(nullptr);
+        connect(socket, &QWebSocket::disconnected, socket, &QObject::deleteLater);
+        QTimer::singleShot(2000, socket, &QObject::deleteLater);
+        socket->flush();
         socket->close();
-    else
+    } else {
         socket->abort();
-    socket->deleteLater();
+        socket->deleteLater();
+    }
 }
 
 void VeadotubeClient::onOpened(QWebSocket *socket)

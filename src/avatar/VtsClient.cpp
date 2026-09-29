@@ -359,8 +359,14 @@ void VtsClient::discardSocket()
     m_socket = nullptr;
     socket->disconnect(this);
     if (socket->state() == QAbstractSocket::ConnectedState) {
+        // Let the last requests (closing the mouth) and the close frame go out:
+        // deleting a connected socket drops what it hasn't written yet. The
+        // socket outlives this client for a moment if necessary.
+        socket->setParent(nullptr);
+        connect(socket, &QWebSocket::disconnected, socket, &QObject::deleteLater);
+        QTimer::singleShot(2000, socket, &QObject::deleteLater);
+        socket->flush();
         socket->close();
-        socket->deleteLater();
     } else {
         socket->abort();
         socket->deleteLater();

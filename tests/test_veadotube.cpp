@@ -227,10 +227,12 @@ private slots:
             const QStringList messages = server.messages();
             return !messages.isEmpty() && messages.last().contains(QLatin1String(text));
         };
+        const auto received = [&server] { return qPrintable(server.messages().join(QLatin1String("\n"))); };
         client.setTalking(true);
-        QTRY_VERIFY(lastSays("\"value\":true"));
+        QTRY_VERIFY2(lastSays("\"value\":true"), received());
+        // Switching off right after a send: the release must still reach mini.
         client.setEnabled(false);
-        QTRY_VERIFY(lastSays("\"value\":false"));
+        QTRY_VERIFY2(lastSays("\"value\":false"), received());
         QCOMPARE(client.status(), Status::Off);
     }
 };
