@@ -27,6 +27,12 @@
   </categories>
   <content_rating type="oars-1.1"/>
   <releases>
-    <release version="0.1.0" date="2026-09-28"/>
+    <release version="1.0.0" date="2026-09-29">
+      <description>
+        <p>First release: typing and dictation spoken in local or cloud voices through a virtual
+        microphone, a phrase board and soundboard, stream overlays and Twitch chat, VTubing
+        connections, 12 interface languages and a full set of accessibility options.</p>
+      </description>
+    </release>
   </releases>
 </component>

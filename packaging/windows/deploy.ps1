@@ -1,7 +1,7 @@
 # Collects VocalInk.exe with Qt and the MSVC runtime into a folder, then builds
 # a portable zip and (if Inno Setup is installed) an installer.
 #
-#   pwsh packaging/windows/deploy.ps1 -BuildDir build -Version 0.1.0
+#   pwsh packaging/windows/deploy.ps1 -BuildDir build -Version 1.0.0
 #
 # Vocal Ink's virtual mic driver is included only when the Microsoft-signed
 # package (VocalInkAudio.inf/.sys/.cat, see docs/VIRTUAL_AUDIO.md) is in

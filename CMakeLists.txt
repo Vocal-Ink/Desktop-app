@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.25)
 
 project(VocalInk
-    VERSION 0.1.0
+    VERSION 1.0.0
     DESCRIPTION "Speak-for-me assistive text-to-speech for people who can't (or don't want to) use their voice"
     HOMEPAGE_URL "https://github.com/Vocal-Ink/Desktop-app"
     LANGUAGES C CXX)

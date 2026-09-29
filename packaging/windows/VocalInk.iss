@@ -1,5 +1,5 @@
 ; Inno Setup script for Vocal Ink.
-; Build with:  iscc /DAppVersion=0.1.0 /DSourceDir=<windeployqt staging dir> /DOutputDir=<dist> VocalInk.iss
+; Build with:  iscc /DAppVersion=1.0.0 /DSourceDir=<windeployqt staging dir> /DOutputDir=<dist> VocalInk.iss
 
 #ifndef AppVersion
   #define AppVersion "0.0.0"

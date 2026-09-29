@@ -65,7 +65,7 @@ and add **effects** (radio, telephone, robot, echo, cave, underwater, megaphone)
 
 **Dictation (speak instead of type)**
 - On-device with [whisper.cpp](https://github.com/ggml-org/whisper.cpp) — private, free, offline — or any
-  OpenAI-compatible service. Push-to-talk (or tap-to-talk), toggle or hands-free; review before speaking, or not.
+  OpenAI-compatible service. Hold to dictate, tap on and off, or hands-free; review before speaking, or not.
 
 **Streaming** — see [docs/OBS.md](docs/OBS.md)
 - **Overlays** for OBS or any streaming app, as many as you like: **captions**, **chat read aloud** and a
@@ -110,20 +110,22 @@ another computer; the app can tell you when an update is out.
 ## Getting started
 
 1. **Download** the latest build for your system from the [Releases](https://github.com/Vocal-Ink/Desktop-app/releases) page
-   (Windows installer or portable zip, macOS `.dmg`, Linux `.AppImage`).
+   (Windows installer or portable zip, macOS `.dmg`, Linux `.AppImage`). What's new: [CHANGELOG.md](CHANGELOG.md).
 2. **Set up the virtual microphone** so other apps can hear Vocal Ink. Vocal Ink brings its own
    ([how it works](docs/VIRTUAL_AUDIO.md)): voice output → *Vocal Ink Voice*, and in Discord/OBS/Zoom pick
    *Vocal Ink Mic* as the microphone (macOS: *Vocal Ink Virtual Mic* for both).
    - **Windows:** tick *Install the Vocal Ink virtual microphone* in the installer, or install it from Vocal Ink's
      audio settings. Builds without the signed driver use [VB-CABLE](https://vb-audio.com/Cable/) (free) instead:
      voice output → *CABLE Input*, microphone → *CABLE Output*.
-   - **macOS:** install it from Vocal Ink's audio settings (asks for your password). Or use
-     [BlackHole 2ch](https://existential.audio/blackhole/) (`brew install blackhole-2ch`).
+   - **macOS:** use [BlackHole 2ch](https://existential.audio/blackhole/) (`brew install blackhole-2ch`) for now.
+     Vocal Ink's own Mac driver is in the source (`-DVOCALINK_WITH_MAC_DRIVER=ON`) but not in the downloads until
+     it has been tested on real Macs.
    - **Linux:** install it from Vocal Ink's audio settings (PulseAudio or PipeWire, no password).
 3. **Open Vocal Ink.** The setup walks you through a voice (a free natural one is ~90 MB), the virtual mic,
    dictation (~60 MB model), shortcuts and comfort settings. Every step can be skipped.
 4. Type something and press <kbd>Enter</kbd>.
 
+> **Windows:** the downloads aren't code-signed yet. If SmartScreen warns you, choose **More info → Run anyway**.
 > **macOS:** builds are signed ad hoc. The first time, right-click the app → **Open**. Allow microphone access when asked if you use speech recognition.
 > **Linux (Wayland):** system-wide shortcuts need X11/XWayland — start with `QT_QPA_PLATFORM=xcb` to use them.
 
@@ -168,9 +170,9 @@ Packaging scripts (used by CI, see `.github/workflows/build.yml`):
 
 | Platform | Command | Output |
 |---|---|---|
-| Windows | `pwsh packaging/windows/deploy.ps1 -BuildDir build -Version 0.1.0` | Inno Setup installer + portable zip |
-| macOS | `packaging/macos/build-dmg.sh build 0.1.0` | drag-to-install `.dmg` |
-| Linux | `packaging/linux/build-appimage.sh build 0.1.0` | `.AppImage` |
+| Windows | `pwsh packaging/windows/deploy.ps1 -BuildDir build -Version 1.0.0` | Inno Setup installer + portable zip |
+| macOS | `packaging/macos/build-dmg.sh build 1.0.0` | drag-to-install `.dmg` |
+| Linux | `packaging/linux/build-appimage.sh build 1.0.0` | `.AppImage` |
 
 Command-line options: `--minimized` (start in the tray), `--no-onboarding`,
 `--show talk|board|voices|audio|stream|avatar|settings[:section]|onboarding[:step id]|quicktype|compact|showtext`,
